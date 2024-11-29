@@ -8,13 +8,17 @@ public class Product {
     private String description;
     private double price;
     private int stock;
+    private Brand brand;
+    private Category category;
 
     public Product() {}
 
-    public Product(int id, int brandId, int categoryId, String name, String description, double price, int stock) {
+    public Product(int id, int brandId, int categoryId, Brand brand, Category category, String name, String description, double price, int stock) {
         this.id = id;
         this.brandId = brandId;
         this.categoryId = categoryId;
+        this.brand = brand;
+        this.category = category;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -75,5 +79,21 @@ public class Product {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
