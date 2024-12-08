@@ -1,14 +1,14 @@
 package com.example.javafxfinalproject.Components;
 
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
 
-public class FormField extends VBox {
+public class SecureFormField extends VBox {
 
-    private final TextField inputField = new TextField();
+    private final PasswordField inputField = new PasswordField();
 
-    public FormField(String labelText, String placeholder) {
+    public SecureFormField(String labelText, String placeholder) {
         // Create and style the label
         Label label = new Label(labelText);
         label.getStyleClass().add("form-label");

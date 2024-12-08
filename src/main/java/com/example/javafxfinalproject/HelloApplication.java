@@ -6,6 +6,7 @@ import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.Managers.AuthManager;
 import com.example.javafxfinalproject.Models.Status;
 import com.example.javafxfinalproject.Models.User;
+import com.example.javafxfinalproject.Stages.LoginStage;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,47 +22,50 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) {
 
-        AuthManager authManager = new AuthManager();
-        FormField usernameField = new FormField("Username", "Enter your username");
-        FormField passwordField = new FormField("Password", "Enter your password");
-        PrimaryButton loginButton = new PrimaryButton("Login");
-        Label errorLabel = new Label();
-        errorLabel.setTextFill(Color.RED);
+        // MARK: CODE UPDATE - HODROJ
+        LoginStage loginStage = new LoginStage();
 
-        // Login logic
-        loginButton.setOnAction(e -> {
-            String username = usernameField.getInputText();
-            String password = passwordField.getInputText();
-            ActionResult<User> login_user = authManager.login(username, password);
-            if (login_user.getStatus() == Status.SUCCESS) {
-                User loggedInUser = login_user.getData();
-                routeToMainStageAsUser(stage ,loggedInUser);
-            } else {
-                errorLabel.setText(login_user.getMessage());
-            }
-        });
-
-        VBox fieldsBox = new VBox();
-        fieldsBox.setSpacing(20);
-        fieldsBox.getChildren().addAll(usernameField, passwordField, errorLabel);
-
-        // Switch to register label
-        Label switchToRegister = new Label("New User? Register now.");
-        switchToRegister.setTextFill(Color.BLUE);
-        switchToRegister.setUnderline(true);
-        switchToRegister.setOnMouseClicked(e -> routeToRegisterStage(stage));
-
-        VBox loginBox = new VBox();
-        loginBox.setSpacing(30);
-        loginBox.setPadding(new Insets(100, 100, 100, 100));
-        loginBox.getChildren().addAll(fieldsBox, loginButton, switchToRegister);
-        loginBox.setAlignment(Pos.CENTER);
-
-        Scene loginScene = new Scene(loginBox);
-        loginScene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));
-        stage.setTitle("Login");
-        stage.setScene(loginScene);
-        stage.show();
+//        AuthManager authManager = new AuthManager();
+//        FormField usernameField = new FormField("Username", "Enter your username");
+//        FormField passwordField = new FormField("Password", "Enter your password");
+//        PrimaryButton loginButton = new PrimaryButton("Login");
+//        Label errorLabel = new Label();
+//        errorLabel.setTextFill(Color.RED);
+//
+//        // Login logic
+//        loginButton.setOnAction(e -> {
+//            String username = usernameField.getInputText();
+//            String password = passwordField.getInputText();
+//            ActionResult<User> login_user = authManager.login(username, password);
+//            if (login_user.getStatus() == Status.SUCCESS) {
+//                User loggedInUser = login_user.getData();
+//                routeToMainStageAsUser(stage ,loggedInUser);
+//            } else {
+//                errorLabel.setText(login_user.getMessage());
+//            }
+//        });
+//
+//        VBox fieldsBox = new VBox();
+//        fieldsBox.setSpacing(20);
+//        fieldsBox.getChildren().addAll(usernameField, passwordField, errorLabel);
+//
+//        // Switch to register label
+//        Label switchToRegister = new Label("New User? Register now.");
+//        switchToRegister.setTextFill(Color.BLUE);
+//        switchToRegister.setUnderline(true);
+//        switchToRegister.setOnMouseClicked(e -> routeToRegisterStage(stage));
+//
+//        VBox loginBox = new VBox();
+//        loginBox.setSpacing(30);
+//        loginBox.setPadding(new Insets(100, 100, 100, 100));
+//        loginBox.getChildren().addAll(fieldsBox, loginButton, switchToRegister);
+//        loginBox.setAlignment(Pos.CENTER);
+//
+//        Scene loginScene = new Scene(loginBox);
+//        loginScene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));
+//        stage.setTitle("Login");
+//        stage.setScene(loginScene);
+//        stage.show();
     }
 
     public static void main(String[] args) {

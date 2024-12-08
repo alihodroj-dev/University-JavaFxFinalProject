@@ -67,29 +67,31 @@
 
 /* Button Styles */
 .button-primary {
-    -fx-background-color: #0d6efd;
-    -fx-text-fill: white;
-    -fx-padding: 10px 20px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
+    -fx-background-color: #333333;
+    -fx-text-fill: #E0E0E0;
+    -fx-padding: 6px 16px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
     -fx-font-size: 14px;
 }
 
 .button-primary:hover {
-    -fx-background-color: #0b5ed7;
+    -fx-background-color: #666666;
 }
 
 /* Form Elements */
 .input-field {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ced4da;
-    -fx-border-radius: 5px;
-    -fx-padding: 8px;
+    -fx-background-color: #333333;
+    -fx-border-color: #444444;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 8px;
     -fx-font-size: 14px;
+    -fx-text-fill: #E0E0E0;
 }
 
 .input-field:focused {
-    -fx-border-color: #0d6efd;
+    -fx-border-color: #888888;
 }
 
 .text-area {
@@ -100,10 +102,15 @@
     -fx-font-size: 14px;
 }
 
-.form-label {
-    -fx-font-size: 12px;
+.heading {
+    -fx-font-size: 26px;
+    -fx-text-fill: #E0E0E0;
     -fx-font-weight: bold;
-    -fx-text-fill: #495057;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #E0E0E0;
     -fx-padding: 4px 0;
 }
 
