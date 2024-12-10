@@ -11,11 +11,11 @@ import static java.sql.DriverManager.getConnection;
 public class ProductManager extends BaseManager {
 
 
-    public ArrayList<Product> getProducts() {
+    public ArrayList<Product> getProducts(int tracker) {
         ArrayList<Product> products = new ArrayList<>();
 
         // SQL query
-        String sql = "SELECT id, brand_id, category_id,name, description,price,stock " + "FROM products";
+        String sql = "SELECT id, brand_id, category_id,name, description,price,stock " + "FROM products" + "WHERE id > " + tracker;
 
         try (Connection connection = getConnection(connectionString); Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 

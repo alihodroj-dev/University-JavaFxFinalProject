@@ -12,7 +12,7 @@ public class UserManager extends BaseManager {
     public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<>();
 
-        String sql = "SELECT id, first_name , last_name , password, email, phone_number, role FROM users";
+        String sql = "SELECT id, first_name , last_name , password, email, phone_number, role FROM users ORDER BY id ASC";
 
         try (Connection connection = getConnection(connectionString);
              Statement stmt = connection.createStatement();
@@ -41,7 +41,7 @@ public class UserManager extends BaseManager {
 
 
     public User getUserById(int userId) {
-        String sql = "SELECT id, first_name, last_name, email, password, phone_number , role FROM users WHERE id = ?";
+        String sql = "SELECT id, first_name, last_name, email, password, phone_number , role FROM users WHERE id = ? LIMIT 1";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
