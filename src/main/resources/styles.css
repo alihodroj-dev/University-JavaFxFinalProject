@@ -5,6 +5,24 @@
     -fx-text-fill: #343a40;
 }
 
+.sidebar {
+    -fx-background-color: #333333;
+}
+
+.sidebar-button {
+        -fx-background-color: #333333;
+        -fx-text-fill: #E0E0E0;
+        -fx-padding: 6px 16px;
+        -fx-background-radius: 6px;
+        -fx-border-radius: 6px;
+        -fx-font-size: 18px;
+        -fx-font-weight: bold;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #666666;
+}
+
 .card {
     -fx-background-color: #ffffff;
     -fx-border-color: #e9ecef;
@@ -137,13 +155,6 @@
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #343a40;
-}
-
-.sidebar {
-    -fx-background-color: #343a40;
-    -fx-text-fill: #f8f9fa;
-    -fx-padding: 20px;
-    -fx-spacing: 15px;
 }
 
 .sidebar-item {

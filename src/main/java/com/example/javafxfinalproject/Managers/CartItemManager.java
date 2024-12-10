@@ -1,4 +1,4 @@
-package com.example.javafxfinalproject.Models.Managers;
+package com.example.javafxfinalproject.Managers;
 
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.CartItem;

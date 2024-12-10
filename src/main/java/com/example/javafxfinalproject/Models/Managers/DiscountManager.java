@@ -1,5 +1,6 @@
 package com.example.javafxfinalproject.Models.Managers;
 
+import com.example.javafxfinalproject.Managers.BaseManager;
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.Discount;
 

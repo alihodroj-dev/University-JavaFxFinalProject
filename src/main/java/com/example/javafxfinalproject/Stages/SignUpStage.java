@@ -4,6 +4,10 @@ import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.MessageLabel;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.SecureFormField;
+import com.example.javafxfinalproject.Models.ActionResult;
+import com.example.javafxfinalproject.Managers.AuthManager;
+import com.example.javafxfinalproject.Models.Status;
+import com.example.javafxfinalproject.Models.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,14 +20,15 @@ import javafx.stage.Stage;
 public class SignUpStage extends Stage {
     final private FormField firstNameField = new FormField("First Name", "Joseph");
     final private FormField lastNameField = new FormField("Last Name", "Gemayel");
+    final private FormField phoneNumberField = new FormField("Phone Number", "03 554 042");
     final private FormField emailField = new FormField("Email", "example@example.com");
     final private SecureFormField passwordField = new SecureFormField("Password", "********");
     final private SecureFormField confirmPasswordField = new SecureFormField("Password", "********");
     final private MessageLabel messageLabel = new MessageLabel("");
     public SignUpStage(LoginStage loginStage) {
         // window properties
-        final int mainWidth = 400;
-        final int mainHeight = 650;
+        final int mainWidth = 450;
+        final int mainHeight = 700;
 
         // main container
         VBox mainContainer = new VBox(40);
@@ -38,7 +43,7 @@ public class SignUpStage extends Stage {
         // form container
         VBox formContainer = new VBox(10);
         formContainer.setPadding(new Insets(0, 50, 0, 50));
-        formContainer.getChildren().addAll(firstNameField, lastNameField, emailField, passwordField, confirmPasswordField);
+        formContainer.getChildren().addAll(firstNameField, lastNameField, phoneNumberField, emailField, passwordField, confirmPasswordField);
 
         // buttons container
         HBox buttonsContainer = new HBox(10);
@@ -65,13 +70,35 @@ public class SignUpStage extends Stage {
     }
 
     private void createButtonAction() {
-        if(emailField.getInputText().isEmpty() || passwordField.getInputText().isEmpty()) {
+        if(firstNameField.getInputText().isEmpty() ||
+                lastNameField.getInputText().isEmpty() ||
+                emailField.getInputText().isEmpty() ||
+                passwordField.getInputText().isEmpty() ||
+                confirmPasswordField.getInputText().isEmpty()) {
             // display error message
             messageLabel.setTextFill(Color.RED);
             messageLabel.setText("Fields should not be empty!");
             messageLabel.playAnimation();
         } else {
-            // try catch block with error handling
+            try {
+                AuthManager auth = new AuthManager();
+                ActionResult<User> response = auth.signUp(
+                        firstNameField.getInputText(),
+                        lastNameField.getInputText(),
+                        emailField.getInputText(),
+                        passwordField.getInputText(),
+                        phoneNumberField.getInputText()
+                        );
+
+                if(response.getStatus() == Status.ERROR) {
+                    messageLabel.setText(response.getMessage());
+                    messageLabel.setTextFill(Color.RED);
+                    messageLabel.playAnimation();
+                } else {
+                    System.out.println("SIGNUP SUCCESS!!!");
+                }
+            } catch (Exception ignored) {
+            }
         }
     }
 

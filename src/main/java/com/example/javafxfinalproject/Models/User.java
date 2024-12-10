@@ -2,10 +2,8 @@ package com.example.javafxfinalproject.Models;
 
 public class User {
     private int id;
-    private String username;
     private String password;
     private String email;
-    private String password;
     private String firstName;
     private String lastName;
     private String phoneNumber;
