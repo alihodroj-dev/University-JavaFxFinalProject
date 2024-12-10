@@ -1,9 +1,7 @@
-
-
 /* Basic Styles */
 .root {
     -fx-font-family: 'Segoe UI', sans-serif;
-    -fx-background-color: #ffffff;
+    -fx-background-color: #121212;
     -fx-text-fill: #343a40;
 }
 

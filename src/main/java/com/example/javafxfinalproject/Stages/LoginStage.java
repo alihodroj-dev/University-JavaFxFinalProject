@@ -23,7 +23,8 @@ public class LoginStage extends Stage {
     // view elements
     final private FormField emailField = new FormField("Email", "example@example.com");
     final private SecureFormField passwordField = new SecureFormField("Password", "********");
-    final private Label messageLabel = new Label("");
+    final private MessageLabel messageLabel = new MessageLabel("");
+    private boolean isSignUpStageOpen = false;
     public LoginStage() {
         // window properties
         final int mainWidth = 700;
@@ -44,7 +45,6 @@ public class LoginStage extends Stage {
         rightSide.setPrefWidth((double) mainWidth / 2);
         rightSide.setPrefHeight(mainHeight);
         rightSide.setAlignment(Pos.CENTER);
-        rightSide.setStyle("-fx-background-color: #121212;");
 
         // heading
         Label heading = new Label("Login");
@@ -65,13 +65,13 @@ public class LoginStage extends Stage {
 
         // creating buttons
         PrimaryButton submitBtn = new PrimaryButton("Submit");
-        PrimaryButton registerBtn = new PrimaryButton("Sign Up");
+        PrimaryButton signUpBtn = new PrimaryButton("Sign Up");
 
         // setting button actions
         submitBtn.setOnAction(e -> submitButtonAction());
 
         // adding buttons to parent container
-        buttons.getChildren().addAll(submitBtn, registerBtn);
+        buttons.getChildren().addAll(submitBtn, signUpBtn);
 
         // adding elements to right container
         rightSide.getChildren().addAll(heading, fields, buttons, messageLabel);
@@ -92,19 +92,8 @@ public class LoginStage extends Stage {
             // display error message
             messageLabel.setTextFill(Color.RED);
             messageLabel.setText("Fields should not be empty!");
-            // fade in animation
-            FadeTransition tIn = new FadeTransition(Duration.millis(500), messageLabel);
-            tIn.setFromValue(0);
-            tIn.setToValue(1);
-            tIn.play();
-            // fade out animation
-            FadeTransition tOut = new FadeTransition(Duration.millis(500), messageLabel);
-            tOut.setFromValue(1);
-            tOut.setToValue(0);
-            tOut.setDelay(Duration.millis(2000));
-            tOut.play();
-        }
-        else {
+            messageLabel.playAnimation();
+        } else {
             try
             {
                 AuthManager auth = new AuthManager();
@@ -125,5 +114,28 @@ public class LoginStage extends Stage {
 
             }
         }
+    }
+
+    private void signUpButtonAction() {
+        if(!isSignUpStageOpen) {
+            SignUpStage signUpStage = new SignUpStage(this);
+            isSignUpStageOpen = true;
+        }
+    }
+
+    public FormField getEmailField() {
+        return emailField;
+    }
+
+    public SecureFormField getPasswordField() {
+        return passwordField;
+    }
+
+    public Label getMessageLabel() {
+        return messageLabel;
+    }
+
+    public void setSignUpStageOpen(boolean signUpStageOpen) {
+        this.isSignUpStageOpen = signUpStageOpen;
     }
 }
