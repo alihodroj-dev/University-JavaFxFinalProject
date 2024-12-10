@@ -3,7 +3,6 @@ package com.example.javafxfinalproject.Models.Managers;
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.User;
 
-import javax.lang.model.type.NullType;
 import java.sql.*;
 
 import static java.sql.DriverManager.getConnection;

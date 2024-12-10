@@ -1,9 +1,14 @@
 package com.example.javafxfinalproject.Models.Managers;
 
 import com.example.javafxfinalproject.Models.CartItem;
-import java.sql.*;
-import static java.sql.DriverManager.getConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import static java.sql.DriverManager.getConnection;
 
 
 public class CartItemManager extends BaseManager {

@@ -1,8 +1,5 @@
 package com.example.javafxfinalproject.Models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Order {
     private int id;
     private int userId;

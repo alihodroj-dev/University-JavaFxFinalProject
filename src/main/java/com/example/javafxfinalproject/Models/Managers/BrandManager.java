@@ -5,7 +5,6 @@ import com.example.javafxfinalproject.Models.Brand;
 import java.sql.*;
 import java.util.ArrayList;
 
-
 import static java.sql.DriverManager.getConnection;
 
 public class BrandManager extends BaseManager {

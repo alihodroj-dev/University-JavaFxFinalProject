@@ -4,7 +4,6 @@ import com.example.javafxfinalproject.Models.Category;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
 

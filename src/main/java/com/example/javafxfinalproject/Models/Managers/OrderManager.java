@@ -1,8 +1,11 @@
 package com.example.javafxfinalproject.Models.Managers;
 
-import com.example.javafxfinalproject.Models.*;
+import com.example.javafxfinalproject.Models.Order;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import static java.sql.DriverManager.getConnection;

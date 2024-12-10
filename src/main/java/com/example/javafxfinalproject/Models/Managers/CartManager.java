@@ -2,7 +2,10 @@ package com.example.javafxfinalproject.Models.Managers;
 
 import com.example.javafxfinalproject.Models.Cart;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static java.sql.DriverManager.getConnection;
 

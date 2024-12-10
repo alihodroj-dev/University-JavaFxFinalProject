@@ -1,7 +1,5 @@
 package com.example.javafxfinalproject.Models.Managers;
 
-import com.example.javafxfinalproject.Models.Brand;
-import com.example.javafxfinalproject.Models.Category;
 import com.example.javafxfinalproject.Models.Product;
 
 import java.sql.Connection;
