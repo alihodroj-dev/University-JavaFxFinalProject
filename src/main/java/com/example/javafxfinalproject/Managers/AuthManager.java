@@ -1,6 +1,5 @@
 package com.example.javafxfinalproject.Managers;
 
-import com.example.javafxfinalproject.Helpers.LogFileHelper;
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.User;
 
@@ -12,7 +11,7 @@ public class AuthManager extends BaseManager {
 
 
     public ActionResult<User> login(String email, String password) {
-        String sql = "SELECT id, first_name , last_name , email, phone_number, password FROM users WHERE username = ?";
+        String sql = "SELECT id, first_name , last_name , email, phone_number, password, role FROM users WHERE username = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -30,7 +29,8 @@ public class AuthManager extends BaseManager {
                         String phoneNumber = rs.getString("phone_number");
                         String firstName = rs.getString("first_name");
                         String lastName = rs.getString("last_name");
-                        User user = new User(userId, firstName , lastName , null, email, phoneNumber);
+                        String role = rs.getString("role");
+                        User user = new User(userId, firstName , lastName , null, email, phoneNumber, role);
                         return ActionResult.success(user, "logged In Successfully");
                     } else {
                         return ActionResult.error(null, "Invalid Credentials");
@@ -40,14 +40,14 @@ public class AuthManager extends BaseManager {
                 }
             }
         } catch (SQLException e) {
-            LogFileHelper.log(e);
+            e.printStackTrace();
             return ActionResult.error(null, "An Error Occurred, please try again later.");
         }
     }
 
     // Method to handle user registration
-    public ActionResult<User> signUp(String firstname, String lastname , String email, String phoneNumber, String password) {
-        String sql = "INSERT INTO users (first_name , last_name , email, phone_number, password) VALUES (?, ?, ?, ?, ?)";
+    public ActionResult<User> register(String firstname, String lastname , String email, String phoneNumber, String password) {
+        String sql = "INSERT INTO users (first_name , last_name , email, phone_number, password, role) VALUES (?, ?, ?, ?, ? , customer)";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { // Request generated keys
@@ -69,7 +69,7 @@ public class AuthManager extends BaseManager {
                         int newUserId = generatedKeys.getInt(1); // The first generated key is the id
 
                         // Create a new User object with the generated id and other data
-                        User newUser = new User(newUserId, firstname, lastname, password, email, phoneNumber);
+                        User newUser = new User(newUserId, firstname, lastname, password, email, phoneNumber, "customer");
                         return ActionResult.success(newUser, "Registration successful");
                     } else {
                         return ActionResult.error(null, "Registration failed");
@@ -79,7 +79,7 @@ public class AuthManager extends BaseManager {
                 return ActionResult.error(null, "Registration failed");
             }
         } catch (SQLException e) {
-            LogFileHelper.log(e);
+            e.printStackTrace();
             return ActionResult.error(null, "Database error: " + e.getMessage());
         }
     }

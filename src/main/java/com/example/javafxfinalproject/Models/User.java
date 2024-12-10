@@ -7,15 +7,17 @@ public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private String role;
 
     public User() {}
-    public User(int id, String firstName , String lastName , String password, String email, String phoneNumber) {
+    public User(int id, String firstName , String lastName , String password, String email, String phoneNumber, String role) {
         this.id = id;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.role = role;
     }
 
     public int getId() {
@@ -64,5 +66,13 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

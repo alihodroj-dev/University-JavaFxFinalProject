@@ -1,9 +1,7 @@
 package com.example.javafxfinalproject.Managers;
 
 import com.example.javafxfinalproject.Models.ActionResult;
-import com.example.javafxfinalproject.Models.Order;
 import com.example.javafxfinalproject.Models.Product;
-import com.example.javafxfinalproject.Models.User;
 
 import java.sql.*;
 import java.util.ArrayList;
