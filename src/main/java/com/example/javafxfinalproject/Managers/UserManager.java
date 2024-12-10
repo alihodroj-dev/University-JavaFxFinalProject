@@ -41,7 +41,7 @@ public class UserManager extends BaseManager {
 
 
     public User getUserById(int userId) {
-        String sql = "SELECT id, first_name, last_name, email, password, phone_number , role FROM users WHERE id = ? LIMIT 1";
+        String sql = "SELECT id, first_name, last_name, email, password, phone_number , role FROM users WHERE id = ? LIMIT 1 AND role = 'customer'";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -75,6 +75,7 @@ public class UserManager extends BaseManager {
             return ActionResult.error(null, "User not found");
         }
         user.setPassword(existingUser.getPassword());
+        user.setRole(existingUser.getRole());
 
         String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, phone_number = ?, password = ? WHERE id = ?";
 

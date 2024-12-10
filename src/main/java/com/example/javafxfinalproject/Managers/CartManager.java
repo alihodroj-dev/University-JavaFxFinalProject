@@ -1,7 +1,6 @@
 package com.example.javafxfinalproject.Managers;
 
 import com.example.javafxfinalproject.Models.*;
-import com.example.javafxfinalproject.Models.Managers.DiscountManager;
 
 import java.sql.*;
 import java.util.ArrayList;

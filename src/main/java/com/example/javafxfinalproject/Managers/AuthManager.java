@@ -46,7 +46,7 @@ public class AuthManager extends BaseManager {
     }
 
     // Method to handle user registration
-    public ActionResult<User> register(String firstname, String lastname , String email, String phoneNumber, String password) {
+    public ActionResult<User> signUp(String firstname, String lastname , String email, String phoneNumber, String password) {
         String sql = "INSERT INTO users (first_name , last_name , email, phone_number, password, role) VALUES (?, ?, ?, ?, ? , customer)";
 
         try (Connection connection = getConnection(connectionString);
