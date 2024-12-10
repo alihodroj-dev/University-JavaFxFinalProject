@@ -29,4 +29,8 @@ public class FormField extends VBox {
         return inputField.getText();
     }
 
+    public void setInputText(String newValue) {
+        this.inputField.setText(newValue);
+    }
+
 }

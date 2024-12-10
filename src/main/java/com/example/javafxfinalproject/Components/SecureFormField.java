@@ -28,5 +28,8 @@ public class SecureFormField extends VBox {
     public String getInputText() {
         return inputField.getText();
     }
+    public void setInputText(String newValue) {
+        this.inputField.setText(newValue);
+    }
 
 }

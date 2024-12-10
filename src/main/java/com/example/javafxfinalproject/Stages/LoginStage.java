@@ -108,7 +108,10 @@ public class LoginStage extends Stage {
                     messageLabel.playAnimation();
                 }
                 else {
-                    System.out.println("LOGIN SUCCESS!!!");
+                    if(response.getData().getRole().equalsIgnoreCase("admin")) {
+                        AdminStage adminStage = new AdminStage(response.getData());
+                        this.close();
+                    }
                 }
             }
             catch (Exception ignored)

@@ -1,5 +1,6 @@
 package com.example.javafxfinalproject;
 
+import com.example.javafxfinalproject.Models.User;
 import com.example.javafxfinalproject.Stages.AdminStage;
 import com.example.javafxfinalproject.Stages.LoginStage;
 import javafx.application.Application;
@@ -12,10 +13,10 @@ public class MotoCenterApp extends Application {
     public void start(Stage stage) {
 
         // MARK: login
-//        LoginStage loginStage = new LoginStage();
+        LoginStage loginStage = new LoginStage();
 
         // MARK: admin
-        AdminStage adminStage = new AdminStage();
+//        AdminStage adminStage = new AdminStage(new User());
 
     }
 

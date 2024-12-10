@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class AdminStage extends Stage {
-    public AdminStage() {
+    public AdminStage(User userAccount) {
         // window properties
         final int mainWidth = 1400;
         final int mainHeight = 800;
@@ -90,6 +90,9 @@ public class AdminStage extends Stage {
         ImageView settingsIcon = new ImageView("settings.png");
         settingsIcon.setFitWidth(25);
         settingsIcon.setFitHeight(25);
+        settingsIcon.setOnMousePressed(e -> {
+            SettingsStage settingsStage = new SettingsStage(userAccount);
+        });
 
         settingIconWrapper.getChildren().add(settingsIcon);
 
@@ -146,8 +149,8 @@ public class AdminStage extends Stage {
             saveBtn.setFitHeight(25);
 
             saveBtn.setOnMouseClicked(e -> {
-                User userToBeSaved = new User(Integer.parseInt(id.getInputText()), fname.getInputText(), lname.getInputText(), "", email.getInputText(), phoneNumber.getInputText());
-
+                User userToBeSaved = new User(Integer.parseInt(id.getInputText()), fname.getInputText(), lname.getInputText(), "", email.getInputText(), phoneNumber.getInputText(), "admin");
+                new UserManager().updateUser(userToBeSaved);
             });
 
             ImageView deleteBtn = new ImageView("delete.png");

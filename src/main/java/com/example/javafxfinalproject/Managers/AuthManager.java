@@ -11,7 +11,7 @@ public class AuthManager extends BaseManager {
 
 
     public ActionResult<User> login(String email, String password) {
-        String sql = "SELECT id, first_name , last_name , email, phone_number, password, role FROM users WHERE username = ?";
+        String sql = "SELECT id, first_name , last_name , email, phone_number, password, role FROM users WHERE email = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
