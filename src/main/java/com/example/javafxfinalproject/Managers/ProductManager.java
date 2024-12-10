@@ -15,23 +15,30 @@ public class ProductManager extends BaseManager {
         ArrayList<Product> products = new ArrayList<>();
 
         // SQL query
-        String sql = "SELECT id, brand_id, category_id,name, description,price,stock " + "FROM products" + "WHERE id > " + tracker;
+        String sql = "SELECT id, brand_id, category_id, name, description, price, stock " +
+                "FROM products " +
+                "WHERE id > ?";
 
-        try (Connection connection = getConnection(connectionString); Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
-            // Iterate through the result set and map data to Product objects
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                double price = rs.getDouble("price");
-                int stock = rs.getInt("stock");
-                int brandId = rs.getInt("brand_id");
-                int categoryId = rs.getInt("category_id");
+        try (Connection connection = getConnection(connectionString);  ) {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, tracker);
+            try (ResultSet rs = ps.executeQuery()) {
 
-                // Create Product object and add it to the list
-                Product product = new Product(id, brandId, categoryId, name, description, price, stock);
-                products.add(product);
+                // Iterate through the result set and map data to Product objects
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("name");
+                    String description = rs.getString("description");
+                    double price = rs.getDouble("price");
+                    int stock = rs.getInt("stock");
+                    int brandId = rs.getInt("brand_id");
+                    int categoryId = rs.getInt("category_id");
+
+                    // Create Product object and add it to the list
+                    Product product = new Product(id, brandId, categoryId, name, description, price, stock);
+                    products.add(product);
+                }
             }
 
         } catch (SQLException e) {
