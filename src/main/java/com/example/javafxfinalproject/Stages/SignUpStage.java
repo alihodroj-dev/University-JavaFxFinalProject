@@ -4,7 +4,6 @@ import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.MessageLabel;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.SecureFormField;
-import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class SignUpStage extends Stage {
     final private FormField firstNameField = new FormField("First Name", "Joseph");
