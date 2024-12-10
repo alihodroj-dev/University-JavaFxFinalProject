@@ -3,6 +3,10 @@ package com.example.javafxfinalproject.Stages;
 import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.SecureFormField;
+import com.example.javafxfinalproject.Models.ActionResult;
+import com.example.javafxfinalproject.Models.Managers.AuthManager;
+import com.example.javafxfinalproject.Models.Status;
+import com.example.javafxfinalproject.Models.User;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -99,8 +103,27 @@ public class LoginStage extends Stage {
             tOut.setToValue(0);
             tOut.setDelay(Duration.millis(2000));
             tOut.play();
-        } else {
-            // try catch block with error handling
+        }
+        else {
+            try
+            {
+                AuthManager auth = new AuthManager();
+                String email = emailField.getInputText();
+                String password = passwordField.getInputText();
+
+                ActionResult<User> response = auth.login(email , password);
+
+                if(response.getStatus() == Status.ERROR) {
+                    // message label here
+                }
+                else {
+                    // navigate to user stage
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
         }
     }
 }
