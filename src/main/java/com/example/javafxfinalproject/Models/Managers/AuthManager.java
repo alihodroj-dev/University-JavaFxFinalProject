@@ -53,9 +53,10 @@ public class AuthManager extends BaseManager {
 
             // Set parameters for the SQL query
             stmt.setString(1, firstname);
-            stmt.setString(2, email);
-            stmt.setString(3, phoneNumber);
-            stmt.setString(4, password);
+            stmt.setString(2, lastname);
+            stmt.setString(3, email);
+            stmt.setString(4, phoneNumber);
+            stmt.setString(5, password);
 
             // Execute the insert operation
             int affectedRows = stmt.executeUpdate();

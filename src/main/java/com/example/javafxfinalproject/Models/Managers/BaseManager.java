@@ -1,5 +1,5 @@
 package com.example.javafxfinalproject.Models.Managers;
 
 public class BaseManager {
-    protected final String connectionString = "jdbc:postgresql://ep-lively-rain-a2ixsukt.eu-central-1.aws.neon.tech/javafx-demo-1?user=javafx-demo-1_owner&password=mCU34cBibVpN&sslmode=require";
+    protected final String connectionString = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres?user=postgres.trrqccfwcijxtlrdwxuc&password=0ieIzEv9kAiKvSLE";
 }
