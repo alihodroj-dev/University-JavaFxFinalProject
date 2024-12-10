@@ -77,14 +77,14 @@ public class CartItemManager extends BaseManager {
     }
 
     // Update an existing cart item
-    public ActionResult<String> updateCartItem(int id, int quantity) {
+    public ActionResult<String> updateCartItem(CartItem cartItem) {
         String sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setInt(1, quantity);
-            stmt.setInt(2, id); // Set the cart item ID to identify the record
+            stmt.setInt(1, cartItem.getQuantity());
+            stmt.setInt(2, cartItem.getId()); // Set the cart item ID to identify the record
 
             int affectedRows = stmt.executeUpdate();
 

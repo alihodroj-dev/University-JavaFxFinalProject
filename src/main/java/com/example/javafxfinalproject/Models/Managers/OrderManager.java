@@ -118,19 +118,19 @@ public class OrderManager extends BaseManager {
         return null; // dead code
     }
 
-    public ActionResult<String> updateOrder(int orderId, int userId, int addressId, double totalAmount, String status, int discountId) {
+    public ActionResult<String> updateOrder(Order order) {
         String sql = "UPDATE orders SET user_id = ?, address_id = ?, total_amount = ?, status = ?, discount_id = ? WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             // Set the parameters for the SQL statement
-            stmt.setInt(1, userId);
-            stmt.setInt(2, addressId);
-            stmt.setDouble(3, totalAmount);
-            stmt.setString(4, status);
-            stmt.setInt(5, discountId);
-            stmt.setInt(6, orderId);  // Set the order ID to identify the record
+            stmt.setInt(1, order.getUserId());
+            stmt.setInt(2, order.getAddressId());
+            stmt.setDouble(3, order.getTotalAmount());
+            stmt.setString(4, order.getStatus());
+            stmt.setInt(5, order.getDiscountId());
+            stmt.setInt(6, order.getId());  // Set the order ID to identify the record
 
             int affectedRows = stmt.executeUpdate();
 

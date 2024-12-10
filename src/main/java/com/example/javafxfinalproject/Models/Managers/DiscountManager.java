@@ -105,21 +105,20 @@ public class DiscountManager extends BaseManager {
     }
 
     // Update an existing discount
-    public ActionResult<Discount> updateDiscount(int discountId, String code, Date expiryDate, double discountedAmount) {
+    public ActionResult<String> updateDiscount(Discount discount) {
         String sql = "UPDATE discounts SET code = ?, expiry_date = ?, discounted_amount = ? WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setString(1, code);
-            stmt.setDate(2, expiryDate);
-            stmt.setDouble(3, discountedAmount);
-            stmt.setInt(4, discountId);
+            stmt.setString(1, discount.getCode());
+            stmt.setDate(2, (Date) discount.getExpiryDate());
+            stmt.setDouble(3, discount.getDiscounted_amount());
+            stmt.setInt(4, discount.getId());
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
-                Discount updatedDiscount = new Discount(discountId, code, expiryDate, discountedAmount);
-                return ActionResult.success(updatedDiscount, "Discount updated successfully");
+                return ActionResult.success(null, "Discount updated successfully");
             }
         } catch (SQLException e) {
             e.printStackTrace();

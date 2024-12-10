@@ -73,16 +73,16 @@ public class OrderItemManager extends BaseManager {
         }
         return ActionResult.error(null, "Could not add order item, please try again");
     }
-    public ActionResult<String> updateOrderItem(int id, int quantity, double price) {
+    public ActionResult<String> updateOrderItem(OrderItem orderItem) {
         String sql = "UPDATE order_items SET quantity = ?, price = ? WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             // Set the parameters for the SQL statement
-            stmt.setInt(1, quantity);
-            stmt.setDouble(2, price);
-            stmt.setInt(3, id);  // Set the order item ID to identify the record
+            stmt.setInt(1, orderItem.getQuantity());
+            stmt.setDouble(2, orderItem.getPrice());
+            stmt.setInt(3, orderItem.getId());  // Set the order item ID to identify the record
 
             int affectedRows = stmt.executeUpdate();
 

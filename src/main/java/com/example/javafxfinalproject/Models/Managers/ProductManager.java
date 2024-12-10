@@ -117,7 +117,7 @@ public class ProductManager extends BaseManager {
         }
     }
 
-    public ActionResult<String> updateProduct(int productId, String name, String description, int brandId, int categoryId, double price, int stock) {
+    public ActionResult<String> updateProduct(Product product) {
         // SQL query to update the product
         String sql = "UPDATE products SET name = ?, description = ?, brand_id = ?, category_id = ?, price = ?, stock = ? WHERE id = ?";
 
@@ -125,13 +125,13 @@ public class ProductManager extends BaseManager {
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             // Set the parameters for the SQL statement
-            stmt.setString(1, name);
-            stmt.setString(2, description);
-            stmt.setInt(3, brandId);
-            stmt.setInt(4, categoryId);
-            stmt.setDouble(5, price);
-            stmt.setInt(6, stock);
-            stmt.setInt(7, productId);  // Specify the product ID to identify which record to update
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setInt(3, product.getBrandId());
+            stmt.setInt(4, product.getCategoryId());
+            stmt.setDouble(5, product.getPrice());
+            stmt.setInt(6, product.getCategoryId());
+            stmt.setInt(7, product.getId());  // Specify the product ID to identify which record to update
 
             // Execute the update and check the affected rows
             int affectedRows = stmt.executeUpdate();
