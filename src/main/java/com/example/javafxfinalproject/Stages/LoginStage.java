@@ -1,6 +1,7 @@
 package com.example.javafxfinalproject.Stages;
 
 import com.example.javafxfinalproject.Components.FormField;
+import com.example.javafxfinalproject.Components.MessageLabel;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.SecureFormField;
 import com.example.javafxfinalproject.Models.ActionResult;
@@ -69,6 +70,7 @@ public class LoginStage extends Stage {
 
         // setting button actions
         submitBtn.setOnAction(e -> submitButtonAction());
+        signUpBtn.setOnAction(e -> signUpButtonAction());
 
         // adding buttons to parent container
         buttons.getChildren().addAll(submitBtn, signUpBtn);
@@ -93,6 +95,17 @@ public class LoginStage extends Stage {
             messageLabel.setTextFill(Color.RED);
             messageLabel.setText("Fields should not be empty!");
             messageLabel.playAnimation();
+//            // fade in animation
+//            FadeTransition tIn = new FadeTransition(Duration.millis(500), messageLabel);
+//            tIn.setFromValue(0);
+//            tIn.setToValue(1);
+//            tIn.play();
+//            // fade out animation
+//            FadeTransition tOut = new FadeTransition(Duration.millis(500), messageLabel);
+//            tOut.setFromValue(1);
+//            tOut.setToValue(0);
+//            tOut.setDelay(Duration.millis(2000));
+//            tOut.play();
         } else {
             try
             {

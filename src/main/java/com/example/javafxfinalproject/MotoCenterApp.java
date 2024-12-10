@@ -1,18 +1,7 @@
 package com.example.javafxfinalproject;
 
-import com.example.javafxfinalproject.Components.FormField;
-import com.example.javafxfinalproject.Components.PrimaryButton;
-import com.example.javafxfinalproject.Models.ActionResult;
-//import com.example.javafxfinalproject.Managers.AuthManager;
-import com.example.javafxfinalproject.Models.Status;
-import com.example.javafxfinalproject.Models.User;
 import com.example.javafxfinalproject.Stages.LoginStage;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class MotoCenterApp extends Application {
