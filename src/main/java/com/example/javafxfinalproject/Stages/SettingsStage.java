@@ -4,6 +4,7 @@ import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.MessageLabel;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.SecureFormField;
+import com.example.javafxfinalproject.Managers.UserManager;
 import com.example.javafxfinalproject.Models.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -48,7 +49,7 @@ public class SettingsStage extends Stage {
         PrimaryButton updateBtn = new PrimaryButton("Update");
 
         backBtn.setOnAction(e -> { this.close(); });
-        updateBtn.setOnAction(e -> updateButtonAction());
+        updateBtn.setOnAction(e -> updateButtonAction(userAccount));
 
         buttonsContainer.getChildren().addAll(backBtn, updateBtn);
 
@@ -70,7 +71,8 @@ public class SettingsStage extends Stage {
         this.show();
     }
 
-    private void updateButtonAction() {
-
+    private void updateButtonAction(User userAccount) {
+        User newUser = new User(userAccount.getId(), firstNameField.getInputText(), lastNameField.getInputText(), "", emailField.getInputText(), phoneNumberField.getInputText(), userAccount.getRole());
+        new UserManager().updateUser(newUser);
     }
 }
