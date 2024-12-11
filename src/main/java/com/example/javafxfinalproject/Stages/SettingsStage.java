@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class SettingsStage extends Stage {
@@ -21,7 +22,7 @@ public class SettingsStage extends Stage {
     final private FormField emailField = new FormField("Email", "example@example.com");
     final private SecureFormField passwordField = new SecureFormField("Password", "********");
     final private MessageLabel messageLabel = new MessageLabel("");
-    public SettingsStage(User userAccount) {
+    public SettingsStage(User userAccount, AdminStage adminStage) {
         // window properties
         final int mainWidth = 450;
         final int mainHeight = 700;
@@ -48,8 +49,8 @@ public class SettingsStage extends Stage {
         PrimaryButton backBtn = new PrimaryButton("Back");
         PrimaryButton updateBtn = new PrimaryButton("Update");
 
-        backBtn.setOnAction(e -> { this.close(); });
-        updateBtn.setOnAction(e -> updateButtonAction(userAccount));
+        backBtn.setOnAction(e -> { adminStage.setSettingsStageOpen(false); this.close(); });
+        updateBtn.setOnAction(e -> updateButtonAction(userAccount, adminStage));
 
         buttonsContainer.getChildren().addAll(backBtn, updateBtn);
 
@@ -68,11 +69,26 @@ public class SettingsStage extends Stage {
         this.setTitle("MotoCenter Dealership - Settings");
         this.setScene(mainScene);
         this.setResizable(false);
+        this.setOnCloseRequest(e -> {
+            adminStage.setSettingsStageOpen(false);
+        });
         this.show();
     }
 
-    private void updateButtonAction(User userAccount) {
-        User newUser = new User(userAccount.getId(), firstNameField.getInputText(), lastNameField.getInputText(), "", emailField.getInputText(), phoneNumberField.getInputText(), userAccount.getRole());
-        new UserManager().updateUser(newUser);
+    private void updateButtonAction(User userAccount, AdminStage adminStage) {
+        if (firstNameField.getInputText().isEmpty() ||
+                lastNameField.getInputText().isEmpty() ||
+                emailField.getInputText().isEmpty() ||
+                phoneNumberField.getInputText().isEmpty() ||
+                passwordField.getInputText().isEmpty()) {
+            messageLabel.setText("Fields shouldn't be empty!");
+            messageLabel.setTextFill(Color.RED);
+            messageLabel.playAnimation();
+        } else {
+            User newUser = new User(userAccount.getId(), firstNameField.getInputText(), lastNameField.getInputText(), "", emailField.getInputText(), phoneNumberField.getInputText(), userAccount.getRole());
+            new UserManager().updateUser(newUser);
+            adminStage.setSettingsStageOpen(false);
+            this.close();
+        }
     }
 }

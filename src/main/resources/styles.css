@@ -5,6 +5,36 @@
     -fx-text-fill: #343a40;
 }
 
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.scroll-pane {
+   -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #333333;
+    -fx-background-radius: 5em;
+}
+
 .sidebar {
     -fx-background-color: #333333;
 }
@@ -218,4 +248,32 @@
     -fx-padding: 6px 12px;
     -fx-background-radius: 5px;
     -fx-font-size: 12px;
+}
+
+.combo-box-base {
+	-fx-background-color: #333333;
+	-fx-background-radius: 6px;
+}
+.combo-box-base:hover {
+	-fx-background-color: #333333;
+}
+.combo-box-base:disabled {
+	-fx-background-color: gray;
+}
+.combo-box .list-cell {
+	-fx-text-fill: #E0E0E0;
+}
+.combo-box-base .arrow-button .arrow {
+	-fx-background-color: #E0E0E0;
+}
+/* WHILE OPEN */
+.combo-box-base:showing {
+	-fx-background-color: #333333;
+}
+.combo-box .combo-box-popup .list-view .list-cell {
+	-fx-background-color: gray;
+}
+.combo-box .combo-box-popup .list-view .list-cell:hover,
+.combo-box .combo-box-popup .list-view .list-cell:selected {
+	-fx-background-color: #333333;
 }

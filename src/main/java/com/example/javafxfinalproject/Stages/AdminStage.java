@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import static com.example.javafxfinalproject.Components.Toast.showToast;
 
 public class AdminStage extends Stage {
+    private boolean isSettingsStageOpen = false;
+    private boolean isAddNewProductStageOpen = false;
     public AdminStage(User userAccount) {
         // window properties
         final int mainWidth = 1400;
@@ -54,37 +57,54 @@ public class AdminStage extends Stage {
         buttonsContainer.setAlignment(Pos.CENTER);
         buttonsContainer.setPadding(new Insets(10, 0, 10, 0));
 
-        // products button
+        // customers button
         PrimaryButton customersBtn = new PrimaryButton("Customers");
         customersBtn.setPrefWidth(220);
         customersBtn.getStyleClass().add("sidebar-button");
         customersBtn.setOnAction(e -> {
             mainContainer.getChildren().remove(1);
-            VBox datatable = customersDataTableView(new UserManager().getUsers());
+            ScrollPane datatable = customersDataTableView(new UserManager().getUsers(), mainContainer);
             datatable.setPadding(new Insets(30));
             mainContainer.getChildren().add(datatable);
+            this.setTitle("MotoCenter Dealership - Dashboard - Customers");
         });
 
+        // products button
         PrimaryButton productsBtn = new PrimaryButton("Products");
         productsBtn.setPrefWidth(220);
         productsBtn.getStyleClass().add("sidebar-button");
         productsBtn.setOnAction(e -> {
             mainContainer.getChildren().remove(1);
-            VBox datatable = productsDataTableView(new ProductManager().getProducts(0));
+            ScrollPane datatable = productsDataTableView(new ProductManager().getProducts(0), mainContainer);
             datatable.setPadding(new Insets(30));
             mainContainer.getChildren().add(datatable);
+            this.setTitle("MotoCenter Dealership - Dashboard - Products");
         });
 
+        // orders button
         PrimaryButton ordersBtn = new PrimaryButton("Orders");
         ordersBtn.setPrefWidth(220);
         ordersBtn.getStyleClass().add("sidebar-button");
         ordersBtn.setOnAction(e -> {
             mainContainer.getChildren().remove(1);
-            VBox datatable = ordersDataTableView(new OrderManager().getOrders());
+            ScrollPane datatable = ordersDataTableView(new OrderManager().getOrders(), mainContainer);
             datatable.setPadding(new Insets(30));
             mainContainer.getChildren().add(datatable);
+            this.setTitle("MotoCenter Dealership - Dashboard - Orders");
         });
 
+        // add a new product button
+        PrimaryButton addNewProductButton = new PrimaryButton("Add a product");
+        addNewProductButton.setPrefWidth(220);
+        addNewProductButton.getStyleClass().add("sidebar-button");
+        addNewProductButton.setOnAction(e -> {
+            if(!isAddNewProductStageOpen) {
+                AddNewProductStage addNewProductStage = new AddNewProductStage(this);
+                this.isAddNewProductStageOpen = true;
+            }
+        });
+
+        // logout button
         PrimaryButton logoutBtn = new PrimaryButton("Logout");
         logoutBtn.setPrefWidth(220);
         logoutBtn.getStyleClass().add("sidebar-button");
@@ -99,7 +119,7 @@ public class AdminStage extends Stage {
         });
 
         // adding buttons to container
-        buttonsContainer.getChildren().addAll(customersBtn, productsBtn, ordersBtn, logoutBtn);
+        buttonsContainer.getChildren().addAll(customersBtn, productsBtn, ordersBtn, addNewProductButton, logoutBtn);
 
         // setting top of sidebar to buttons container
         sideBar.setTop(buttonsContainer);
@@ -132,7 +152,10 @@ public class AdminStage extends Stage {
         settingsIcon.setFitWidth(25);
         settingsIcon.setFitHeight(25);
         settingsIcon.setOnMousePressed(e -> {
-            SettingsStage settingsStage = new SettingsStage(new UserManager().getUserById(userAccount.getId()));
+            if(!isSettingsStageOpen) {
+                SettingsStage settingsStage = new SettingsStage(new UserManager().getUserById(userAccount.getId()), this);
+                this.isSettingsStageOpen = true;
+            }
         });
 
         settingIconWrapper.getChildren().add(settingsIcon);
@@ -143,21 +166,21 @@ public class AdminStage extends Stage {
         // setting sidebar footer
         sideBar.setBottom(sideBarFooter);
 
-        VBox datatable = this.customersDataTableView(new UserManager().getUsers());
+        ScrollPane datatable = this.customersDataTableView(new UserManager().getUsers(), mainContainer);
         datatable.setPadding(new Insets(30));
 
         mainContainer.getChildren().addAll(sideBar, datatable);
 
         Scene mainScene = new Scene(mainContainer);
         mainScene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));
-        this.setTitle("MotoCenter Dealership - Dashboard");
+        this.setTitle("MotoCenter Dealership - Dashboard - Customers");
         this.setScene(mainScene);
         this.setResizable(false);
         this.show();
     }
 
-    private VBox customersDataTableView(ArrayList<User> users) {
-        VBox mainContainer = new VBox(0);
+    private ScrollPane customersDataTableView(ArrayList<User> users, HBox parentContainer) {
+        VBox subContainer = new VBox(0);
 
         for(User user : users) {
             HBox userContainer = new HBox(20);
@@ -192,18 +215,28 @@ public class AdminStage extends Stage {
             deleteBtn.setFitWidth(25);
             deleteBtn.setFitHeight(25);
 
+            deleteBtn.setOnMousePressed(e -> {
+                new UserManager().deleteUser(Integer.parseInt(id.getInputText()));
+                parentContainer.getChildren().remove(1);
+                ScrollPane datatable = customersDataTableView(new UserManager().getUsers(), parentContainer);
+                datatable.setPadding(new Insets(30));
+                parentContainer.getChildren().add(datatable);
+            });
+
             saveDeleteContainer.getChildren().addAll(saveBtn, deleteBtn);
 
 
             userContainer.getChildren().addAll(id, email, fname, lname, phoneNumber, saveDeleteContainer);
-            mainContainer.getChildren().add(userContainer);
+            subContainer.getChildren().add(userContainer);
         }
+
+        ScrollPane mainContainer = new ScrollPane(subContainer);
 
         return mainContainer;
     }
 
-    private VBox productsDataTableView(ArrayList<Product> products) {
-        VBox mainContainer = new VBox(0);
+    private ScrollPane productsDataTableView(ArrayList<Product> products, HBox parentContainer) {
+        VBox subContainer = new VBox(0);
 
         for(Product product : products) {
             HBox productContainer = new HBox(20);
@@ -242,18 +275,29 @@ public class AdminStage extends Stage {
             deleteBtn.setFitWidth(25);
             deleteBtn.setFitHeight(25);
 
+            deleteBtn.setOnMousePressed(e -> {
+                new ProductManager().deleteProduct(Integer.parseInt(id.getInputText()));
+                parentContainer.getChildren().remove(1);
+                ScrollPane datatable = productsDataTableView(new ProductManager().getProducts(0), parentContainer);
+                datatable.setPadding(new Insets(30));
+                parentContainer.getChildren().add(datatable);
+
+            });
+
             saveDeleteContainer.getChildren().addAll(saveBtn, deleteBtn);
 
 
             productContainer.getChildren().addAll(id, brandId, categoryId, name, description, price, stock, saveDeleteContainer);
-            mainContainer.getChildren().add(productContainer);
+            subContainer.getChildren().add(productContainer);
         }
 
+        ScrollPane mainContainer = new ScrollPane(subContainer);
+        mainContainer.getStyleClass().add("scroll-pane");
         return mainContainer;
     }
 
-    private VBox ordersDataTableView(ArrayList<Order> orders) {
-        VBox mainContainer = new VBox(0);
+    private ScrollPane ordersDataTableView(ArrayList<Order> orders, HBox parentContainer) {
+        VBox subContainer = new VBox(0);
 
         for(Order order : orders) {
             HBox orderContainer = new HBox(20);
@@ -292,13 +336,31 @@ public class AdminStage extends Stage {
             deleteBtn.setFitWidth(25);
             deleteBtn.setFitHeight(25);
 
+            deleteBtn.setOnMousePressed(e -> {
+                new OrderManager().deleteOrder(Integer.parseInt(id.getInputText()));
+                parentContainer.getChildren().remove(1);
+                ScrollPane datatable = ordersDataTableView(new OrderManager().getOrders(), parentContainer);
+                datatable.setPadding(new Insets(30));
+                parentContainer.getChildren().add(datatable);
+            });
+
             saveDeleteContainer.getChildren().addAll(saveBtn, deleteBtn);
 
 
-            orderContainer.getChildren().addAll(id, userId, addressId, totalAmount, status, isDiscounted, discountId);
-            mainContainer.getChildren().add(orderContainer);
+            orderContainer.getChildren().addAll(id, userId, addressId, totalAmount, status, isDiscounted, discountId, saveDeleteContainer);
+            subContainer.getChildren().add(orderContainer);
         }
 
+        ScrollPane mainContainer = new ScrollPane(subContainer);
+
         return mainContainer;
+    }
+
+    public void setSettingsStageOpen(boolean settingsStageOpen) {
+        isSettingsStageOpen = settingsStageOpen;
+    }
+
+    public void setAddNewProductStageOpen(boolean addNewProductStageOpen) {
+        isAddNewProductStageOpen = addNewProductStageOpen;
     }
 }
