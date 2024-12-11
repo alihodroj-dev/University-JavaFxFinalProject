@@ -158,9 +158,9 @@ public class CustomerStage extends Stage {
         FlowPane flowPane = new FlowPane();
         flowPane.setHgap(20);
         flowPane.setVgap(20);
-        flowPane.setPrefWrapLength(1220);
+        flowPane.setPrefWrapLength(1000);
         flowPane.setAlignment(Pos.CENTER);
-        flowPane.setPadding(new Insets(20 , 20 , 20 , 20));
+        flowPane.setPadding(new Insets(50 , 50 , 50 , 50));
         ArrayList<Product> products = new ProductManager().getProducts(1);
         for(Product product : products) {
             ProductCard productCard = new ProductCard(this , product , this.getWidth() / ((double) products.size() / 2), userCart.getId());
@@ -195,16 +195,18 @@ public class CustomerStage extends Stage {
 
         // Align the button in the center at the bottom
         BorderPane.setAlignment(loadMoreButton, Pos.BOTTOM_RIGHT);
-        BorderPane.setMargin(loadMoreButton, new Insets(10)); // Add some padding/margin
+        BorderPane.setMargin(loadMoreButton, new Insets(10));
 
         return mainPane;
     }
 
-    private VBox cartView(User user) {
+    private ScrollPane cartView(User user) {
+
         Cart cart = new CartManager().getCartByUserId(user.getId());
         ArrayList<CartItem> cartItems = new CartItemManager().getCartItemsByCartId(cart.getId());
 
         VBox listBox = new VBox(10);
+        listBox.setAlignment(Pos.CENTER);
 
         listBox.setPadding(new Insets(50 , 50 , 50 , 50));
 
@@ -213,6 +215,8 @@ public class CustomerStage extends Stage {
             listBox.getChildren().add(cartCard);
         }
 
-        return listBox;
+        ScrollPane scrollPane = new ScrollPane(listBox);
+
+        return scrollPane;
     }
 }

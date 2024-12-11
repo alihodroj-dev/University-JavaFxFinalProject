@@ -16,20 +16,20 @@ import java.util.ArrayList;
 public class TestStage2 extends Stage {
 
     public TestStage2(User user) {
-        Cart cart = new CartManager().getCartByUserId(user.getId());
-        ArrayList<CartItem> cartItems = new CartItemManager().getCartItemsByCartId(cart.getId());
-
-        VBox listBox = new VBox(10);
-
-
-        for(CartItem cartItem : cartItems) {
-            CartCard cartCard = new CartCard(this , cartItem);
-            listBox.getChildren().add(cartCard);
-        }
-        Scene scene = new Scene(listBox);
-        scene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));
-        this.setScene(scene);
-        this.show();
+//        Cart cart = new CartManager().getCartByUserId(user.getId());
+//        ArrayList<CartItem> cartItems = new CartItemManager().getCartItemsByCartId(cart.getId());
+//
+//        VBox listBox = new VBox(10);
+//
+//
+//        for(CartItem cartItem : cartItems) {
+//            CartCard cartCard = new CartCard(this , cartItem);
+//            listBox.getChildren().add(cartCard);
+//        }
+//        Scene scene = new Scene(listBox);
+//        scene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));
+//        this.setScene(scene);
+//        this.show();
 
     }
 }
