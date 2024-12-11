@@ -36,8 +36,41 @@ public class CartManager extends BaseManager {
         }
     }
 
+    public ActionResult<String> createCart(User user) {
+        String sql = "INSERT INTO carts (user_id) VALUES (?)";
+        try (Connection connection =  getConnection(connectionString); // Ensure you have a DatabaseConnection utility
+             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-    public ActionResult<String> Checkout(User user , int cartId , String discountCode) {
+            // Set the user_id value
+            preparedStatement.setInt(1, user.getId());
+
+            // Execute the insert operation
+            int affectedRows = preparedStatement.executeUpdate();
+
+            // Check if the insert was successful
+            if (affectedRows > 0) {
+                // Retrieve the generated cart ID
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        String cartId = generatedKeys.getString(1);
+                        return ActionResult.success(cartId, "Cart created successfully");
+                    }
+                }
+            }
+
+            return  ActionResult.error(null , "Failed to create cart");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ActionResult<>(Status.ERROR, "Database error: " + e.getMessage(), null);
+        }
+
+
+
+    }
+
+
+    public ActionResult<String> checkout(User user , int cartId , String discountCode) {
         Connection connection = null;
         try {
             connection = getConnection(connectionString);

@@ -47,7 +47,13 @@ public class AuthManager extends BaseManager {
 
     // Method to handle user registration
     public ActionResult<User> signUp(String firstname, String lastname , String email, String phoneNumber, String password) {
-        String sql = "INSERT INTO users (first_name , last_name , email, phone_number, password, role) VALUES (?, ?, ?, ?, ? , customer)";
+
+        if(doesEmailExist(email)) {
+            return ActionResult.error(null, "Email already exists");
+        }
+
+
+        String sql = "INSERT INTO users (first_name , last_name , email, phone_number, password, role) VALUES (?, ?, ?, ?, ? , ?::user_roles)";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { // Request generated keys
@@ -58,6 +64,7 @@ public class AuthManager extends BaseManager {
             stmt.setString(3, email);
             stmt.setString(4, phoneNumber);
             stmt.setString(5, password);
+            stmt.setString(6, "customer");
 
             // Execute the insert operation
             int affectedRows = stmt.executeUpdate();
@@ -81,6 +88,27 @@ public class AuthManager extends BaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return ActionResult.error(null, "Database error: " + e.getMessage());
+        }
+    }
+
+    private boolean doesEmailExist(String email) {
+        String sql = "SELECT 1 FROM users WHERE email = ? LIMIT 1"; // Query to check if email exists
+
+        try (Connection connection = getConnection(connectionString);
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Set the email parameter in the query
+            stmt.setString(1, email);
+
+            // Execute the query
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                // If the query returns a result, the email already exists
+                return resultSet.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log the error for debugging
+            return false; // Optionally, return false or rethrow the exception
         }
     }
 

@@ -4,6 +4,7 @@ import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.MessageLabel;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.SecureFormField;
+import com.example.javafxfinalproject.Managers.CartManager;
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Managers.AuthManager;
 import com.example.javafxfinalproject.Models.Status;
@@ -95,7 +96,7 @@ public class SignUpStage extends Stage {
                     messageLabel.setTextFill(Color.RED);
                     messageLabel.playAnimation();
                 } else {
-                    System.out.println("SIGNUP SUCCESS!!!");
+                    ActionResult<String> cartResponse = new CartManager().createCart(response.getData());
                 }
             } catch (Exception ignored) {
             }
