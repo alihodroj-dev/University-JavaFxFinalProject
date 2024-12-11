@@ -61,4 +61,28 @@ public class PhotoManager extends BaseManager {
             throw new RuntimeException(e);
         }
     }
+    // Method to update the URL of a Photo
+    public ActionResult<String> updatePhotoUrl(int photoId, String newUrl) {
+        String sql = "UPDATE photos SET url = ? WHERE id = ?";
+
+        try (Connection connection = getConnection(connectionString);
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Set the parameters for the query
+            stmt.setString(1, newUrl);
+            stmt.setInt(2, photoId);
+
+            // Execute the update
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows > 0) {
+                return ActionResult.success(null, "Photo URL updated successfully");
+            } else {
+                return ActionResult.error(null, "No photo found with the given ID");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ActionResult.error(null, "An error occurred while updating the photo URL");
+        }
+    }
 }
