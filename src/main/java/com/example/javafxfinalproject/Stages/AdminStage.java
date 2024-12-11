@@ -3,6 +3,7 @@ package com.example.javafxfinalproject.Stages;
 import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.TableViewCell;
+import com.example.javafxfinalproject.Helpers.RememberMeHelper;
 import com.example.javafxfinalproject.Managers.OrderManager;
 import com.example.javafxfinalproject.Managers.ProductManager;
 import com.example.javafxfinalproject.Managers.UserManager;
@@ -23,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AdminStage extends Stage {
@@ -83,6 +85,11 @@ public class AdminStage extends Stage {
         logoutBtn.setPrefWidth(220);
         logoutBtn.getStyleClass().add("sidebar-button");
         logoutBtn.setOnAction(e -> {
+            try {
+                RememberMeHelper.clearCredentials();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             this.close();
             new LoginStage();
         });
