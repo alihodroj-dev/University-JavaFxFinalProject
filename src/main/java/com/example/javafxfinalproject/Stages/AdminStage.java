@@ -311,10 +311,6 @@ public class AdminStage extends Stage {
             TableViewCell totalAmount = new TableViewCell(orders.indexOf(order) == 0 ? "totalAmount" : "", "" + order.getTotalAmount());
             // status
             TableViewCell status = new TableViewCell(orders.indexOf(order) == 0 ? "status" : "", order.getStatus());
-            // isDiscounted
-            TableViewCell isDiscounted = new TableViewCell(orders.indexOf(order) == 0 ? "isDiscounted" : "", "" + order.isDiscounted());
-            // discountId
-            TableViewCell discountId = new TableViewCell(orders.indexOf(order) == 0 ? "discountId" : "", (order.isDiscounted() ? ("" + order.getDiscountId()) : "N/A"));
 
             // save and delete container
             HBox saveDeleteContainer = new HBox(15);
@@ -327,7 +323,7 @@ public class AdminStage extends Stage {
             saveBtn.setFitHeight(25);
 
             saveBtn.setOnMouseClicked(e -> {
-                Order orderToBeSaved = new Order(Integer.parseInt(id.getInputText()), Integer.parseInt(userId.getInputText()), address.getInputText(), Integer.parseInt(totalAmount.getInputText()), status.getInputText(), Boolean.parseBoolean(isDiscounted.getInputText()), Integer.parseInt(discountId.getInputText()));
+                Order orderToBeSaved = new Order(Integer.parseInt(id.getInputText()), Integer.parseInt(userId.getInputText()), address.getInputText(), Integer.parseInt(totalAmount.getInputText()), status.getInputText());
                 ActionResult<String> response = new OrderManager().updateOrder(orderToBeSaved);
                 showToast(this , response.getMessage());
             });
@@ -347,7 +343,7 @@ public class AdminStage extends Stage {
             saveDeleteContainer.getChildren().addAll(saveBtn, deleteBtn);
 
 
-            orderContainer.getChildren().addAll(id, userId, address, totalAmount, status, isDiscounted, discountId, saveDeleteContainer);
+            orderContainer.getChildren().addAll(id, userId, address, totalAmount, status, saveDeleteContainer);
             subContainer.getChildren().add(orderContainer);
         }
 

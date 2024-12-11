@@ -23,8 +23,8 @@ public class Toast {
         popup.getContent().add(toastLabel); // Add the label to the popup
 
         // Set the position of the toast on the bottom-right of the screen
-        popup.setX(popup.getX());
-        popup.setY(stage.getHeight() - 40);
+        popup.setX((stage.getWidth()/2) + (toastLabel.getWidth()/2));
+        popup.setY(stage.getHeight() - 20);
 
         popup.show(stage);
 

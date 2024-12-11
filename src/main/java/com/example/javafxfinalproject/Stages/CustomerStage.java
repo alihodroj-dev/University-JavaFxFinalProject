@@ -1,6 +1,7 @@
 package com.example.javafxfinalproject.Stages;
 
 import com.example.javafxfinalproject.Components.CartCard;
+import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.ProductCard;
 import com.example.javafxfinalproject.Helpers.RememberMeHelper;
@@ -28,7 +29,6 @@ import static com.example.javafxfinalproject.Components.Toast.showToast;
 
 public class CustomerStage extends Stage {
     private boolean isSettingsStageOpen = false;
-    private int cartItemCount;
     private int tracker;
     public CustomerStage(User userAccount) {
         // window properties
@@ -62,15 +62,12 @@ public class CustomerStage extends Stage {
             this.setTitle("MotoCenter Dealership - App - Shop");
         });
 
-        // cart button
-        cartItemCount = new CartItemManager().getCount(new CartManager().getCartByUserId(userAccount.getId()).getId());
-
-        PrimaryButton cartBtn = new PrimaryButton("View Cart" + " - " + cartItemCount);
+        PrimaryButton cartBtn = new PrimaryButton("View Cart");
         cartBtn.prefWidth(220);
         cartBtn.getStyleClass().add("sidebar-button");
         cartBtn.setOnAction(e -> {
             mainContainer.getChildren().remove(1);
-            mainContainer.getChildren().add(cartView(new UserManager().getUserById(userAccount.getId())));
+            mainContainer.getChildren().add(cartView(new UserManager().getUserById(userAccount.getId()), mainContainer));
             this.setTitle("MotoCenter Dealership - App - Cart");
         });
 
@@ -187,7 +184,7 @@ public class CustomerStage extends Stage {
 
         ScrollPane container = new ScrollPane(flowPane);
         container.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        container.setPrefSize(1300, 800);
+        container.setPrefSize(1100, 800);
 
         // Create a BorderPane to organize the layout
         BorderPane mainPane = new BorderPane();
@@ -204,7 +201,7 @@ public class CustomerStage extends Stage {
         return mainPane;
     }
 
-    private ScrollPane cartView(User user) {
+    private ScrollPane cartView(User user, HBox mainContainer) {
 
         Cart cart = new CartManager().getCartByUserId(user.getId());
         ArrayList<CartItem> cartItems = new CartItemManager().getCartItemsByCartId(cart.getId());
@@ -214,14 +211,56 @@ public class CustomerStage extends Stage {
 
         listBox.setPadding(new Insets(50 , 50 , 50 , 50));
 
-        for(CartItem cartItem : cartItems) {
-            CartCard cartCard = new CartCard(this , cartItem);
-            listBox.getChildren().add(cartCard);
+        if (!cartItems.isEmpty()) {
+            for (CartItem cartItem : cartItems) {
+                CartCard cartCard = new CartCard(this, cartItem, mainContainer, user);
+                listBox.getChildren().add(cartCard);
+            }
+
+            BorderPane checkoutContainer = new BorderPane();
+            checkoutContainer.setPadding(new Insets(30));
+
+            double total = 0;
+
+            for (CartItem cartItem : cartItems) {
+                total += cartItem.getQuantity() * new ProductManager().getProductById(cartItem.getProductId()).getPrice();
+            }
+
+            Label totalAmount = new Label("Total Amount: $" + total);
+            totalAmount.getStyleClass().add("form-label");
+
+            checkoutContainer.setLeft(totalAmount);
+
+            PrimaryButton checkoutBtn = new PrimaryButton("Checkout");
+            checkoutBtn.setPrefWidth(180);
+            checkoutBtn.setOnAction(e -> {
+                new CartManager().checkout(user, new CartManager().getCartByUserId(user.getId()).getId(), "");
+                reloadCart(mainContainer, user);
+            });
+
+            checkoutContainer.setRight(checkoutBtn);
+
+            FormField addressField = new FormField("Address", "Country - City - Street - Building - Apartment");
+            addressField.setPadding(new Insets(20));
+
+
+            listBox.getChildren().addAll(addressField, checkoutContainer);
+        } else {
+            Label emptyCartLabel = new Label("Your cart is empty");
+            emptyCartLabel.getStyleClass().add("form-label");
+            listBox.setPrefWidth(1120);
+            listBox.setPrefHeight(750);
+            listBox.getChildren().add(emptyCartLabel);
         }
 
         ScrollPane scrollPane = new ScrollPane(listBox);
 
         return scrollPane;
+    }
+
+    public void reloadCart(HBox mainContainer, User user) {
+        mainContainer.getChildren().remove(1);
+        mainContainer.getChildren().add(cartView(new UserManager().getUserById(user.getId()), mainContainer));
     }
 }
 

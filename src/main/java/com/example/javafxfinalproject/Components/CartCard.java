@@ -5,6 +5,7 @@ import com.example.javafxfinalproject.Managers.ProductManager;
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.CartItem;
 import com.example.javafxfinalproject.Models.Product;
+import com.example.javafxfinalproject.Models.User;
 import com.example.javafxfinalproject.Stages.CustomerStage;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -19,7 +20,7 @@ public class CartCard extends BorderPane {
 
     private final CartItem cartItem;
 
-    public CartCard(CustomerStage stage, CartItem cartItem) {
+    public CartCard(CustomerStage stage, CartItem cartItem, HBox mainContainer, User user) {
         this.cartItem = cartItem;
         Product product = new ProductManager().getProductById(cartItem.getProductId());
 
@@ -49,6 +50,7 @@ public class CartCard extends BorderPane {
             // Handle item removal
             ActionResult<String> response = new CartItemManager().deleteCartItem(cartItem.getId());
             showToast(stage, response.getMessage());
+            stage.reloadCart(mainContainer, user);
         });
 
         // Add elements to the HBox layout
