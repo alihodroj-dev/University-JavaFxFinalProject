@@ -231,17 +231,19 @@ public class CustomerStage extends Stage {
 
             checkoutContainer.setLeft(totalAmount);
 
+            FormField addressField = new FormField("Address", "Country - City - Street - Building - Apartment");
+            addressField.setPadding(new Insets(20));
+
             PrimaryButton checkoutBtn = new PrimaryButton("Checkout");
             checkoutBtn.setPrefWidth(180);
             checkoutBtn.setOnAction(e -> {
-                new CartManager().checkout(user, new CartManager().getCartByUserId(user.getId()).getId(), "");
+                new CartManager().checkout(user, new CartManager().getCartByUserId(user.getId()).getId(), addressField.getInputText());
                 reloadCart(mainContainer, user);
             });
 
             checkoutContainer.setRight(checkoutBtn);
 
-            FormField addressField = new FormField("Address", "Country - City - Street - Building - Apartment");
-            addressField.setPadding(new Insets(20));
+
 
 
             listBox.getChildren().addAll(addressField, checkoutContainer);
