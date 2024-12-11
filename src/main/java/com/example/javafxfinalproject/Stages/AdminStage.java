@@ -272,6 +272,7 @@ public class AdminStage extends Stage {
             saveBtn.setOnMouseClicked(e -> {
                 Product productToBeSaved = new Product(Integer.parseInt(id.getInputText()), Integer.parseInt(brandId.getInputText()), Integer.parseInt(categoryId.getInputText()), name.getInputText(), description.getInputText(), Double.parseDouble(price.getInputText()), Integer.parseInt(stock.getInputText()));
                 ActionResult<String> response =  new ProductManager().updateProduct(productToBeSaved);
+                new PhotoManager().updatePhotoUrl(product.getId() , url.getInputText());
                 showToast(this , response.getMessage());
             });
 
@@ -291,7 +292,7 @@ public class AdminStage extends Stage {
             saveDeleteContainer.getChildren().addAll(saveBtn, deleteBtn);
 
 
-            productContainer.getChildren().addAll(id, brandId, categoryId, name, description, price, stock, saveDeleteContainer);
+            productContainer.getChildren().addAll(id, brandId, categoryId, name, description, price, stock, url,  saveDeleteContainer);
             subContainer.getChildren().add(productContainer);
             id.setIsEditable(false);
         }

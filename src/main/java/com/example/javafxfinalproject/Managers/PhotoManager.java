@@ -62,15 +62,15 @@ public class PhotoManager extends BaseManager {
         }
     }
     // Method to update the URL of a Photo
-    public ActionResult<String> updatePhotoUrl(int photoId, String newUrl) {
-        String sql = "UPDATE photos SET url = ? WHERE id = ?";
+    public ActionResult<String> updatePhotoUrl(int productId, String newUrl) {
+        String sql = "UPDATE photos SET url = ? WHERE product_id = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             // Set the parameters for the query
             stmt.setString(1, newUrl);
-            stmt.setInt(2, photoId);
+            stmt.setInt(2, productId);
 
             // Execute the update
             int affectedRows = stmt.executeUpdate();
