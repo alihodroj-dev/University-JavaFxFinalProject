@@ -79,18 +79,18 @@ public class ProductManager extends BaseManager {
 
 
 
-    public ActionResult<Product> addProduct(String name, String description, int brandId, int categoryId, double price, int stock) {
+    public ActionResult<String> addProduct(Product product) {
         String sql = "INSERT INTO products (name, description, brand_id, category_id, price, stock) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = getConnection(connectionString); PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             // Set the values for the SQL statement
-            stmt.setString(1, name);
-            stmt.setString(2, description);
-            stmt.setInt(3, brandId);
-            stmt.setInt(4, categoryId);
-            stmt.setDouble(5, price);
-            stmt.setInt(6, stock);
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setInt(3, product.getBrandId());
+            stmt.setInt(4, product.getCategoryId());
+            stmt.setDouble(5, product.getPrice());
+            stmt.setInt(6, product.getStock());
 
             // Execute the update and check affected rows
             int affectedRows = stmt.executeUpdate();
@@ -103,8 +103,7 @@ public class ProductManager extends BaseManager {
                         int newProductId = generatedKeys.getInt(1); // The first generated key is the product id
 
                         // Create the new Product object with the generated id and other data
-                        Product product = new Product(newProductId, brandId, categoryId, name, description, price, stock);
-                        return ActionResult.success(product, "Product added successfully");
+                        return ActionResult.success(""+newProductId, "Product added successfully");
                     } else {
                         // If no keys are returned, there was an issue with generating the product ID
                         return ActionResult.error(null, "Could not retrieve product ID, please try again");
