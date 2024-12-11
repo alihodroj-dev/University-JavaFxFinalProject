@@ -69,13 +69,6 @@ public class UserManager extends BaseManager {
     }
 
     public ActionResult<String> updateUser(User user) {
-        // Ensure password is retained from the existing user
-        User existingUser = getUserById(user.getId());
-        if (existingUser == null) {
-            return ActionResult.error(null, "User not found");
-        }
-        user.setPassword(existingUser.getPassword());
-        user.setRole(existingUser.getRole());
 
         String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, phone_number = ?, password = ? WHERE id = ?";
 
