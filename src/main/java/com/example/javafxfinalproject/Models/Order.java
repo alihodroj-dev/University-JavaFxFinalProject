@@ -6,8 +6,6 @@ public class Order {
     private String address;
     private double totalAmount;
     private String status;
-    private boolean isDiscounted = false;
-    private Integer discountId = null;
 
     public Order() {}
 
@@ -19,15 +17,6 @@ public class Order {
         this.status = status;
     }
 
-    public Order(int id, int userId, String address, double totalAmount, String status, boolean isDiscounted, int discountId) {
-        this.id = id;
-        this.userId = userId;
-        this.address = address;
-        this.totalAmount = totalAmount;
-        this.status = status;
-        this.isDiscounted = isDiscounted;
-        this.discountId = discountId;
-    }
 
     public int getId() {
         return id;
@@ -67,25 +56,6 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-    public boolean isDiscounted() {
-        return isDiscounted;
-    }
-
-    public void setDiscounted(boolean discounted) {
-        isDiscounted = discounted;
-    }
-
-    public int getDiscountId() {
-        return discountId;
-    }
-
-    public void setDiscountId(int discountId) {
-        this.discountId = discountId;
-    }
-
-    public void setDiscountId(Integer discountId) {
-        this.discountId = discountId;
     }
 
 }

@@ -34,11 +34,6 @@ public class OrderManager extends BaseManager {
 
                 Order order = new Order(orderId, userId, address, totalAmount, status );
 
-                if(discountId > 0) {
-                    order.setDiscountId(discountId);
-                    order.setDiscounted(true);
-                }
-
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -49,7 +44,7 @@ public class OrderManager extends BaseManager {
     }
 
     public Order getOrderById(int orderId) {
-        String sql = "SELECT id AS order_id, user_id, address, total_amount, status, discount_id " +
+        String sql = "SELECT id AS order_id, user_id, address, total_amount, status" +
                 "FROM orders WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
@@ -67,10 +62,6 @@ public class OrderManager extends BaseManager {
 
                     // Create and return the Order object
                     Order order = new Order(orderId, userId, address, totalAmount, status);
-                    if (discountId > 0) {
-                        order.setDiscountId(discountId);
-                        order.setDiscounted(true);
-                    }
                     return order;
                 }
             }
@@ -101,10 +92,6 @@ public class OrderManager extends BaseManager {
                     if (generatedKeys.next()) {
                         int newOrderId = generatedKeys.getInt(1);  // Get the new order ID
                         Order order = new Order(newOrderId, userId, address, totalAmount, status);
-                        if (discountId > 0) {
-                            order.setDiscountId(discountId);
-                            order.setDiscounted(true);
-                        }
                         return ActionResult.success(order, "Order added successfully");
                     }
                 }
@@ -119,7 +106,7 @@ public class OrderManager extends BaseManager {
     }
 
     public ActionResult<String> updateOrder(Order order) {
-        String sql = "UPDATE orders SET user_id = ?, address = ?, total_amount = ?, status = ?, discount_id = ? WHERE id = ?";
+        String sql = "UPDATE orders SET user_id = ?, address = ?, total_amount = ?, status = ?  WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -129,8 +116,7 @@ public class OrderManager extends BaseManager {
             stmt.setString(2, order.getAddress());
             stmt.setDouble(3, order.getTotalAmount());
             stmt.setString(4, order.getStatus());
-            stmt.setInt(5, order.getDiscountId());
-            stmt.setInt(6, order.getId());  // Set the order ID to identify the record
+            stmt.setInt(5, order.getId());  // Set the order ID to identify the record
 
             int affectedRows = stmt.executeUpdate();
 

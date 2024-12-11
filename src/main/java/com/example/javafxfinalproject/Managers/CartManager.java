@@ -70,7 +70,7 @@ public class CartManager extends BaseManager {
     }
 
 
-    public ActionResult<String> checkout(User user , int cartId , String address, String discountCode) {
+    public ActionResult<String> checkout(User user , int cartId , String address) {
         Connection connection = null;
         try {
             connection = getConnection(connectionString);
@@ -89,30 +89,16 @@ public class CartManager extends BaseManager {
                 totalAmount += product.getPrice() * cartItem.getQuantity();
             }
 
-            // Step 3: Apply discount if applicable
-            Discount discount = null;
-            if (discountCode != null && !discountCode.isEmpty()) {
-                discount = new DiscountManager().getDiscountByCode(discountCode);
-                if (discount != null && discount.getExpiryDate().after(new Date(System.currentTimeMillis()))) {
-                    // Apply discount to total amount
-                    totalAmount -= discount.getDiscounted_amount()*totalAmount; // discounted amount is in %
-                } else {
-                    discount = null; // Invalid or expired discount
-                }
-            }
+
 
             // Step 4: Create the new order
-            String insertOrderSql = "INSERT INTO orders (user_id, address, total_amount, status, discount_id) " +
+            String insertOrderSql = "INSERT INTO orders (user_id, address, total_amount, status) " +
                     "VALUES (?, ?, ?, 'Pending', ?)";
             try (PreparedStatement orderStmt = connection.prepareStatement(insertOrderSql, Statement.RETURN_GENERATED_KEYS)) {
                 orderStmt.setInt(1, user.getId()); // user_id from User object
                 orderStmt.setString(2, address); // address_id from User object
                 orderStmt.setDouble(3, totalAmount);
-                if (discount != null) {
-                    orderStmt.setInt(4, discount.getId()); // Set discount_id
-                } else {
-                    orderStmt.setNull(4, Types.INTEGER); // Set discount_id to NULL
-                }
+
 
                 int affectedRows = orderStmt.executeUpdate();
                 if (affectedRows == 0) {
