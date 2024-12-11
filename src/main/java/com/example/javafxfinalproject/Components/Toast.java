@@ -19,11 +19,12 @@ public class Toast {
                 + "-fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
         toastLabel.setOpacity(0);
 
+
         popup.getContent().add(toastLabel); // Add the label to the popup
 
         // Set the position of the toast on the bottom-right of the screen
-        popup.setX(stage.getWidth() - toastLabel.getWidth() * 3);
-        popup.setY(stage.getHeight() - 50);
+        popup.setX(popup.getX());
+        popup.setY(stage.getHeight() - 40);
 
         popup.show(stage);
 

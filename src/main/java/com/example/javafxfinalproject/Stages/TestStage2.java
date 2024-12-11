@@ -26,7 +26,6 @@ public class TestStage2 extends Stage {
             CartCard cartCard = new CartCard(this , cartItem);
             listBox.getChildren().add(cartCard);
         }
-        listBox.setPadding(new Insets(50 , 50 , 50 , 50));
         Scene scene = new Scene(listBox);
         scene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));
         this.setScene(scene);
