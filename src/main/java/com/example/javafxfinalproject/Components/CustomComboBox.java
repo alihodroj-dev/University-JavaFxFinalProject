@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CustomComboBox extends BorderPane {
     ComboBox comboBox;
@@ -31,6 +32,7 @@ public class CustomComboBox extends BorderPane {
     }
 
     public String getSelectedItem() {
-        return this.comboBox.getSelectionModel().getSelectedItem().toString();
+        Object selectedItem = this.comboBox.getSelectionModel().getSelectedItem();
+        return selectedItem == null ? "" : selectedItem.toString();
     }
 }

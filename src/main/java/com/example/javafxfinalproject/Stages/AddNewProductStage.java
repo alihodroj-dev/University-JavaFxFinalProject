@@ -20,14 +20,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class AddNewProductStage extends Stage {
-//    final private FormField brandIdField = new FormField("Brand ID", "103937");
-//    final private FormField categoryIdField = new FormField("Category ID", "683630");
     private CustomComboBox brandIdField = new CustomComboBox();
     private CustomComboBox categoryIdField = new CustomComboBox();
     final private FormField productNameField = new FormField("Product Name", "Yamaha R1");
     final private FormField productDescriptionField = new FormField("Product Description", "1000cc Bike");
     final private FormField productPriceField = new FormField("Product Price", "10,000");
     final private FormField productStockField = new FormField("Product Stock", "8");
+    final private FormField productUrlField = new FormField("Product URL", "https://example_url.com");
     final private MessageLabel messageLabel = new MessageLabel("");
     public AddNewProductStage(AdminStage adminStage) {
         // window properties
@@ -68,7 +67,7 @@ public class AddNewProductStage extends Stage {
 
         categoryIdField = new CustomComboBox("Category", categoryNames);
 
-        formContainer.getChildren().addAll(brandIdField, categoryIdField, productNameField, productDescriptionField, productPriceField, productStockField);
+        formContainer.getChildren().addAll(brandIdField, categoryIdField, productNameField, productDescriptionField, productPriceField, productStockField, productUrlField);
 
         // buttons container
         HBox buttonsContainer = new HBox(10);
