@@ -153,7 +153,7 @@ public class AdminStage extends Stage {
         settingsIcon.setFitHeight(25);
         settingsIcon.setOnMousePressed(e -> {
             if(!isSettingsStageOpen) {
-                SettingsStage settingsStage = new SettingsStage(userAccount, this);
+                SettingsStage settingsStage = new SettingsStage(new UserManager().getUserById(userAccount.getId()), this);
                 this.isSettingsStageOpen = true;
             }
         });
