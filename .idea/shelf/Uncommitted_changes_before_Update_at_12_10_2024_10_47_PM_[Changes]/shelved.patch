@@ -1,0 +1,541 @@
+Index: src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject.Managers;\r\n\r\nimport com.example.javafxfinalproject.Models.ActionResult;\r\nimport com.example.javafxfinalproject.Models.Order;\r\nimport com.example.javafxfinalproject.Models.OrderItem;\r\n\r\nimport java.sql.*;\r\nimport java.util.ArrayList;\r\n\r\nimport static java.sql.DriverManager.getConnection;\r\n\r\npublic class OrderManager extends BaseManager {\r\n\r\n\r\n    public ArrayList<Order> getOrders() {\r\n        ArrayList<Order> orders = new ArrayList<>();\r\n\r\n        String sql = \"SELECT id AS order_id, user_id, address_id, total_amount, status, discount_id \" +\r\n                \"FROM orders\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             Statement stmt = connection.createStatement();\r\n             ResultSet rs = stmt.executeQuery(sql)) {\r\n\r\n            while (rs.next()) {\r\n                int orderId = rs.getInt(\"order_id\");\r\n                int userId = rs.getInt(\"user_id\");\r\n                int addressId = rs.getInt(\"address_id\");\r\n                double totalAmount = rs.getDouble(\"total_amount\");\r\n                String status = rs.getString(\"status\");\r\n                int discountId = rs.getInt(\"discount_id\");\r\n\r\n                // Create and add Order object\r\n\r\n                Order order = new Order(orderId, userId, addressId, totalAmount, status );\r\n\r\n                if(discountId > 0) {\r\n                    order.setDiscountId(discountId);\r\n                    order.setDiscounted(true);\r\n                }\r\n\r\n                orders.add(order);\r\n            }\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n        }\r\n\r\n        return orders;\r\n    }\r\n\r\n    public Order getOrderById(int orderId) {\r\n        String sql = \"SELECT id AS order_id, user_id, address_id, total_amount, status, discount_id \" +\r\n                \"FROM orders WHERE id = ?\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             PreparedStatement stmt = connection.prepareStatement(sql)) {\r\n\r\n            stmt.setInt(1, orderId);  // Set the order ID in the query\r\n\r\n            try (ResultSet rs = stmt.executeQuery()) {\r\n                if (rs.next()) {\r\n                    int userId = rs.getInt(\"user_id\");\r\n                    int addressId = rs.getInt(\"address_id\");\r\n                    double totalAmount = rs.getDouble(\"total_amount\");\r\n                    String status = rs.getString(\"status\");\r\n                    int discountId = rs.getInt(\"discount_id\");\r\n\r\n                    // Create and return the Order object\r\n                    Order order = new Order(orderId, userId, addressId, totalAmount, status);\r\n                    if (discountId > 0) {\r\n                        order.setDiscountId(discountId);\r\n                        order.setDiscounted(true);\r\n                    }\r\n                    return order;\r\n                }\r\n            }\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n        }\r\n        return null;  // Return null if the order wasn't found\r\n    }\r\n\r\n    public ActionResult<Order> addOrder(int userId, int addressId, double totalAmount, String status, int discountId) {\r\n        String sql = \"INSERT INTO orders (user_id, address_id, total_amount, status, discount_id) \" +\r\n                \"VALUES (?, ?, ?, ?, ?)\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {\r\n\r\n            // Set the parameters for the SQL statement\r\n            stmt.setInt(1, userId);\r\n            stmt.setInt(2, addressId);\r\n            stmt.setDouble(3, totalAmount);\r\n            stmt.setString(4, status);\r\n            stmt.setInt(5, discountId);\r\n\r\n            int affectedRows = stmt.executeUpdate();\r\n\r\n            if (affectedRows > 0) {\r\n                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {\r\n                    if (generatedKeys.next()) {\r\n                        int newOrderId = generatedKeys.getInt(1);  // Get the new order ID\r\n                        Order order = new Order(newOrderId, userId, addressId, totalAmount, status);\r\n                        if (discountId > 0) {\r\n                            order.setDiscountId(discountId);\r\n                            order.setDiscounted(true);\r\n                        }\r\n                        return ActionResult.success(order, \"Order added successfully\");\r\n                    }\r\n                }\r\n            } else {\r\n                return ActionResult.error(null, \"Could not add order, please try again\");\r\n            }\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n            return ActionResult.error(null, \"An error occurred while adding the order: \" + e.getMessage());\r\n        }\r\n        return null; // dead code\r\n    }\r\n\r\n    public ActionResult<String> updateOrder(Order order) {\r\n        String sql = \"UPDATE orders SET user_id = ?, address_id = ?, total_amount = ?, status = ?, discount_id = ? WHERE id = ?\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             PreparedStatement stmt = connection.prepareStatement(sql)) {\r\n\r\n            // Set the parameters for the SQL statement\r\n            stmt.setInt(1, order.getUserId());\r\n            stmt.setInt(2, order.getAddressId());\r\n            stmt.setDouble(3, order.getTotalAmount());\r\n            stmt.setString(4, order.getStatus());\r\n            stmt.setInt(5, order.getDiscountId());\r\n            stmt.setInt(6, order.getId());  // Set the order ID to identify the record\r\n\r\n            int affectedRows = stmt.executeUpdate();\r\n\r\n            if (affectedRows > 0) {\r\n                return ActionResult.success(null,\"Order updated successfully\");\r\n            } else {\r\n                return ActionResult.error(null, \"Could not update order, please try again\");\r\n            }\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n            return ActionResult.error(null, \"An error occurred while updating the order: \" + e.getMessage());\r\n        }\r\n    }\r\n\r\n    public ActionResult<String> deleteOrder(int orderId) {\r\n        String selectOrderSql = \"SELECT status FROM orders WHERE id = ?\";\r\n        String deleteOrderSql = \"DELETE FROM orders WHERE id = ?\";\r\n\r\n        // Step 1: Use the OrderItemManager to restore stock and get order items\r\n        OrderItemManager orderItemManager = new OrderItemManager();\r\n\r\n        try (Connection connection = getConnection(connectionString)) {\r\n            connection.setAutoCommit(false); // Start transaction\r\n\r\n            // Step 2: Check if the order status is \"pending\"\r\n            try (PreparedStatement selectOrderStmt = connection.prepareStatement(selectOrderSql)) {\r\n                selectOrderStmt.setInt(1, orderId);\r\n                try (ResultSet rs = selectOrderStmt.executeQuery()) {\r\n                    if (rs.next()) {\r\n                        String status = rs.getString(\"status\");\r\n                        if (\"delivered\".equals(status)) {\r\n                            // If order is delivered, cannot delete it\r\n                            return ActionResult.error(null, \"Cannot delete a delivered order\");\r\n                        }\r\n                    } else {\r\n                        return ActionResult.error(null, \"Order not found\");\r\n                    }\r\n                }\r\n            }\r\n\r\n            // Step 3: Use OrderItemManager to fetch order items and restore stock\r\n            ArrayList<OrderItem> orderItems = orderItemManager.getOrderItemsByOrderId(orderId);\r\n            for (OrderItem orderItem : orderItems) {\r\n                int productId = orderItem.getProductId();\r\n                int quantity = orderItem.getQuantity();\r\n\r\n                // Restore the stock for each product\r\n                String updateStockSql = \"UPDATE products SET stock = stock + ? WHERE id = ?\";\r\n                try (PreparedStatement updateStockStmt = connection.prepareStatement(updateStockSql)) {\r\n                    updateStockStmt.setInt(1, quantity);  // Restore the stock\r\n                    updateStockStmt.setInt(2, productId); // Set the product ID\r\n                    updateStockStmt.executeUpdate();\r\n                }\r\n            }\r\n\r\n            // Step 4: Delete the order\r\n            try (PreparedStatement deleteStmt = connection.prepareStatement(deleteOrderSql)) {\r\n                deleteStmt.setInt(1, orderId);\r\n                int affectedRows = deleteStmt.executeUpdate();\r\n\r\n                if (affectedRows > 0) {\r\n                    connection.commit(); // Commit transaction\r\n                    return ActionResult.success(null, \"Order deleted\");\r\n                } else {\r\n                    connection.rollback();\r\n                    return ActionResult.error(null, \"Could not delete order, please try again\");\r\n                }\r\n            }\r\n\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n            return ActionResult.error(null, \"An error occurred while deleting the order: \" + e.getMessage());\r\n        }\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java b/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java
+--- a/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java	(revision 5dfb1744eb7c7bc32ab1d493fd9299b3ec5dbf27)
++++ b/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java	(date 1733863160042)
+@@ -28,7 +28,7 @@
+                 int addressId = rs.getInt("address_id");
+                 double totalAmount = rs.getDouble("total_amount");
+                 String status = rs.getString("status");
+-                int discountId = rs.getInt("discount_id");
++                Integer discountId = rs.getInt("discount_id");
+ 
+                 // Create and add Order object
+ 
+@@ -63,7 +63,7 @@
+                     int addressId = rs.getInt("address_id");
+                     double totalAmount = rs.getDouble("total_amount");
+                     String status = rs.getString("status");
+-                    int discountId = rs.getInt("discount_id");
++                    Integer discountId = rs.getInt("discount_id");
+ 
+                     // Create and return the Order object
+                     Order order = new Order(orderId, userId, addressId, totalAmount, status);
+Index: src/main/java/com/example/javafxfinalproject/MotoCenterApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject;\r\n\r\nimport com.example.javafxfinalproject.Stages.AdminStage;\r\nimport com.example.javafxfinalproject.Stages.LoginStage;\r\nimport javafx.application.Application;\r\nimport javafx.stage.Stage;\r\n\r\npublic class MotoCenterApp extends Application {\r\n\r\n\r\n    @Override\r\n    public void start(Stage stage) {\r\n\r\n        // MARK: login\r\n//        LoginStage loginStage = new LoginStage();\r\n\r\n        // MARK: admin\r\n        AdminStage adminStage = new AdminStage();\r\n\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        launch(args);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java b/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java
+--- a/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java	(revision 5dfb1744eb7c7bc32ab1d493fd9299b3ec5dbf27)
++++ b/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java	(date 1733863105591)
+@@ -1,21 +1,47 @@
+ package com.example.javafxfinalproject;
+ 
++import com.example.javafxfinalproject.Components.Carousel;
++import com.example.javafxfinalproject.Managers.OrderManager;
++import com.example.javafxfinalproject.Managers.PhotoManager;
++import com.example.javafxfinalproject.Managers.ProductManager;
++import com.example.javafxfinalproject.Models.Order;
++import com.example.javafxfinalproject.Models.Photo;
++import com.example.javafxfinalproject.Models.Product;
+ import com.example.javafxfinalproject.Stages.AdminStage;
+ import com.example.javafxfinalproject.Stages.LoginStage;
+ import javafx.application.Application;
++import javafx.scene.image.Image;
++import javafx.scene.image.ImageView;
++import javafx.scene.layout.Pane;
++import javafx.scene.layout.StackPane;
++import javafx.scene.layout.VBox;
++import javafx.scene.text.Text;
+ import javafx.stage.Stage;
+ 
++import java.util.ArrayList;
++
+ public class MotoCenterApp extends Application {
+ 
+ 
+     @Override
+     public void start(Stage stage) {
+ 
+-        // MARK: login
+-//        LoginStage loginStage = new LoginStage();
++        ArrayList<Photo> photos = new PhotoManager().getPhotosByProductId(3);
++        ArrayList<ImageView> imageViews = new ArrayList<>();
++        photos.forEach(photo -> {
++            ImageView imageView = new ImageView(new Image(photo.getUrl()));
++            imageView.setFitWidth(600);
++            imageView.setFitHeight(400);
++            imageViews.add(imageView);
++        });
+ 
+-        // MARK: admin
+-        AdminStage adminStage = new AdminStage();
++        VBox pane = new VBox(50);
++        Carousel carousel = new Carousel(imageViews);
++        pane.getChildren().addAll(carousel);
++        stage.setScene(new javafx.scene.Scene(pane));
++        stage.show();
++        ArrayList<Order> orders = new OrderManager().getOrders();
++        System.out.println(orders.getFirst().getId());
+ 
+     }
+ 
+Index: src/main/java/com/example/javafxfinalproject/Components/FormField.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject.Components;\r\n\r\nimport javafx.scene.control.Label;\r\nimport javafx.scene.control.TextField;\r\nimport javafx.scene.layout.VBox;\r\n\r\npublic class FormField extends VBox {\r\n\r\n    private final TextField inputField = new TextField();\r\n\r\n    public FormField(String labelText, String placeholder) {\r\n        // Create and style the label\r\n        Label label = new Label(labelText);\r\n        label.getStyleClass().add(\"form-label\");\r\n\r\n        // Create and style the input field\r\n        inputField.setPromptText(placeholder);\r\n        inputField.getStyleClass().add(\"input-field\");\r\n\r\n        // Apply spacing\r\n        this.setSpacing(10);\r\n\r\n        // Add components to the container\r\n        this.getChildren().addAll(label, inputField);\r\n    }\r\n\r\n    // Getter for the input field text\r\n    public String getInputText() {\r\n        return inputField.getText();\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/FormField.java b/src/main/java/com/example/javafxfinalproject/Components/FormField.java
+--- a/src/main/java/com/example/javafxfinalproject/Components/FormField.java	(revision 5dfb1744eb7c7bc32ab1d493fd9299b3ec5dbf27)
++++ b/src/main/java/com/example/javafxfinalproject/Components/FormField.java	(date 1733857962012)
+@@ -19,7 +19,7 @@
+ 
+         // Apply spacing
+         this.setSpacing(10);
+-
++        // hello
+         // Add components to the container
+         this.getChildren().addAll(label, inputField);
+     }
+@@ -29,4 +29,6 @@
+         return inputField.getText();
+     }
+ 
++    public void setInputText(String text) { inputField.setText(text); }
++
+ }
+Index: src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject.Stages;\r\n\r\nimport com.example.javafxfinalproject.Components.FormField;\r\nimport com.example.javafxfinalproject.Components.PrimaryButton;\r\nimport com.example.javafxfinalproject.Components.TableViewCell;\r\nimport com.example.javafxfinalproject.Managers.UserManager;\r\nimport com.example.javafxfinalproject.Models.User;\r\nimport javafx.geometry.Insets;\r\nimport javafx.geometry.Pos;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.control.Label;\r\nimport javafx.scene.control.TextField;\r\nimport javafx.scene.image.ImageView;\r\nimport javafx.scene.layout.Background;\r\nimport javafx.scene.layout.BorderPane;\r\nimport javafx.scene.layout.HBox;\r\nimport javafx.scene.layout.VBox;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.scene.text.Text;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class AdminStage extends Stage {\r\n    public AdminStage() {\r\n        // window properties\r\n        final int mainWidth = 1400;\r\n        final int mainHeight = 800;\r\n\r\n        // main container\r\n        HBox mainContainer = new HBox(0);\r\n        mainContainer.setPrefWidth(mainWidth);\r\n        mainContainer.setPrefHeight(mainHeight);\r\n\r\n        // MARK: SIDEBAR\r\n        // sidebar container\r\n        BorderPane sideBar = new BorderPane();\r\n        sideBar.setPrefWidth(240);\r\n        sideBar.setPrefHeight(800);\r\n        sideBar.getStyleClass().add(\"sidebar\");\r\n\r\n        // buttons container\r\n        VBox buttonsContainer = new VBox(10);\r\n        buttonsContainer.setAlignment(Pos.CENTER);\r\n        buttonsContainer.setPadding(new Insets(10, 0, 10, 0));\r\n\r\n        // products button\r\n        PrimaryButton customersBtn = new PrimaryButton(\"Customers\");\r\n        customersBtn.setPrefWidth(220);\r\n        customersBtn.getStyleClass().add(\"sidebar-button\");\r\n\r\n        PrimaryButton productsBtn = new PrimaryButton(\"Products\");\r\n        productsBtn.setPrefWidth(220);\r\n        productsBtn.getStyleClass().add(\"sidebar-button\");\r\n\r\n        PrimaryButton ordersBtn = new PrimaryButton(\"Orders\");\r\n        ordersBtn.setPrefWidth(220);\r\n        ordersBtn.getStyleClass().add(\"sidebar-button\");\r\n\r\n        // adding buttons to container\r\n        buttonsContainer.getChildren().addAll(customersBtn, productsBtn, ordersBtn);\r\n\r\n        // setting top of sidebar to buttons container\r\n        sideBar.setTop(buttonsContainer);\r\n\r\n        // sidebar footer\r\n        BorderPane sideBarFooter = new BorderPane();\r\n        sideBarFooter.setPrefHeight(50);\r\n        sideBarFooter.setBackground(Background.fill(Color.rgb(43, 43, 43)));\r\n\r\n        // avatar and user's name\r\n        HBox avatarNameContainer = new HBox(10);\r\n        avatarNameContainer.setAlignment(Pos.CENTER);\r\n        avatarNameContainer.setPadding(new Insets(0, 15, 0, 15));\r\n\r\n        ImageView avatar = new ImageView(\"avatar.png\");\r\n        avatar.setFitWidth(35);\r\n        avatar.setFitHeight(35);\r\n\r\n        Label userFirstName = new Label(\"Welcome, Ali\");\r\n        userFirstName.setStyle(\"-fx-font-size: 14px;\" +\r\n                \"-fx-text-fill: #E0E0E0;\");\r\n\r\n        avatarNameContainer.getChildren().addAll(avatar, userFirstName);\r\n\r\n        HBox settingIconWrapper = new HBox(0);\r\n        settingIconWrapper.setAlignment(Pos.CENTER);\r\n        settingIconWrapper.setPadding(new Insets(0, 10, 0, 10));\r\n\r\n        ImageView settingsIcon = new ImageView(\"settings.png\");\r\n        settingsIcon.setFitWidth(25);\r\n        settingsIcon.setFitHeight(25);\r\n\r\n        settingIconWrapper.getChildren().add(settingsIcon);\r\n\r\n        sideBarFooter.setLeft(avatarNameContainer);\r\n        sideBarFooter.setRight(settingIconWrapper);\r\n\r\n        // MARK: MAIN AREA\r\n        ArrayList<String> data = new ArrayList<String>();\r\n\r\n        for(int i = 0; i < 6; i++) {\r\n            data.add(\"KLEB\");\r\n        }\r\n\r\n        // setting sidebar footer\r\n        sideBar.setBottom(sideBarFooter);\r\n\r\n        VBox datatable = this.customersDataTableView(new UserManager().getUsers());\r\n        datatable.setPadding(new Insets(30));\r\n\r\n        mainContainer.getChildren().addAll(sideBar, datatable);\r\n\r\n        Scene mainScene = new Scene(mainContainer);\r\n        mainScene.getStylesheets().add(String.valueOf(getClass().getResource(\"/styles.css\")));\r\n        this.setTitle(\"MotoCenter Dealership - Dashboard\");\r\n        this.setScene(mainScene);\r\n        this.setResizable(false);\r\n        this.show();\r\n    }\r\n\r\n    private VBox customersDataTableView(ArrayList<User> users) {\r\n        VBox mainContainer = new VBox(0);\r\n\r\n        for(User user : users) {\r\n            HBox userContainer = new HBox(20);\r\n            // id\r\n            TableViewCell id = new TableViewCell(users.indexOf(user) == 0 ? \"ID\" : \"\", \"\" + user.getId());\r\n            // email\r\n            TableViewCell email = new TableViewCell(users.indexOf(user) == 0 ? \"EMAIL\" : \"\", user.getEmail());\r\n            // firstName\r\n            TableViewCell fname = new TableViewCell(users.indexOf(user) == 0 ? \"FIRST NAME\" : \"\", user.getFirstName());\r\n            // last name\r\n            TableViewCell lname = new TableViewCell(users.indexOf(user) == 0 ? \"LAST NAME\" : \"\", (user.getLastName()));\r\n            // phone number\r\n            TableViewCell phoneNumber = new TableViewCell(users.indexOf(user) == 0 ? \"PHONE NUMBER\" : \"\", user.getPhoneNumber());\r\n\r\n            // save and delete container\r\n            HBox saveDeleteContainer = new HBox(15);\r\n            saveDeleteContainer.setAlignment(Pos.BOTTOM_CENTER);\r\n            saveDeleteContainer.setPadding(new Insets(0, 0, 4, 0));\r\n\r\n            // save icon\r\n            ImageView saveBtn = new ImageView(\"save.png\");\r\n            saveBtn.setFitWidth(25);\r\n            saveBtn.setFitHeight(25);\r\n\r\n            saveBtn.setOnMouseClicked(e -> {\r\n                User userToBeSaved = new User(Integer.parseInt(id.getInputText()), fname.getInputText(), lname.getInputText(), \"\", email.getInputText(), phoneNumber.getInputText());\r\n\r\n            });\r\n\r\n            ImageView deleteBtn = new ImageView(\"delete.png\");\r\n            deleteBtn.setFitWidth(25);\r\n            deleteBtn.setFitHeight(25);\r\n\r\n            saveDeleteContainer.getChildren().addAll(saveBtn, deleteBtn);\r\n\r\n\r\n            userContainer.getChildren().addAll(id, email, fname, lname, phoneNumber, saveDeleteContainer);\r\n            mainContainer.getChildren().add(userContainer);\r\n        }\r\n\r\n        return mainContainer;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java b/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java
+--- a/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java	(revision 5dfb1744eb7c7bc32ab1d493fd9299b3ec5dbf27)
++++ b/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java	(date 1733860431637)
+@@ -146,7 +146,7 @@
+             saveBtn.setFitHeight(25);
+ 
+             saveBtn.setOnMouseClicked(e -> {
+-                User userToBeSaved = new User(Integer.parseInt(id.getInputText()), fname.getInputText(), lname.getInputText(), "", email.getInputText(), phoneNumber.getInputText());
++                User userToBeSaved = new User(Integer.parseInt(id.getInputText()), fname.getInputText(), lname.getInputText(), "", email.getInputText(), phoneNumber.getInputText() , "");
+ 
+             });
+ 
+Index: src/main/java/com/example/javafxfinalproject/Components/Carousel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/Carousel.java b/src/main/java/com/example/javafxfinalproject/Components/Carousel.java
+new file mode 100644
+--- /dev/null	(date 1733861999078)
++++ b/src/main/java/com/example/javafxfinalproject/Components/Carousel.java	(date 1733861999078)
+@@ -0,0 +1,79 @@
++package com.example.javafxfinalproject.Components;
++
++import javafx.scene.control.Button;
++import javafx.scene.image.ImageView;
++import javafx.scene.input.MouseEvent;
++import javafx.scene.layout.HBox;
++import javafx.scene.layout.StackPane;
++
++import java.util.ArrayList;
++
++public class Carousel extends StackPane {
++
++    private final ArrayList<ImageView> images = new ArrayList<>();
++    private int currentIndex = 0;
++    private double dragStartX;
++
++    public Carousel(ArrayList<ImageView> images) {
++        this.images.addAll(images);
++        if (!images.isEmpty()) {
++            getChildren().add(images.getFirst());
++        }
++
++        // Navigation Buttons
++        Button prevButton = new Button("<");
++        Button nextButton = new Button(">");
++
++        prevButton.setOnAction(e -> showPrevious());
++        nextButton.setOnAction(e -> showNext());
++
++        // Button Layout
++        HBox buttonBox = new HBox(10, prevButton, nextButton);
++        buttonBox.setStyle("-fx-alignment: center;");
++        buttonBox.setTranslateY(200); // Adjust positioning
++
++        // Drag Event Handling
++        setOnMousePressed(this::onMousePressed);
++        setOnMouseDragged(this::onMouseDragged);
++        setOnMouseReleased(this::onMouseReleased);
++
++        getChildren().add(buttonBox);
++        setStyle("-fx-background-color: #222; -fx-alignment: center;");
++    }
++
++    private void onMousePressed(MouseEvent event) {
++        dragStartX = event.getX();
++    }
++
++    private void onMouseDragged(MouseEvent event) {
++        double dragDelta = event.getX() - dragStartX;
++        if (dragDelta > 50) { // Swipe right
++            showPrevious();
++            dragStartX = event.getX(); // Reset drag start
++        } else if (dragDelta < -50) { // Swipe left
++            showNext();
++            dragStartX = event.getX(); // Reset drag start
++        }
++    }
++
++    private void onMouseReleased(MouseEvent event) {
++        // Optionally handle releasing logic here
++    }
++
++    private void showPrevious() {
++        if (currentIndex > 0) {
++            getChildren().remove(images.get(currentIndex));
++            currentIndex--;
++            getChildren().add(0, images.get(currentIndex));
++        }
++    }
++
++    private void showNext() {
++        if (currentIndex < images.size() - 1) {
++            getChildren().remove(images.get(currentIndex));
++            currentIndex++;
++            getChildren().add(0, images.get(currentIndex));
++        }
++    }
++
++}
+Index: src/main/java/com/example/javafxfinalproject/Stages/TestStage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java b/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java
+new file mode 100644
+--- /dev/null	(date 1733857962031)
++++ b/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java	(date 1733857962031)
+@@ -0,0 +1,20 @@
++package com.example.javafxfinalproject.Stages;
++
++import com.example.javafxfinalproject.Managers.UserManager;
++import com.example.javafxfinalproject.Models.User;
++import javafx.stage.Stage;
++
++import java.util.ArrayList;
++
++public class TestStage extends Stage {
++
++
++
++    public TestStage() {
++        ArrayList<User> users = new UserManager().getUsers();
++
++        System.out.println(users.getFirst().getId());
++    }
++
++
++}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"added signup stage and updated user model\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Helpers/LogFileHelper.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gitignore\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gitignore\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/Card.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/ProductCards.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/PostgresManager.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AddressManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AddressManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AuthManager.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BaseManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/BaseManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BrandManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/BrandManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartItemManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CategoryManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CategoryManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/DiscountManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/DiscountManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderItemManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderItemManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/PhotoManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/PhotoManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/ProductManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/ProductManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/UserManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/UserManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/SignUpStage.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/SignUpStage.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/styles.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/styles.css\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Enum\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Pull.Settings\">\r\n    <option name=\"OPTIONS\">\r\n      <set>\r\n        <option value=\"REBASE\" />\r\n      </set>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 4\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2p2P8MVFdI2exeqyOV5l1BkkJ3T\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,\r\n    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,\r\n    &quot;Application.MotoCenterApp.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;test-branch-authmanager&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;/Users/alihodroj/Desktop/JavaFxFinalProject/src/main/resources&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.5354839&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\r\n      <recent name=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\r\n      <recent name=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Helpers\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"com.example.javafxfinalproject\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.example.javafxfinalproject.Stages\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"\" />\r\n      <created>1731961038614</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1731961038614</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"commit 1\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731969251555</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731969251555</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"testing connection to Database\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731979452231</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731979452231</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"project setup\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1732047956786</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1732047956786</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"added loginStage\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733628415569</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733628415569</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"added signup stage and updated user model\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733838359920</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733838359920</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"added signup stage and updated user model\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733838426029</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733838426029</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"7\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"commit 1\" />\r\n    <MESSAGE value=\"testing connection to Database\" />\r\n    <MESSAGE value=\"project setup\" />\r\n    <MESSAGE value=\"added loginStage\" />\r\n    <MESSAGE value=\"added signup stage and updated user model\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"added signup stage and updated user model\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 5dfb1744eb7c7bc32ab1d493fd9299b3ec5dbf27)
++++ b/.idea/workspace.xml	(date 1733863105687)
+@@ -4,33 +4,14 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="added signup stage and updated user model">
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Helpers/LogFileHelper.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
++    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="fixed bug in getusers">
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/Carousel.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/Card.java" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/ProductCards.java" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/PostgresManager.java" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AddressManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AddressManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AuthManager.java" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/BaseManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BrandManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/BrandManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartItemManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CategoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CategoryManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/DiscountManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/DiscountManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderItemManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderItemManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/PhotoManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/PhotoManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/ProductManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/ProductManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/UserManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/SignUpStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/SignUpStage.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/resources/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -40,7 +21,6 @@
+   <component name="FileTemplateManagerImpl">
+     <option name="RECENT_TEMPLATES">
+       <list>
+-        <option value="Enum" />
+         <option value="Class" />
+       </list>
+     </option>
+@@ -59,56 +39,70 @@
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="UPDATE_TYPE" value="REBASE" />
++  </component>
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;ramialosmann&quot;
++  }
++}</component>
++  <component name="GithubPullRequestsUISettings"><![CDATA[{
++  "selectedUrlAndAccountId": {
++    "url": "https://github.com/alihodroj-dev/JavaFxFinalProject.git",
++    "accountId": "3f70709c-f955-43f8-9999-7d956e19cfbd"
++  }
++}]]></component>
++  <component name="MavenImportPreferences">
++    <option name="generalSettings">
++      <MavenGeneralSettings>
++        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
++      </MavenGeneralSettings>
++    </option>
++  </component>
++  <component name="ProblemsViewState">
++    <option name="selectedTabId" value="CurrentFile" />
+   </component>
+   <component name="ProjectColorInfo">{
+   &quot;associatedIndex&quot;: 4
+ }</component>
+   <component name="ProjectId" id="2p2P8MVFdI2exeqyOV5l1BkkJ3T" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+-    <ConfirmationsSetting value="1" id="Add" />
++    <ConfirmationsSetting value="2" id="Add" />
+   </component>
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+-    &quot;Application.MotoCenterApp.executor&quot;: &quot;Run&quot;,
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;test-branch-authmanager&quot;,
+-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;/Users/alihodroj/Desktop/JavaFxFinalProject/src/main/resources&quot;,
+-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+-    &quot;project.structure.side.proportion&quot;: &quot;0.5354839&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "Application.HelloApplication.executor": "Run",
++    "Application.MotoCenterApp.executor": "Run",
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "RunOnceActivity.git.unshallow": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "git-widget-placeholder": "managers-testing",
++    "ignore.virus.scanning.warn.message": "true",
++    "kotlin-language-version-configured": "true",
++    "last_opened_file_path": "C:/Users/ramia/IdeaProjects/JavaFxFinalProject",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "project.structure.last.edited": "Libraries",
++    "project.structure.proportion": "0.15",
++    "project.structure.side.proportion": "0.5354839",
++    "settings.editor.selected.configurable": "preferences.pluginManager",
++    "vue.rearranger.settings.migration": "true"
+   }
+-}</component>
+-  <component name="RecentsManager">
+-    <key name="CopyFile.RECENT_KEYS">
+-      <recent name="$PROJECT_DIR$/src/main/resources" />
+-      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components" />
+-    </key>
+-    <key name="MoveFile.RECENT_KEYS">
+-      <recent name="$PROJECT_DIR$/src/main/resources" />
+-      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Helpers" />
+-    </key>
+-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+-      <recent name="com.example.javafxfinalproject" />
+-    </key>
+-    <key name="CopyClassDialog.RECENTS_KEY">
+-      <recent name="com.example.javafxfinalproject.Stages" />
+-    </key>
+-  </component>
++}]]></component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+-        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176" />
++        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.145" />
++        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.145" />
+       </set>
+     </attachedChunks>
+   </component>
+@@ -120,6 +114,8 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1731961038614</updated>
++      <workItem from="1733856629553" duration="304000" />
++      <workItem from="1733858187959" duration="4891000" />
+     </task>
+     <task id="LOCAL-00001" summary="commit 1">
+       <option name="closed" value="true" />
+@@ -145,33 +141,84 @@
+       <option name="project" value="LOCAL" />
+       <updated>1732047956786</updated>
+     </task>
+-    <task id="LOCAL-00004" summary="added loginStage">
++    <task id="LOCAL-00004" summary="managers set up , read functions to all">
+       <option name="closed" value="true" />
+-      <created>1733628415569</created>
++      <created>1733838268629</created>
+       <option name="number" value="00004" />
+       <option name="presentableId" value="LOCAL-00004" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733628415569</updated>
++      <updated>1733838268629</updated>
+     </task>
+-    <task id="LOCAL-00005" summary="added signup stage and updated user model">
++    <task id="LOCAL-00005" summary="managers set up , read functions to all">
+       <option name="closed" value="true" />
+-      <created>1733838359920</created>
++      <created>1733839589321</created>
+       <option name="number" value="00005" />
+       <option name="presentableId" value="LOCAL-00005" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733838359920</updated>
++      <updated>1733839589321</updated>
+     </task>
+-    <task id="LOCAL-00006" summary="added signup stage and updated user model">
++    <task id="LOCAL-00006" summary="added cruds to all managers ( MISSING is PHOTO MANAGER ) , migrated to supabase with population">
+       <option name="closed" value="true" />
+-      <created>1733838426029</created>
++      <created>1733853590895</created>
+       <option name="number" value="00006" />
+       <option name="presentableId" value="LOCAL-00006" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733838426029</updated>
++      <updated>1733853590895</updated>
+     </task>
+-    <option name="localTasksCounter" value="7" />
++    <task id="LOCAL-00007" summary="update now takes the object itself as an argument">
++      <option name="closed" value="true" />
++      <created>1733856010846</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1733856010846</updated>
++    </task>
++    <task id="LOCAL-00008" summary="Added User roles + some user update function + altered the sign up and login functions to fetch the role as well.">
++      <option name="closed" value="true" />
++      <created>1733857924269</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1733857924269</updated>
++    </task>
++    <task id="LOCAL-00009" summary="added tracker to getProducts + added order by id to getUsers">
++      <option name="closed" value="true" />
++      <created>1733859180399</created>
++      <option name="number" value="00009" />
++      <option name="presentableId" value="LOCAL-00009" />
++      <option name="project" value="LOCAL" />
++      <updated>1733859180399</updated>
++    </task>
++    <task id="LOCAL-00010" summary="some fixes in auth and cart manager +  fixed getusers query to return only customer">
++      <option name="closed" value="true" />
++      <created>1733861007496</created>
++      <option name="number" value="00010" />
++      <option name="presentableId" value="LOCAL-00010" />
++      <option name="project" value="LOCAL" />
++      <updated>1733861007496</updated>
++    </task>
++    <task id="LOCAL-00011" summary="my bad bro">
++      <option name="closed" value="true" />
++      <created>1733861056321</created>
++      <option name="number" value="00011" />
++      <option name="presentableId" value="LOCAL-00011" />
++      <option name="project" value="LOCAL" />
++      <updated>1733861056321</updated>
++    </task>
++    <task id="LOCAL-00012" summary="fixed bug in getusers">
++      <option name="closed" value="true" />
++      <created>1733862450510</created>
++      <option name="number" value="00012" />
++      <option name="presentableId" value="LOCAL-00012" />
++      <option name="project" value="LOCAL" />
++      <updated>1733862450510</updated>
++    </task>
++    <option name="localTasksCounter" value="13" />
+     <servers />
+   </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
+   <component name="Vcs.Log.Tabs.Properties">
+     <option name="TAB_STATES">
+       <map>
+@@ -187,8 +234,14 @@
+     <MESSAGE value="commit 1" />
+     <MESSAGE value="testing connection to Database" />
+     <MESSAGE value="project setup" />
+-    <MESSAGE value="added loginStage" />
+-    <MESSAGE value="added signup stage and updated user model" />
+-    <option name="LAST_COMMIT_MESSAGE" value="added signup stage and updated user model" />
++    <MESSAGE value="managers set up , read functions to all" />
++    <MESSAGE value="added cruds to all managers ( MISSING is PHOTO MANAGER ) , migrated to supabase with population" />
++    <MESSAGE value="update now takes the object itself as an argument" />
++    <MESSAGE value="Added User roles + some user update function + altered the sign up and login functions to fetch the role as well." />
++    <MESSAGE value="added tracker to getProducts + added order by id to getUsers" />
++    <MESSAGE value="some fixes in auth and cart manager +  fixed getusers query to return only customer" />
++    <MESSAGE value="my bad bro" />
++    <MESSAGE value="fixed bug in getusers" />
++    <option name="LAST_COMMIT_MESSAGE" value="fixed bug in getusers" />
+   </component>
+ </project>
+\ No newline at end of file

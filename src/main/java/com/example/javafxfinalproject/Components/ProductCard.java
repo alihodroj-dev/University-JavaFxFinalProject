@@ -1,6 +1,5 @@
 package com.example.javafxfinalproject.Components;
 import com.example.javafxfinalproject.Managers.CartItemManager;
-import com.example.javafxfinalproject.Managers.CartManager;
 import com.example.javafxfinalproject.Managers.PhotoManager;
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.Photo;

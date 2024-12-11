@@ -1,0 +1,963 @@
+Index: src/main/java/com/example/javafxfinalproject/MotoCenterApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject;\r\n\r\nimport com.example.javafxfinalproject.Helpers.RememberMeHelper;\r\nimport com.example.javafxfinalproject.Managers.UserManager;\r\nimport com.example.javafxfinalproject.Models.User;\r\nimport com.example.javafxfinalproject.Stages.AdminStage;\r\nimport com.example.javafxfinalproject.Stages.LoginStage;\r\nimport javafx.application.Application;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.io.IOException;\r\nimport java.util.List;\r\n\r\npublic class MotoCenterApp extends Application {\r\n\r\n\r\n    @Override\r\n    public void start(Stage stage) throws IOException {\r\n\r\n        List<String> credentials = RememberMeHelper.readCredentials();\r\n        if(!credentials.isEmpty()) {\r\n                User user = new UserManager().getUserById(Integer.parseInt(credentials.getFirst()));\r\n                if(user != null) {\r\n                    if(credentials.getLast().equalsIgnoreCase(\"admin\")) {\r\n                        AdminStage adminStage = new AdminStage(user);\r\n                    }\r\n                    else {\r\n                        // customer stage here\r\n                    }\r\n                }\r\n        }\r\n\r\n        // MARK: login\r\n        LoginStage loginStage = new LoginStage();\r\n\r\n        // MARK: admin\r\n//        AdminStage adminStage = new AdminStage(new User());\r\n\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        launch(args);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java b/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java
+--- a/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java	(revision 9d2ab9ce03293bd6ad69abfeebbbf2a17d94d078)
++++ b/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java	(date 1733932548905)
+@@ -5,6 +5,7 @@
+ import com.example.javafxfinalproject.Models.User;
+ import com.example.javafxfinalproject.Stages.AdminStage;
+ import com.example.javafxfinalproject.Stages.LoginStage;
++import com.example.javafxfinalproject.Stages.TestStage;
+ import javafx.application.Application;
+ import javafx.stage.Stage;
+ 
+@@ -17,24 +18,7 @@
+     @Override
+     public void start(Stage stage) throws IOException {
+ 
+-        List<String> credentials = RememberMeHelper.readCredentials();
+-        if(!credentials.isEmpty()) {
+-                User user = new UserManager().getUserById(Integer.parseInt(credentials.getFirst()));
+-                if(user != null) {
+-                    if(credentials.getLast().equalsIgnoreCase("admin")) {
+-                        AdminStage adminStage = new AdminStage(user);
+-                    }
+-                    else {
+-                        // customer stage here
+-                    }
+-                }
+-        }
+-
+-        // MARK: login
+-        LoginStage loginStage = new LoginStage();
+-
+-        // MARK: admin
+-//        AdminStage adminStage = new AdminStage(new User());
++        TestStage  testStage = new TestStage(new UserManager().getUserById(5));
+ 
+     }
+ 
+Index: src/main/java/com/example/javafxfinalproject/Stages/TestStage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java b/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java
+new file mode 100644
+--- /dev/null	(date 1733933743946)
++++ b/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java	(date 1733933743946)
+@@ -0,0 +1,49 @@
++package com.example.javafxfinalproject.Stages;
++
++import com.example.javafxfinalproject.Components.ProductCard;
++import com.example.javafxfinalproject.Managers.CartManager;
++import com.example.javafxfinalproject.Managers.ProductManager;
++import com.example.javafxfinalproject.Managers.UserManager;
++import com.example.javafxfinalproject.Models.Cart;
++import com.example.javafxfinalproject.Models.Product;
++import com.example.javafxfinalproject.Models.User;
++import javafx.geometry.Insets;
++import javafx.geometry.Pos;
++import javafx.scene.Scene;
++import javafx.scene.layout.FlowPane;
++import javafx.scene.layout.StackPane;
++import javafx.stage.Stage;
++
++import java.util.ArrayList;
++
++public class TestStage extends Stage {
++
++
++
++    public TestStage(User user) {
++        Cart userCart = new CartManager().getCartByUserId(user.getId());
++        FlowPane flowPane = new FlowPane();
++        flowPane.setHgap(20);
++        flowPane.setVgap(20);
++        flowPane.setPrefWrapLength(1220);
++        flowPane.setAlignment(Pos.CENTER);
++        flowPane.setPadding(new Insets(20 , 20 , 20 , 20));
++        ArrayList<Product> products = new ProductManager().getProducts(1);
++        for(Product product : products) {
++            ProductCard productCard = new ProductCard(this , product , this.getWidth() / ((double) products.size() / 2), userCart.getId());
++            flowPane.getChildren().add(productCard);
++
++        }
++
++        StackPane container = new StackPane();
++        container.getChildren().add(flowPane);
++        container.setPrefSize(1440 , 920);
++        Scene scene = new Scene(container);
++        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
++        setScene(scene);
++        this.show();
++
++    }
++
++
++}
+Index: .idea/dataSources.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/dataSources.xml b/.idea/dataSources.xml
+new file mode 100644
+--- /dev/null	(date 1733925709431)
++++ b/.idea/dataSources.xml	(date 1733925709431)
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
++    <data-source source="LOCAL" name="postgres@aws-0-eu-central-1.pooler.supabase.com" uuid="3a817756-527f-46e3-93f9-da71e4d32835">
++      <driver-ref>postgresql</driver-ref>
++      <synchronize>true</synchronize>
++      <configured-by-url>true</configured-by-url>
++      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
++      <jdbc-url>jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres?user=postgres.trrqccfwcijxtlrdwxuc&amp;password=0ieIzEv9kAiKvSLE</jdbc-url>
++      <jdbc-additional-properties>
++        <property name="com.intellij.clouds.kubernetes.db.host.port" />
++        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
++        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
++        <property name="com.intellij.clouds.kubernetes.db.container.port" />
++      </jdbc-additional-properties>
++      <working-dir>$ProjectFileDir$</working-dir>
++    </data-source>
++  </component>
++</project>
+\ No newline at end of file
+Index: src/main/java/com/example/javafxfinalproject/Components/FormField.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject.Components;\r\n\r\nimport javafx.scene.control.Label;\r\nimport javafx.scene.control.TextField;\r\nimport javafx.scene.layout.VBox;\r\n\r\npublic class FormField extends VBox {\r\n\r\n    private final TextField inputField = new TextField();\r\n\r\n    public FormField(String labelText, String placeholder) {\r\n        // Create and style the label\r\n        Label label = new Label(labelText);\r\n        label.getStyleClass().add(\"form-label\");\r\n\r\n        // Create and style the input field\r\n        inputField.setPromptText(placeholder);\r\n        inputField.getStyleClass().add(\"input-field\");\r\n\r\n        // Apply spacing\r\n        this.setSpacing(10);\r\n\r\n        // Add components to the container\r\n        this.getChildren().addAll(label, inputField);\r\n    }\r\n\r\n    // Getter for the input field text\r\n    public String getInputText() {\r\n        return inputField.getText();\r\n    }\r\n\r\n    public void setInputText(String newValue) {\r\n        this.inputField.setText(newValue);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/FormField.java b/src/main/java/com/example/javafxfinalproject/Components/FormField.java
+--- a/src/main/java/com/example/javafxfinalproject/Components/FormField.java	(revision 9d2ab9ce03293bd6ad69abfeebbbf2a17d94d078)
++++ b/src/main/java/com/example/javafxfinalproject/Components/FormField.java	(date 1733863754590)
+@@ -19,7 +19,7 @@
+ 
+         // Apply spacing
+         this.setSpacing(10);
+-
++        // hello
+         // Add components to the container
+         this.getChildren().addAll(label, inputField);
+     }
+@@ -33,4 +33,5 @@
+         this.inputField.setText(newValue);
+     }
+ 
++
+ }
+Index: .idea/sqldialects.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/sqldialects.xml b/.idea/sqldialects.xml
+new file mode 100644
+--- /dev/null	(date 1733926157715)
++++ b/.idea/sqldialects.xml	(date 1733926157715)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="SqlDialectMappings">
++    <file url="file://$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java" dialect="GenericSQL" />
++    <file url="file://$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java" dialect="GenericSQL" />
++    <file url="PROJECT" dialect="GenericSQL" />
++  </component>
++</project>
+\ No newline at end of file
+Index: src/main/resources/styles.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/* Basic Styles */\r\n.root {\r\n    -fx-font-family: 'Segoe UI', sans-serif;\r\n    -fx-background-color: #121212;\r\n    -fx-text-fill: #343a40;\r\n}\r\n\r\n.sidebar {\r\n    -fx-background-color: #333333;\r\n}\r\n\r\n.sidebar-button {\r\n        -fx-background-color: #333333;\r\n        -fx-text-fill: #E0E0E0;\r\n        -fx-padding: 6px 16px;\r\n        -fx-background-radius: 6px;\r\n        -fx-border-radius: 6px;\r\n        -fx-font-size: 18px;\r\n        -fx-font-weight: bold;\r\n}\r\n\r\n.sidebar-button:hover {\r\n    -fx-background-color: #666666;\r\n}\r\n\r\n.card {\r\n    -fx-background-color: #ffffff;\r\n    -fx-border-color: #e9ecef;\r\n    -fx-border-radius: 8px;\r\n    -fx-border-width: 1px;\r\n    -fx-padding: 16px;\r\n    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 3);\r\n}\r\n\r\n.card-header {\r\n    -fx-font-size: 20px;\r\n    -fx-font-weight: bold;\r\n    -fx-text-fill: #212529;\r\n    -fx-padding: 0 0 12px 0;\r\n}\r\n\r\n.card-description {\r\n    -fx-font-size: 12px;\r\n    -fx-text-fill: #6c757d;\r\n}\r\n\r\n.card-category-brand {\r\n    -fx-font-size: 14px;\r\n    -fx-text-fill: #495057;\r\n}\r\n\r\n.card-category {\r\n    -fx-font-weight: bold;\r\n}\r\n\r\n.card-brand {\r\n    -fx-font-style: italic;\r\n}\r\n\r\n.card-price {\r\n    -fx-font-size: 20px;\r\n    -fx-font-weight: bold;\r\n    -fx-text-fill: #10B981; /* Tailwind green-500 */\r\n}\r\n\r\n.card-button-box {\r\n    -fx-spacing: 10;\r\n}\r\n\r\n.card-add-to-cart-button {\r\n    -fx-background-color: #10B981; /* Tailwind green-500 */\r\n    -fx-text-fill: white;\r\n    -fx-padding: 5 10;\r\n    -fx-background-radius: 5;\r\n}\r\n\r\n.card-view-button {\r\n    -fx-background-color: #007bff;\r\n    -fx-text-fill: white;\r\n    -fx-padding: 5 10;\r\n    -fx-background-radius: 5;\r\n}\r\n\r\n/* Button Styles */\r\n.button-primary {\r\n    -fx-background-color: #333333;\r\n    -fx-text-fill: #E0E0E0;\r\n    -fx-padding: 6px 16px;\r\n    -fx-background-radius: 6px;\r\n    -fx-border-radius: 6px;\r\n    -fx-font-size: 14px;\r\n}\r\n\r\n.button-primary:hover {\r\n    -fx-background-color: #666666;\r\n}\r\n\r\n/* Form Elements */\r\n.input-field {\r\n    -fx-background-color: #333333;\r\n    -fx-border-color: #444444;\r\n    -fx-border-radius: 6px;\r\n    -fx-background-radius: 6px;\r\n    -fx-padding: 6px 8px;\r\n    -fx-font-size: 14px;\r\n    -fx-text-fill: #E0E0E0;\r\n}\r\n\r\n.input-field:focused {\r\n    -fx-border-color: #888888;\r\n}\r\n\r\n.text-area {\r\n    -fx-background-color: #ffffff;\r\n    -fx-border-color: #ced4da;\r\n    -fx-border-radius: 5px;\r\n    -fx-padding: 8px;\r\n    -fx-font-size: 14px;\r\n}\r\n\r\n.heading {\r\n    -fx-font-size: 26px;\r\n    -fx-text-fill: #E0E0E0;\r\n    -fx-font-weight: bold;\r\n}\r\n\r\n.form-label {\r\n    -fx-font-size: 14px;\r\n    -fx-text-fill: #E0E0E0;\r\n    -fx-padding: 4px 0;\r\n}\r\n\r\n.checkbox {\r\n    -fx-padding: 8px 0;\r\n    -fx-font-size: 14px;\r\n}\r\n\r\n/* Containers */\r\n.container {\r\n    -fx-padding: 20px;\r\n    -fx-background-color: #f1f3f5;\r\n    -fx-border-radius: 10px;\r\n}\r\n\r\n.section {\r\n    -fx-padding: 16px;\r\n    -fx-background-color: #ffffff;\r\n    -fx-border-color: #e9ecef;\r\n    -fx-border-width: 1px;\r\n    -fx-border-radius: 8px;\r\n    -fx-spacing: 10px;\r\n}\r\n\r\n.section-header {\r\n    -fx-font-size: 18px;\r\n    -fx-font-weight: bold;\r\n    -fx-text-fill: #343a40;\r\n}\r\n\r\n.sidebar-item {\r\n    -fx-font-size: 14px;\r\n    -fx-text-fill: #adb5bd;\r\n    -fx-padding: 8px 0;\r\n}\r\n\r\n.sidebar-item:hover {\r\n    -fx-text-fill: #ffffff;\r\n}\r\n\r\n.header {\r\n  -fx-background-color: #343a40;\r\n}\r\n\r\n.navbar {\r\n    -fx-background-color: #343a40;\r\n    -fx-text-fill: white;\r\n    -fx-padding: 10px 20px;\r\n    -fx-spacing: 20px;\r\n}\r\n\r\n.navbar-link {\r\n    -fx-font-size: 14px;\r\n    -fx-text-fill: #adb5bd;\r\n    -fx-padding: 5px 10px;\r\n}\r\n\r\n.navbar-link:hover {\r\n    -fx-text-fill: #ffffff;\r\n}\r\n\r\n.flex-row {\r\n    -fx-hgap: 10px;\r\n    -fx-alignment: center-left;\r\n}\r\n\r\n.flex-column {\r\n    -fx-vgap: 10px;\r\n    -fx-alignment: center-left;\r\n}\r\n\r\n.grid {\r\n    -fx-hgap: 15px;\r\n    -fx-vgap: 15px;\r\n}\r\n\r\n.modal {\r\n    -fx-background-color: #ffffff;\r\n    -fx-background-radius: 10px;\r\n    -fx-padding: 20px;\r\n    -fx-border-color: #e9ecef;\r\n    -fx-border-width: 1px;\r\n    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);\r\n}\r\n\r\n.tooltip {\r\n    -fx-background-color: #343a40;\r\n    -fx-text-fill: #ffffff;\r\n    -fx-padding: 6px 12px;\r\n    -fx-background-radius: 5px;\r\n    -fx-font-size: 12px;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/styles.css b/src/main/resources/styles.css
+--- a/src/main/resources/styles.css	(revision 9d2ab9ce03293bd6ad69abfeebbbf2a17d94d078)
++++ b/src/main/resources/styles.css	(date 1733932704994)
+@@ -24,61 +24,108 @@
+ }
+ 
+ .card {
+-    -fx-background-color: #ffffff;
+-    -fx-border-color: #e9ecef;
++    -fx-background-color: #1a1a1a; /* Slightly lighter than the root background */
++    -fx-border-color: #2b2b2b; /* Muted, darker border */
+     -fx-border-radius: 8px;
+     -fx-border-width: 1px;
+     -fx-padding: 16px;
+-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 3);
++    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 2, 4); /* Subtle shadow */
++    -fx-spacing: 10px;
++    -fx-background-radius: 8px; /* Matches the border radius */
++    -fx-background-insets: 1; /* Ensures background stays within the border */
+ }
+ 
++/* Card Header Style */
+ .card-header {
+-    -fx-font-size: 20px;
++    -fx-font-size: 15px;
+     -fx-font-weight: bold;
+-    -fx-text-fill: #212529;
+-    -fx-padding: 0 0 12px 0;
++    -fx-text-fill: #e0e0e0; /* Bright text similar to root */
++    -fx-padding: 0 0 8px 0;
+ }
+ 
++/* Card Description Text */
+ .card-description {
+-    -fx-font-size: 12px;
+-    -fx-text-fill: #6c757d;
+-}
+-
+-.card-category-brand {
+     -fx-font-size: 14px;
+-    -fx-text-fill: #495057;
+-}
+-
+-.card-category {
+-    -fx-font-weight: bold;
+-}
+-
+-.card-brand {
+-    -fx-font-style: italic;
++    -fx-text-fill: #b0b0b0; /* Muted gray for contrast */
++    -fx-padding: 0 0 8px 0;
+ }
+ 
++/* Card Price Text */
+ .card-price {
+-    -fx-font-size: 20px;
+-    -fx-font-weight: bold;
+-    -fx-text-fill: #10B981; /* Tailwind green-500 */
++    -fx-font-size: 18px;
++    -fx-font-weight: bold; /* Bold styling for emphasis */
++    -fx-text-fill: #e0e0e0; /* Text matches root's light color */
++    -fx-padding: 8px 0;
+ }
+ 
++/* Card Button Box */
+ .card-button-box {
+-    -fx-spacing: 10;
++    -fx-spacing: 10px;
++    -fx-padding: 8px 0;
+ }
+ 
++/* Add to Cart Button */
+ .card-add-to-cart-button {
+-    -fx-background-color: #10B981; /* Tailwind green-500 */
+-    -fx-text-fill: white;
+-    -fx-padding: 5 10;
+-    -fx-background-radius: 5;
++    -fx-background-color: #333333; /* Matches primary button style */
++    -fx-text-fill: #e0e0e0; /* Contrast light text */
++    -fx-padding: 8px 12px;
++    -fx-background-radius: 6px;
++    -fx-font-size: 14px;
++    -fx-font-weight: bold;
++    -fx-border-radius: 6px;
++    -fx-cursor: hand; /* Pointer cursor for interactivity */
++}
++
++.card-add-to-cart-button:hover {
++    -fx-background-color: #666666; /* Darker gray on hover */
+ }
+ 
++/* View Button */
+ .card-view-button {
+-    -fx-background-color: #007bff;
+-    -fx-text-fill: white;
+-    -fx-padding: 5 10;
+-    -fx-background-radius: 5;
++    -fx-background-color: #333333; /* Matches Add to Cart button */
++    -fx-text-fill: #e0e0e0;
++    -fx-padding: 8px 12px;
++    -fx-background-radius: 6px;
++    -fx-font-size: 14px;
++    -fx-font-weight: bold;
++    -fx-border-radius: 6px;
++    -fx-cursor: hand;
++}
++
++.card-view-button:hover {
++    -fx-background-color: #666666; /* Darker gray on hover */
++}
++
++/* Image Styles */
++.card-image {
++    -fx-background-color: #2a2a2a; /* Darker contrast for images */
++    -fx-padding: 8px;
++    -fx-border-radius: 6px;
++    -fx-min-height: 150px; /* Placeholder height */
++    -fx-min-width: 100%; /* Full Width */
++    -fx-alignment: center;
++}
++
++.card-image img {
++    -fx-fit-width: 100%; /* Ensures the image scales to fit */
++    -fx-border-radius: 6px; /* Slightly rounded corners for images */
++}
++
++/* General Text Styling */
++.muted-text {
++    -fx-font-size: 12px;
++    -fx-text-fill: #B0B0B0; /* Muted gray for supporting text */
++}
++
++.heading {
++    -fx-font-size: 20px;
++    -fx-text-fill: #E0E0E0;
++    -fx-font-weight: bold;
++}
++
++.text-highlight {
++    -fx-text-fill: #5CB85C; /* Green text highlight */
++    -fx-font-weight: bold;
+ }
+ 
+ /* Button Styles */
+Index: src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject.Managers;\r\n\r\nimport com.example.javafxfinalproject.Models.ActionResult;\r\nimport com.example.javafxfinalproject.Models.CartItem;\r\n\r\nimport java.sql.Connection;\r\nimport java.sql.PreparedStatement;\r\nimport java.sql.ResultSet;\r\nimport java.sql.SQLException;\r\nimport java.util.ArrayList;\r\n\r\nimport static java.sql.DriverManager.getConnection;\r\n\r\npublic class CartItemManager extends BaseManager {\r\n\r\n    // Get all cart items by cart ID\r\n    public ArrayList<CartItem> getCartItemsByCartId(int cartId) {\r\n        ArrayList<CartItem> cartItems = new ArrayList<>();\r\n        String sql = \"SELECT ci.id AS cart_item_id, \" +\r\n                \"       ci.cart_id, \" +\r\n                \"       ci.product_id, \" +\r\n                \"       ci.quantity \" +\r\n                \"FROM cart_items ci \" +\r\n                \"WHERE ci.cart_id = ?;\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             PreparedStatement stmt = connection.prepareStatement(sql)) {\r\n\r\n            stmt.setInt(1, cartId);\r\n            ResultSet rs = stmt.executeQuery();\r\n\r\n            while (rs.next()) {\r\n                int cartItemId = rs.getInt(\"cart_item_id\");\r\n                int productId = rs.getInt(\"product_id\");\r\n                int quantity = rs.getInt(\"quantity\");\r\n\r\n                // Create a CartItem object and add it to the list\r\n                CartItem cartItem = new CartItem(cartItemId, cartId, productId, quantity);\r\n                cartItems.add(cartItem);\r\n            }\r\n\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n        }\r\n\r\n        return cartItems;\r\n    }\r\n\r\n    // Add a new cart item\r\n    public ActionResult<CartItem> addCartItem(int cartId, int productId, int quantity) {\r\n        String sql = \"INSERT INTO cart_items (cart_id, product_id, quantity) \" +\r\n                \"VALUES (?, ?, ?)\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {\r\n\r\n            stmt.setInt(1, cartId);\r\n            stmt.setInt(2, productId);\r\n            stmt.setInt(3, quantity);\r\n\r\n            int affectedRows = stmt.executeUpdate();\r\n\r\n            if (affectedRows > 0) {\r\n                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {\r\n                    if (generatedKeys.next()) {\r\n                        int newId = generatedKeys.getInt(1); // Get the generated ID\r\n                        CartItem cartItem = new CartItem(newId, cartId, productId, quantity);\r\n                        return ActionResult.success(cartItem, \"Cart item added successfully\");\r\n                    }\r\n                }\r\n            }\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n            return ActionResult.error(null, \"An error occurred while adding the cart item: \" + e.getMessage());\r\n        }\r\n        return ActionResult.error(null, \"Could not add cart item, please try again\");\r\n    }\r\n\r\n    // Update an existing cart item\r\n    public ActionResult<String> updateCartItem(CartItem cartItem) {\r\n        String sql = \"UPDATE cart_items SET quantity = ? WHERE id = ?\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             PreparedStatement stmt = connection.prepareStatement(sql)) {\r\n\r\n            stmt.setInt(1, cartItem.getQuantity());\r\n            stmt.setInt(2, cartItem.getId()); // Set the cart item ID to identify the record\r\n\r\n            int affectedRows = stmt.executeUpdate();\r\n\r\n            if (affectedRows > 0) {\r\n                return ActionResult.success(null,\"Cart item updated successfully\");\r\n            } else {\r\n                return ActionResult.error(null, \"Could not update cart item, please try again\");\r\n            }\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n            return ActionResult.error(null, \"An error occurred while updating the cart item: \" + e.getMessage());\r\n        }\r\n    }\r\n\r\n    // Delete a cart item by its ID\r\n    public ActionResult<String> deleteCartItem(int id) {\r\n        String sql = \"DELETE FROM cart_items WHERE id = ?\";\r\n\r\n        try (Connection connection = getConnection(connectionString);\r\n             PreparedStatement stmt = connection.prepareStatement(sql)) {\r\n\r\n            stmt.setInt(1, id); // Set the cart item ID to delete\r\n\r\n            int affectedRows = stmt.executeUpdate();\r\n\r\n            if (affectedRows > 0) {\r\n                return ActionResult.success(null,\"Cart item deleted successfully\");\r\n            } else {\r\n                return ActionResult.error(null, \"Could not delete cart item, please try again\");\r\n            }\r\n        } catch (SQLException e) {\r\n            e.printStackTrace();\r\n            return ActionResult.error(null, \"An error occurred while deleting the cart item: \" + e.getMessage());\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java b/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java
+--- a/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java	(revision 9d2ab9ce03293bd6ad69abfeebbbf2a17d94d078)
++++ b/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java	(date 1733933556361)
+@@ -47,7 +47,12 @@
+     }
+ 
+     // Add a new cart item
+-    public ActionResult<CartItem> addCartItem(int cartId, int productId, int quantity) {
++    public ActionResult<String> addCartItem(int cartId, int productId, int quantity) {
++        Integer existingQuantity = checkIfCartItemExists(cartId, productId);
++        if(existingQuantity != null) {
++            addQuantity(existingQuantity + quantity, cartId , productId );
++            return ActionResult.success(""+existingQuantity + quantity, "Product addedd to cart");
++        }
+         String sql = "INSERT INTO cart_items (cart_id, product_id, quantity) " +
+                 "VALUES (?, ?, ?)";
+ 
+@@ -64,16 +69,16 @@
+                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                     if (generatedKeys.next()) {
+                         int newId = generatedKeys.getInt(1); // Get the generated ID
+-                        CartItem cartItem = new CartItem(newId, cartId, productId, quantity);
+-                        return ActionResult.success(cartItem, "Cart item added successfully");
++
++                        return ActionResult.success(""+newId, "Product added to cart");
+                     }
+                 }
+             }
+         } catch (SQLException e) {
+             e.printStackTrace();
+-            return ActionResult.error(null, "An error occurred while adding the cart item: " + e.getMessage());
++            return ActionResult.error(null, "An error occurred while adding the cart : " + e.getMessage());
+         }
+-        return ActionResult.error(null, "Could not add cart item, please try again");
++        return ActionResult.error(null, "Could not add product, please try again");
+     }
+ 
+     // Update an existing cart item
+@@ -95,7 +100,29 @@
+             }
+         } catch (SQLException e) {
+             e.printStackTrace();
+-            return ActionResult.error(null, "An error occurred while updating the cart item: " + e.getMessage());
++            return ActionResult.error(null, "An error occurred while updating the cart : " + e.getMessage());
++        }
++    }
++    public ActionResult<String> addQuantity(int newQuantity , int cartId , int productid) {
++        String sql = "UPDATE cart_items SET quantity = ? WHERE cart_id = ? AND product_id = ? ";
++
++        try (Connection connection = getConnection(connectionString);
++             PreparedStatement stmt = connection.prepareStatement(sql)) {
++
++            stmt.setInt(1, newQuantity);
++            stmt.setInt(2, cartId);
++            stmt.setInt(3, productid);
++
++            int affectedRows = stmt.executeUpdate();
++
++            if (affectedRows > 0) {
++                return ActionResult.success(null,"Added Product");
++            } else {
++                return ActionResult.error(null, "Could not add product, please try again");
++            }
++        } catch (SQLException e) {
++            e.printStackTrace();
++            return ActionResult.error(null, "An error occurred while updating the cart : " + e.getMessage());
+         }
+     }
+ 
+@@ -120,4 +147,24 @@
+             return ActionResult.error(null, "An error occurred while deleting the cart item: " + e.getMessage());
+         }
+     }
++
++    private Integer checkIfCartItemExists(int cartId, int productId)  {
++        String checkSql = "SELECT quantity FROM cart_items WHERE cart_id = ? AND product_id = ?";
++
++        try (Connection connection = getConnection(connectionString) ;PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
++            checkStmt.setInt(1, cartId);
++            checkStmt.setInt(2, productId);
++
++            try (ResultSet rs = checkStmt.executeQuery()) {
++                if(rs.next()) {
++                   return rs.getInt("quantity");
++                }
++                return null;
++            }
++        }
++        catch (SQLException e) {
++            e.printStackTrace();
++            return null;
++        }
++    }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"working on admin panel\">\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/avatar.png\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/delete.png\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/save.png\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/settings.png\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/SettingsStage.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/SecureFormField.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/SecureFormField.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Enum\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Pull.Settings\">\r\n    <option name=\"OPTIONS\">\r\n      <set>\r\n        <option value=\"REBASE\" />\r\n      </set>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 4\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2p2P8MVFdI2exeqyOV5l1BkkJ3T\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,\r\n    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,\r\n    &quot;Application.MotoCenterApp.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;test-branch-authmanager&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;/Users/alihodroj/Desktop/JavaFxFinalProject/src/main/resources&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.5354839&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\r\n      <recent name=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\r\n      <recent name=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Helpers\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"com.example.javafxfinalproject\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.example.javafxfinalproject.Stages\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"\" />\r\n      <created>1731961038614</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1731961038614</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"commit 1\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731969251555</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731969251555</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"testing connection to Database\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731979452231</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731979452231</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"project setup\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1732047956786</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1732047956786</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"added loginStage\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733628415569</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733628415569</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"added signup stage and updated user model\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733838359920</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733838359920</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"added signup stage and updated user model\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733838426029</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733838426029</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"working on admin panel\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733856662935</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733856662935</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"working on admin panel\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733856735234</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733856735234</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"9\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"commit 1\" />\r\n    <MESSAGE value=\"testing connection to Database\" />\r\n    <MESSAGE value=\"project setup\" />\r\n    <MESSAGE value=\"added loginStage\" />\r\n    <MESSAGE value=\"added signup stage and updated user model\" />\r\n    <MESSAGE value=\"working on admin panel\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"working on admin panel\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 9d2ab9ce03293bd6ad69abfeebbbf2a17d94d078)
++++ b/.idea/workspace.xml	(date 1733933744011)
+@@ -4,20 +4,17 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="working on admin panel">
+-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/avatar.png" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/delete.png" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/save.png" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_12_2024,_8_52 PM_[Changes]/settings.png" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/SettingsStage.java" afterDir="false" />
++    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="fixed add product">
++      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/Carousel.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/ProductCard.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/SecureFormField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/SecureFormField.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/MotoCenterApp.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/AdminStage.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles.css" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -27,7 +24,6 @@
+   <component name="FileTemplateManagerImpl">
+     <option name="RECENT_TEMPLATES">
+       <list>
+-        <option value="Enum" />
+         <option value="Class" />
+       </list>
+     </option>
+@@ -46,56 +42,75 @@
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="UPDATE_TYPE" value="REBASE" />
++  </component>
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;ramialosmann&quot;
++  }
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/alihodroj-dev/JavaFxFinalProject.git&quot;,
++    &quot;accountId&quot;: &quot;3f70709c-f955-43f8-9999-7d956e19cfbd&quot;
++  }
++}</component>
++  <component name="MavenImportPreferences">
++    <option name="generalSettings">
++      <MavenGeneralSettings>
++        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
++      </MavenGeneralSettings>
++    </option>
++  </component>
++  <component name="ProblemsViewState">
++    <option name="selectedTabId" value="CurrentFile" />
+   </component>
+   <component name="ProjectColorInfo">{
+   &quot;associatedIndex&quot;: 4
+ }</component>
+   <component name="ProjectId" id="2p2P8MVFdI2exeqyOV5l1BkkJ3T" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+-    <ConfirmationsSetting value="1" id="Add" />
++    <ConfirmationsSetting value="2" id="Add" />
+   </component>
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+-    &quot;Application.MotoCenterApp.executor&quot;: &quot;Run&quot;,
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;test-branch-authmanager&quot;,
+-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;/Users/alihodroj/Desktop/JavaFxFinalProject/src/main/resources&quot;,
+-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+-    &quot;project.structure.side.proportion&quot;: &quot;0.5354839&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+-  }
+-}</component>
+-  <component name="RecentsManager">
+-    <key name="CopyFile.RECENT_KEYS">
+-      <recent name="$PROJECT_DIR$/src/main/resources" />
+-      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components" />
+-    </key>
+-    <key name="MoveFile.RECENT_KEYS">
+-      <recent name="$PROJECT_DIR$/src/main/resources" />
+-      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Helpers" />
+-    </key>
+-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+-      <recent name="com.example.javafxfinalproject" />
+-    </key>
+-    <key name="CopyClassDialog.RECENTS_KEY">
+-      <recent name="com.example.javafxfinalproject.Stages" />
+-    </key>
+-  </component>
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "Application.HelloApplication.executor": "Run",
++    "Application.MotoCenterApp.executor": "Run",
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "RunOnceActivity.git.unshallow": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "git-widget-placeholder": "managers-testing",
++    "ignore.virus.scanning.warn.message": "true",
++    "kotlin-language-version-configured": "true",
++    "last_opened_file_path": "C:/Users/ramia/IdeaProjects/JavaFxFinalProject",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "project.structure.last.edited": "Libraries",
++    "project.structure.proportion": "0.15",
++    "project.structure.side.proportion": "0.5354839",
++    "settings.editor.selected.configurable": "preferences.pluginManager",
++    "vue.rearranger.settings.migration": "true"
++  },
++  "keyToStringList": {
++    "DatabaseDriversLRU": [
++      "postgresql"
++    ]
++  }
++}]]></component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+-        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176" />
++        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.145" />
++        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.145" />
+       </set>
+     </attachedChunks>
+   </component>
+@@ -107,6 +122,11 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1731961038614</updated>
++      <workItem from="1733856629553" duration="304000" />
++      <workItem from="1733858187959" duration="5921000" />
++      <workItem from="1733902378371" duration="255000" />
++      <workItem from="1733902836092" duration="326000" />
++      <workItem from="1733922928063" duration="10540000" />
+     </task>
+     <task id="LOCAL-00001" summary="commit 1">
+       <option name="closed" value="true" />
+@@ -132,49 +152,132 @@
+       <option name="project" value="LOCAL" />
+       <updated>1732047956786</updated>
+     </task>
+-    <task id="LOCAL-00004" summary="added loginStage">
++    <task id="LOCAL-00004" summary="managers set up , read functions to all">
+       <option name="closed" value="true" />
+-      <created>1733628415569</created>
++      <created>1733838268629</created>
+       <option name="number" value="00004" />
+       <option name="presentableId" value="LOCAL-00004" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733628415569</updated>
++      <updated>1733838268629</updated>
+     </task>
+-    <task id="LOCAL-00005" summary="added signup stage and updated user model">
++    <task id="LOCAL-00005" summary="managers set up , read functions to all">
+       <option name="closed" value="true" />
+-      <created>1733838359920</created>
++      <created>1733839589321</created>
+       <option name="number" value="00005" />
+       <option name="presentableId" value="LOCAL-00005" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733838359920</updated>
++      <updated>1733839589321</updated>
+     </task>
+-    <task id="LOCAL-00006" summary="added signup stage and updated user model">
++    <task id="LOCAL-00006" summary="added cruds to all managers ( MISSING is PHOTO MANAGER ) , migrated to supabase with population">
+       <option name="closed" value="true" />
+-      <created>1733838426029</created>
++      <created>1733853590895</created>
+       <option name="number" value="00006" />
+       <option name="presentableId" value="LOCAL-00006" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733838426029</updated>
++      <updated>1733853590895</updated>
+     </task>
+-    <task id="LOCAL-00007" summary="working on admin panel">
++    <task id="LOCAL-00007" summary="update now takes the object itself as an argument">
+       <option name="closed" value="true" />
+-      <created>1733856662935</created>
++      <created>1733856010846</created>
+       <option name="number" value="00007" />
+       <option name="presentableId" value="LOCAL-00007" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733856662935</updated>
++      <updated>1733856010846</updated>
+     </task>
+-    <task id="LOCAL-00008" summary="working on admin panel">
++    <task id="LOCAL-00008" summary="Added User roles + some user update function + altered the sign up and login functions to fetch the role as well.">
+       <option name="closed" value="true" />
+-      <created>1733856735234</created>
++      <created>1733857924269</created>
+       <option name="number" value="00008" />
+       <option name="presentableId" value="LOCAL-00008" />
+       <option name="project" value="LOCAL" />
+-      <updated>1733856735234</updated>
++      <updated>1733857924269</updated>
++    </task>
++    <task id="LOCAL-00009" summary="added tracker to getProducts + added order by id to getUsers">
++      <option name="closed" value="true" />
++      <created>1733859180399</created>
++      <option name="number" value="00009" />
++      <option name="presentableId" value="LOCAL-00009" />
++      <option name="project" value="LOCAL" />
++      <updated>1733859180399</updated>
++    </task>
++    <task id="LOCAL-00010" summary="some fixes in auth and cart manager +  fixed getusers query to return only customer">
++      <option name="closed" value="true" />
++      <created>1733861007496</created>
++      <option name="number" value="00010" />
++      <option name="presentableId" value="LOCAL-00010" />
++      <option name="project" value="LOCAL" />
++      <updated>1733861007496</updated>
++    </task>
++    <task id="LOCAL-00011" summary="my bad bro">
++      <option name="closed" value="true" />
++      <created>1733861056321</created>
++      <option name="number" value="00011" />
++      <option name="presentableId" value="LOCAL-00011" />
++      <option name="project" value="LOCAL" />
++      <updated>1733861056321</updated>
++    </task>
++    <task id="LOCAL-00012" summary="fixed bug in getusers">
++      <option name="closed" value="true" />
++      <created>1733862450510</created>
++      <option name="number" value="00012" />
++      <option name="presentableId" value="LOCAL-00012" />
++      <option name="project" value="LOCAL" />
++      <updated>1733862450510</updated>
++    </task>
++    <task id="LOCAL-00013" summary="added logout btn and remember me functionality">
++      <option name="closed" value="true" />
++      <created>1733924967701</created>
++      <option name="number" value="00013" />
++      <option name="presentableId" value="LOCAL-00013" />
++      <option name="project" value="LOCAL" />
++      <updated>1733924967701</updated>
++    </task>
++    <task id="LOCAL-00014" summary="delete credentials on logout">
++      <option name="closed" value="true" />
++      <created>1733925244690</created>
++      <option name="number" value="00014" />
++      <option name="presentableId" value="LOCAL-00014" />
++      <option name="project" value="LOCAL" />
++      <updated>1733925244690</updated>
+     </task>
+-    <option name="localTasksCounter" value="9" />
++    <task id="LOCAL-00015" summary="added helper function to check if email already exists + added cart creation on user creation">
++      <option name="closed" value="true" />
++      <created>1733926681942</created>
++      <option name="number" value="00015" />
++      <option name="presentableId" value="LOCAL-00015" />
++      <option name="project" value="LOCAL" />
++      <updated>1733926681942</updated>
++    </task>
++    <task id="LOCAL-00016" summary="Added delete user + search by name">
++      <option name="closed" value="true" />
++      <created>1733927448540</created>
++      <option name="number" value="00016" />
++      <option name="presentableId" value="LOCAL-00016" />
++      <option name="project" value="LOCAL" />
++      <updated>1733927448540</updated>
++    </task>
++    <task id="LOCAL-00017" summary="Added a toaster">
++      <option name="closed" value="true" />
++      <created>1733928384438</created>
++      <option name="number" value="00017" />
++      <option name="presentableId" value="LOCAL-00017" />
++      <option name="project" value="LOCAL" />
++      <updated>1733928384438</updated>
++    </task>
++    <task id="LOCAL-00018" summary="fixed add product">
++      <option name="closed" value="true" />
++      <created>1733929556013</created>
++      <option name="number" value="00018" />
++      <option name="presentableId" value="LOCAL-00018" />
++      <option name="project" value="LOCAL" />
++      <updated>1733929556013</updated>
++    </task>
++    <option name="localTasksCounter" value="19" />
+     <servers />
+   </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
+   <component name="Vcs.Log.Tabs.Properties">
+     <option name="TAB_STATES">
+       <map>
+@@ -190,9 +293,20 @@
+     <MESSAGE value="commit 1" />
+     <MESSAGE value="testing connection to Database" />
+     <MESSAGE value="project setup" />
+-    <MESSAGE value="added loginStage" />
+-    <MESSAGE value="added signup stage and updated user model" />
+-    <MESSAGE value="working on admin panel" />
+-    <option name="LAST_COMMIT_MESSAGE" value="working on admin panel" />
++    <MESSAGE value="managers set up , read functions to all" />
++    <MESSAGE value="added cruds to all managers ( MISSING is PHOTO MANAGER ) , migrated to supabase with population" />
++    <MESSAGE value="update now takes the object itself as an argument" />
++    <MESSAGE value="Added User roles + some user update function + altered the sign up and login functions to fetch the role as well." />
++    <MESSAGE value="added tracker to getProducts + added order by id to getUsers" />
++    <MESSAGE value="some fixes in auth and cart manager +  fixed getusers query to return only customer" />
++    <MESSAGE value="my bad bro" />
++    <MESSAGE value="fixed bug in getusers" />
++    <MESSAGE value="added logout btn and remember me functionality" />
++    <MESSAGE value="delete credentials on logout" />
++    <MESSAGE value="added helper function to check if email already exists + added cart creation on user creation" />
++    <MESSAGE value="Added delete user + search by name" />
++    <MESSAGE value="Added a toaster" />
++    <MESSAGE value="fixed add product" />
++    <option name="LAST_COMMIT_MESSAGE" value="fixed add product" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/main/java/com/example/javafxfinalproject/Components/ProductCard.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/ProductCard.java b/src/main/java/com/example/javafxfinalproject/Components/ProductCard.java
+new file mode 100644
+--- /dev/null	(date 1733933697184)
++++ b/src/main/java/com/example/javafxfinalproject/Components/ProductCard.java	(date 1733933697184)
+@@ -0,0 +1,88 @@
++package com.example.javafxfinalproject.Components;
++
++import com.example.javafxfinalproject.Managers.CartItemManager;
++import com.example.javafxfinalproject.Managers.CartManager;
++import com.example.javafxfinalproject.Managers.PhotoManager;
++import com.example.javafxfinalproject.Models.ActionResult;
++import com.example.javafxfinalproject.Models.Photo;
++import com.example.javafxfinalproject.Models.Product;
++import javafx.geometry.Insets;
++import javafx.geometry.Pos;
++import javafx.scene.control.Button;
++import javafx.scene.image.Image;
++import javafx.scene.image.ImageView;
++import javafx.scene.layout.BorderPane;
++import javafx.scene.layout.VBox;
++import javafx.scene.layout.HBox;
++import javafx.scene.control.Label;
++import javafx.scene.text.TextAlignment;
++import javafx.stage.Stage;
++
++import java.util.ArrayList;
++
++import static com.example.javafxfinalproject.Components.Toast.showToast;
++
++public class ProductCard extends BorderPane {
++
++    private Product product;
++    private ArrayList<Photo> photos;
++
++
++    public ProductCard(Stage stage , Product product , double width, int cartId ) {
++        this.product = product;
++        this.setPrefWidth(width);
++        photos = new PhotoManager().getPhotosByProductId(product.getId());
++
++        // Apply card style
++        this.getStyleClass().add("card");
++
++        // Create the image view
++        ImageView productImage = new ImageView(new Image(photos.stream().filter(Photo::isMain).findFirst().orElse(photos.getFirst()).getUrl()));
++        productImage.setFitWidth(200);
++        productImage.setFitHeight(150);
++        productImage.setPreserveRatio(true);
++
++        // Product title
++        Label productTitle = new Label(product.getName());
++        productTitle.getStyleClass().add("card-header");
++
++        // Product description
++        Label productDescription = new Label(product.getDescription());
++        productDescription.getStyleClass().add("card-description");
++        productDescription.setWrapText(true);
++        productDescription.setTextAlignment(TextAlignment.CENTER);// Allow multiline descriptions
++
++        // Product price
++        Label productPrice = new Label("$" + product.getPrice());
++        productPrice.getStyleClass().add("card-price");
++
++        // Add to cart button
++        Button addToCartButton = new Button("Add to Cart");
++        addToCartButton.getStyleClass().add("card-add-to-cart-button");
++        addToCartButton.setOnAction(e -> {
++            ActionResult<String> response = new CartItemManager().addCartItem(cartId , product.getId() , 1);
++            showToast(stage, response.getMessage());
++        });
++        addToCartButton.setDisable(
++                product.getStock() == 0
++        );
++
++        // Layout for the button
++        HBox buttonBox = new HBox(addToCartButton);
++        buttonBox.setAlignment(Pos.CENTER);
++        buttonBox.setSpacing(10);
++
++
++        // Add components to the card
++        this.setTop(productImage);
++        VBox infoContainer = new VBox(productTitle, productDescription, productPrice);
++        infoContainer.setAlignment(Pos.CENTER);
++        infoContainer.setSpacing(10);
++        infoContainer.setPrefHeight(150);
++        this.setCenter(infoContainer);
++        this.setBottom(buttonBox);
++        BorderPane.setAlignment(buttonBox, Pos.CENTER);
++        BorderPane.setAlignment(productImage, Pos.CENTER);
++        BorderPane.setMargin(infoContainer, new Insets(10, 10, 10, 10));
++    }
++}
+\ No newline at end of file
+Index: src/main/java/com/example/javafxfinalproject/Components/Carousel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/Carousel.java b/src/main/java/com/example/javafxfinalproject/Components/Carousel.java
+new file mode 100644
+--- /dev/null	(date 1733863697029)
++++ b/src/main/java/com/example/javafxfinalproject/Components/Carousel.java	(date 1733863697029)
+@@ -0,0 +1,79 @@
++package com.example.javafxfinalproject.Components;
++
++import javafx.scene.control.Button;
++import javafx.scene.image.ImageView;
++import javafx.scene.input.MouseEvent;
++import javafx.scene.layout.HBox;
++import javafx.scene.layout.StackPane;
++
++import java.util.ArrayList;
++
++public class Carousel extends StackPane {
++
++    private final ArrayList<ImageView> images = new ArrayList<>();
++    private int currentIndex = 0;
++    private double dragStartX;
++
++    public Carousel(ArrayList<ImageView> images) {
++        this.images.addAll(images);
++        if (!images.isEmpty()) {
++            getChildren().add(images.getFirst());
++        }
++
++        // Navigation Buttons
++        Button prevButton = new Button("<");
++        Button nextButton = new Button(">");
++
++        prevButton.setOnAction(e -> showPrevious());
++        nextButton.setOnAction(e -> showNext());
++
++        // Button Layout
++        HBox buttonBox = new HBox(10, prevButton, nextButton);
++        buttonBox.setStyle("-fx-alignment: center;");
++        buttonBox.setTranslateY(200); // Adjust positioning
++
++        // Drag Event Handling
++        setOnMousePressed(this::onMousePressed);
++        setOnMouseDragged(this::onMouseDragged);
++        setOnMouseReleased(this::onMouseReleased);
++
++        getChildren().add(buttonBox);
++        setStyle("-fx-background-color: #222; -fx-alignment: center;");
++    }
++
++    private void onMousePressed(MouseEvent event) {
++        dragStartX = event.getX();
++    }
++
++    private void onMouseDragged(MouseEvent event) {
++        double dragDelta = event.getX() - dragStartX;
++        if (dragDelta > 50) { // Swipe right
++            showPrevious();
++            dragStartX = event.getX(); // Reset drag start
++        } else if (dragDelta < -50) { // Swipe left
++            showNext();
++            dragStartX = event.getX(); // Reset drag start
++        }
++    }
++
++    private void onMouseReleased(MouseEvent event) {
++        // Optionally handle releasing logic here
++    }
++
++    private void showPrevious() {
++        if (currentIndex > 0) {
++            getChildren().remove(images.get(currentIndex));
++            currentIndex--;
++            getChildren().add(0, images.get(currentIndex));
++        }
++    }
++
++    private void showNext() {
++        if (currentIndex < images.size() - 1) {
++            getChildren().remove(images.get(currentIndex));
++            currentIndex++;
++            getChildren().add(0, images.get(currentIndex));
++        }
++    }
++
++}

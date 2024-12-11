@@ -144,6 +144,34 @@
     -fx-border-radius: 6px; /* Slightly rounded corners for images */
 }
 
+/*cart item styles*/
+.cart-item-name {
+    -fx-font-size: 14px; /* Smaller size for labels */
+    -fx-text-fill: #e0e0e0; /* Bright text for dark background */
+    -fx-font-weight: bold;
+}
+.cart-item-quantity {
+    -fx-font-size: 14px;
+    -fx-text-fill: #b0b0b0; /* Subtle gray for less emphasis */
+}
+.cart-item-price {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e0e0e0; /* Matches the product name for brightness */
+}
+.cart-item-remove-button {
+    -fx-background-color: #ff6666; /* Standout red for the action button */
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 6px;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.cart-item-remove-button:hover {
+    -fx-background-color: #ff3333; /* Slightly darker red on hover */
+}
+
 /* Button Styles */
 .button-primary {
     -fx-background-color: #333333;

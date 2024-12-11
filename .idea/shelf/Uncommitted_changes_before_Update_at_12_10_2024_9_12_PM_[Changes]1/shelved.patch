@@ -1,0 +1,387 @@
+Index: src/main/java/com/example/javafxfinalproject/Components/Card.java
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/Card.java b/src/main/java/com/example/javafxfinalproject/Components/Card.java
+deleted file mode 100644
+--- a/src/main/java/com/example/javafxfinalproject/Components/Card.java	(revision d8f6c87a94e877a842186cd60ddb532dc614267c)
++++ /dev/null	(revision d8f6c87a94e877a842186cd60ddb532dc614267c)
+@@ -1,64 +0,0 @@
+-package com.example.javafxfinalproject.Components;
+-
+-import com.example.javafxfinalproject.Models.Product;
+-import javafx.scene.control.Button;
+-import javafx.scene.control.Label;
+-import javafx.scene.layout.HBox;
+-import javafx.scene.layout.VBox;
+-
+-public class Card extends VBox {
+-
+-    public Card(Product product) {
+-        // Apply the card style
+-        this.getStyleClass().add("card");
+-
+-        // Create the card header (Product name)
+-        Label header = new Label(product.getName());
+-        header.getStyleClass().add("card-header");
+-
+-        // Product description under the name (lighter font)
+-        Label description = new Label(product.getDescription());
+-        description.getStyleClass().add("card-description");
+-
+-        // Create a horizontal box for category and brand (same line)
+-        HBox categoryBrandBox = new HBox();
+-        categoryBrandBox.setSpacing(10); // Space between category and brand
+-        categoryBrandBox.getStyleClass().add("card-category-brand");
+-
+-        Label category = new Label(product.getCategory().getName());
+-        category.getStyleClass().add("card-category");
+-
+-        Label brand = new Label(product.getBrand().getName());
+-        brand.getStyleClass().add("card-brand");
+-
+-        categoryBrandBox.getChildren().addAll(category, brand);
+-
+-        // Create a label for price with a bigger font
+-        Label price = new Label("$" + product.getPrice());
+-        price.getStyleClass().add("card-price");
+-
+-        // Buttons for "Add to Cart" and "View"
+-        HBox buttonBox = new HBox();
+-        buttonBox.setSpacing(10); // Space between the buttons
+-        buttonBox.getStyleClass().add("card-button-box");
+-
+-        Button addToCartButton = new Button("Add to Cart");
+-        addToCartButton.getStyleClass().add("card-add-to-cart-button");
+-
+-        Button viewButton = new Button("View");
+-        viewButton.getStyleClass().add("card-view-button");
+-
+-        buttonBox.getChildren().addAll(addToCartButton, viewButton);
+-
+-        // Create the card content
+-        VBox content = new VBox();
+-        content.setSpacing(10);
+-        content.getStyleClass().add("card-content");
+-
+-        // Add the category/brand, description, price, and buttons to the content
+-        content.getChildren().addAll(description, categoryBrandBox, price, buttonBox);
+-
+-        // Add header and content to the card
+-        this.getChildren().addAll(header, content);
+-    }
+-}
+Index: src/main/java/com/example/javafxfinalproject/Components/ProductCards.java
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/ProductCards.java b/src/main/java/com/example/javafxfinalproject/Components/ProductCards.java
+deleted file mode 100644
+--- a/src/main/java/com/example/javafxfinalproject/Components/ProductCards.java	(revision d8f6c87a94e877a842186cd60ddb532dc614267c)
++++ /dev/null	(revision d8f6c87a94e877a842186cd60ddb532dc614267c)
+@@ -1,35 +0,0 @@
+-package com.example.javafxfinalproject.Components;
+-
+-
+-import javafx.scene.layout.GridPane;
+-import javafx.scene.layout.VBox;
+-
+-import java.util.List;
+-
+-public class ProductCards extends GridPane {
+-
+-    public ProductCards(List<Card> cards) {
+-        // Set the grid layout properties
+-        this.setHgap(20); // Horizontal gap between cards
+-        this.setVgap(20); // Vertical gap between cards
+-        this.setPrefWidth(800); // Optional: Set a preferred width for the grid
+-
+-        int row = 0;
+-        int column = 0;
+-
+-        // Loop through the list of Card objects
+-        for (Card card : cards) {
+-            // Add the Card to the GridPane at the appropriate row and column
+-            this.add(card, column, row);
+-
+-            // Increment the column for the next card
+-            column++;
+-
+-            // If the column exceeds a certain number (e.g., 3), move to the next row
+-            if (column > 2) {
+-                column = 0; // Reset the column to 0
+-                row++; // Move to the next row
+-            }
+-        }
+-    }
+-}
+Index: src/main/java/com/example/javafxfinalproject/Components/FormField.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject.Components;\r\n\r\nimport javafx.scene.control.Label;\r\nimport javafx.scene.control.TextField;\r\nimport javafx.scene.layout.VBox;\r\n\r\npublic class FormField extends VBox {\r\n\r\n    private final TextField inputField = new TextField();\r\n\r\n    public FormField(String labelText, String placeholder) {\r\n        // Create and style the label\r\n        Label label = new Label(labelText);\r\n        label.getStyleClass().add(\"form-label\");\r\n\r\n        // Create and style the input field\r\n        inputField.setPromptText(placeholder);\r\n        inputField.getStyleClass().add(\"input-field\");\r\n\r\n        // Apply spacing\r\n        this.setSpacing(10);\r\n\r\n        // Add components to the container\r\n        this.getChildren().addAll(label, inputField);\r\n    }\r\n\r\n    // Getter for the input field text\r\n    public String getInputText() {\r\n        return inputField.getText();\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Components/FormField.java b/src/main/java/com/example/javafxfinalproject/Components/FormField.java
+--- a/src/main/java/com/example/javafxfinalproject/Components/FormField.java	(revision d8f6c87a94e877a842186cd60ddb532dc614267c)
++++ b/src/main/java/com/example/javafxfinalproject/Components/FormField.java	(date 1733841797516)
+@@ -19,7 +19,7 @@
+ 
+         // Apply spacing
+         this.setSpacing(10);
+-
++        // hello
+         // Add components to the container
+         this.getChildren().addAll(label, inputField);
+     }
+@@ -29,4 +29,6 @@
+         return inputField.getText();
+     }
+ 
++    public void setInputText(String text) { inputField.setText(text); }
++
+ }
+Index: src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject.Stages;\r\n\r\nimport com.example.javafxfinalproject.Components.FormField;\r\nimport com.example.javafxfinalproject.Components.PrimaryButton;\r\nimport com.example.javafxfinalproject.Components.SecureFormField;\r\nimport com.example.javafxfinalproject.Models.ActionResult;\r\nimport com.example.javafxfinalproject.Models.Managers.AuthManager;\r\nimport com.example.javafxfinalproject.Models.Status;\r\nimport com.example.javafxfinalproject.Models.User;\r\nimport javafx.animation.FadeTransition;\r\nimport javafx.geometry.Insets;\r\nimport javafx.geometry.Pos;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.control.Label;\r\nimport javafx.scene.image.ImageView;\r\nimport javafx.scene.layout.HBox;\r\nimport javafx.scene.layout.VBox;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.stage.Stage;\r\nimport javafx.util.Duration;\r\n\r\npublic class LoginStage extends Stage {\r\n    // view elements\r\n    final private FormField emailField = new FormField(\"Email\", \"example@example.com\");\r\n    final private SecureFormField passwordField = new SecureFormField(\"Password\", \"********\");\r\n    final private Label messageLabel = new Label(\"\");\r\n    public LoginStage() {\r\n        // window properties\r\n        final int mainWidth = 700;\r\n        final int mainHeight = 500;\r\n\r\n        // main container\r\n        HBox mainContainer = new HBox(0);\r\n        mainContainer.setPrefWidth(mainWidth);\r\n        mainContainer.setPrefHeight(mainHeight);\r\n\r\n        // left side cover image\r\n        ImageView coverImage = new ImageView(\"loginStageCoverImage.jpeg\");\r\n        coverImage.setFitWidth((double) mainWidth / 2);\r\n        coverImage.setFitHeight(mainHeight);\r\n\r\n        // right side container\r\n        VBox rightSide = new VBox(40);\r\n        rightSide.setPrefWidth((double) mainWidth / 2);\r\n        rightSide.setPrefHeight(mainHeight);\r\n        rightSide.setAlignment(Pos.CENTER);\r\n        rightSide.setStyle(\"-fx-background-color: #121212;\");\r\n\r\n        // heading\r\n        Label heading = new Label(\"Login\");\r\n        heading.getStyleClass().add(\"heading\");\r\n\r\n        // email field\r\n        this.emailField.setPadding(new Insets(0, 60, 0, 60));\r\n        // password field\r\n        passwordField.setPadding(new Insets(10, 60, 0, 60));\r\n\r\n        // form container\r\n        VBox fields = new VBox(10);\r\n        fields.getChildren().addAll(emailField, passwordField);\r\n\r\n        // buttons container\r\n        HBox buttons = new HBox(10);\r\n        buttons.setAlignment(Pos.CENTER);\r\n\r\n        // creating buttons\r\n        PrimaryButton submitBtn = new PrimaryButton(\"Submit\");\r\n        PrimaryButton registerBtn = new PrimaryButton(\"Sign Up\");\r\n\r\n        // setting button actions\r\n        submitBtn.setOnAction(e -> submitButtonAction());\r\n\r\n        // adding buttons to parent container\r\n        buttons.getChildren().addAll(submitBtn, registerBtn);\r\n\r\n        // adding elements to right container\r\n        rightSide.getChildren().addAll(heading, fields, buttons, messageLabel);\r\n\r\n        // adding left and right side to main container\r\n        mainContainer.getChildren().addAll(coverImage, rightSide);\r\n\r\n        Scene mainScene = new Scene(mainContainer);\r\n        mainScene.getStylesheets().add(String.valueOf(getClass().getResource(\"/styles.css\")));\r\n        this.setTitle(\"MotoCenter Dealership - Login\");\r\n        this.setScene(mainScene);\r\n        this.setResizable(false);\r\n        this.show();\r\n    }\r\n\r\n    private void submitButtonAction() {\r\n        if(emailField.getInputText().isEmpty() || passwordField.getInputText().isEmpty()) {\r\n            // display error message\r\n            messageLabel.setTextFill(Color.RED);\r\n            messageLabel.setText(\"Fields should not be empty!\");\r\n            // fade in animation\r\n            FadeTransition tIn = new FadeTransition(Duration.millis(500), messageLabel);\r\n            tIn.setFromValue(0);\r\n            tIn.setToValue(1);\r\n            tIn.play();\r\n            // fade out animation\r\n            FadeTransition tOut = new FadeTransition(Duration.millis(500), messageLabel);\r\n            tOut.setFromValue(1);\r\n            tOut.setToValue(0);\r\n            tOut.setDelay(Duration.millis(2000));\r\n            tOut.play();\r\n        }\r\n        else {\r\n            try\r\n            {\r\n                AuthManager auth = new AuthManager();\r\n                String email = emailField.getInputText();\r\n                String password = passwordField.getInputText();\r\n\r\n                ActionResult<User> response = auth.login(email , password);\r\n\r\n                if(response.getStatus() == Status.ERROR) {\r\n                    // message label here\r\n                }\r\n                else {\r\n                    // navigate to user stage\r\n                }\r\n            }\r\n            catch (Exception e)\r\n            {\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java b/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java
+--- a/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java	(revision d8f6c87a94e877a842186cd60ddb532dc614267c)
++++ b/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java	(date 1733857733458)
+@@ -4,7 +4,7 @@
+ import com.example.javafxfinalproject.Components.PrimaryButton;
+ import com.example.javafxfinalproject.Components.SecureFormField;
+ import com.example.javafxfinalproject.Models.ActionResult;
+-import com.example.javafxfinalproject.Models.Managers.AuthManager;
++import com.example.javafxfinalproject.Managers.AuthManager;
+ import com.example.javafxfinalproject.Models.Status;
+ import com.example.javafxfinalproject.Models.User;
+ import javafx.animation.FadeTransition;
+Index: src/main/java/com/example/javafxfinalproject/Stages/TestStage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java b/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java
+new file mode 100644
+--- /dev/null	(date 1733857733544)
++++ b/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java	(date 1733857733544)
+@@ -0,0 +1,20 @@
++package com.example.javafxfinalproject.Stages;
++
++import com.example.javafxfinalproject.Managers.UserManager;
++import com.example.javafxfinalproject.Models.User;
++import javafx.stage.Stage;
++
++import java.util.ArrayList;
++
++public class TestStage extends Stage {
++
++
++
++    public TestStage() {
++        ArrayList<User> users = new UserManager().getUsers();
++
++        System.out.println(users.getFirst().getId());
++    }
++
++
++}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"managers set up , read functions to all\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AddressManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BaseManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BrandManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartItemManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CategoryManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderItemManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/PhotoManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/ProductManager.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/UserManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/Card.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/ProductCards.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/HelloApplication.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/HelloApplication.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AuthManager.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AuthManager.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/PostgresManager.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Order.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Order.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Product.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Product.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Pull.Settings\">\r\n    <option name=\"OPTIONS\">\r\n      <set>\r\n        <option value=\"REBASE\" />\r\n      </set>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\r\n  \"lastFilter\": {\r\n    \"state\": \"OPEN\",\r\n    \"assignee\": \"ramialosmann\"\r\n  }\r\n}]]></component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/alihodroj-dev/JavaFxFinalProject.git\",\r\n    \"accountId\": \"28a9c468-e18e-4187-83aa-f9189032f7d3\"\r\n  }\r\n}]]></component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 4\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2p2P8MVFdI2exeqyOV5l1BkkJ3T\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.HelloApplication.executor\": \"Run\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"git-widget-placeholder\": \"managers-testing\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"project.structure.last.edited\": \"Libraries\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.5354839\",\r\n    \"settings.editor.selected.configurable\": \"reference.projectsettings.compiler.javacompiler\"\r\n  }\r\n}]]></component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"\" />\r\n      <created>1731961038614</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1731961038614</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"commit 1\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731969251555</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731969251555</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"testing connection to Database\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731979452231</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731979452231</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"project setup\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1732047956786</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1732047956786</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"4\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"commit 1\" />\r\n    <MESSAGE value=\"testing connection to Database\" />\r\n    <MESSAGE value=\"project setup\" />\r\n    <MESSAGE value=\"managers set up , read functions to all\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"managers set up , read functions to all\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision d8f6c87a94e877a842186cd60ddb532dc614267c)
++++ b/.idea/workspace.xml	(date 1733857733974)
+@@ -4,26 +4,26 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="managers set up , read functions to all">
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AddressManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BaseManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BrandManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartItemManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CategoryManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderItemManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/PhotoManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/ProductManager.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/UserManager.java" afterDir="false" />
++    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="update now takes the object itself as an argument">
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/TestStage.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/Card.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/FormField.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components/ProductCards.java" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/HelloApplication.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AuthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AuthManager.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/PostgresManager.java" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Order.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Product.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AddressManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AddressManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/AuthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/AuthManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/BaseManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/BrandManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/BrandManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartItemManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartItemManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CartManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CartManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/CategoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/CategoryManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/DiscountManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/DiscountManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderItemManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderItemManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/OrderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/OrderManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/PhotoManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/PhotoManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/ProductManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/ProductManager.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/Managers/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Managers/UserManager.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Models/User.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/LoginStage.java" afterDir="false" />
+     </list>
+@@ -54,18 +54,28 @@
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {
+-    "state": "OPEN",
+-    "assignee": "ramialosmann"
+-  }
+-}]]></component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/alihodroj-dev/JavaFxFinalProject.git",
+-    "accountId": "28a9c468-e18e-4187-83aa-f9189032f7d3"
+-  }
+-}]]></component>
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;ramialosmann&quot;
++  }
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/alihodroj-dev/JavaFxFinalProject.git&quot;,
++    &quot;accountId&quot;: &quot;28a9c468-e18e-4187-83aa-f9189032f7d3&quot;
++  }
++}</component>
++  <component name="MavenImportPreferences">
++    <option name="generalSettings">
++      <MavenGeneralSettings>
++        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
++      </MavenGeneralSettings>
++    </option>
++  </component>
++  <component name="ProblemsViewState">
++    <option name="selectedTabId" value="CurrentFile" />
++  </component>
+   <component name="ProjectColorInfo">{
+   &quot;associatedIndex&quot;: 4
+ }</component>
+@@ -77,21 +87,25 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Application.HelloApplication.executor": "Run",
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.git.unshallow": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "git-widget-placeholder": "managers-testing",
+-    "kotlin-language-version-configured": "true",
+-    "project.structure.last.edited": "Libraries",
+-    "project.structure.proportion": "0.15",
+-    "project.structure.side.proportion": "0.5354839",
+-    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;managers-testing&quot;,
++    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/ramia/IdeaProjects/JavaFxFinalProject&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.5354839&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+@@ -100,6 +114,7 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1731961038614</updated>
++      <workItem from="1733856629553" duration="304000" />
+     </task>
+     <task id="LOCAL-00001" summary="commit 1">
+       <option name="closed" value="true" />
+@@ -125,9 +140,44 @@
+       <option name="project" value="LOCAL" />
+       <updated>1732047956786</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="managers set up , read functions to all">
++      <option name="closed" value="true" />
++      <created>1733838268629</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1733838268629</updated>
++    </task>
++    <task id="LOCAL-00005" summary="managers set up , read functions to all">
++      <option name="closed" value="true" />
++      <created>1733839589321</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1733839589321</updated>
++    </task>
++    <task id="LOCAL-00006" summary="added cruds to all managers ( MISSING is PHOTO MANAGER ) , migrated to supabase with population">
++      <option name="closed" value="true" />
++      <created>1733853590895</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1733853590895</updated>
++    </task>
++    <task id="LOCAL-00007" summary="update now takes the object itself as an argument">
++      <option name="closed" value="true" />
++      <created>1733856010846</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1733856010846</updated>
++    </task>
++    <option name="localTasksCounter" value="8" />
+     <servers />
+   </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
+   <component name="Vcs.Log.Tabs.Properties">
+     <option name="TAB_STATES">
+       <map>
+@@ -144,6 +194,8 @@
+     <MESSAGE value="testing connection to Database" />
+     <MESSAGE value="project setup" />
+     <MESSAGE value="managers set up , read functions to all" />
+-    <option name="LAST_COMMIT_MESSAGE" value="managers set up , read functions to all" />
++    <MESSAGE value="added cruds to all managers ( MISSING is PHOTO MANAGER ) , migrated to supabase with population" />
++    <MESSAGE value="update now takes the object itself as an argument" />
++    <option name="LAST_COMMIT_MESSAGE" value="update now takes the object itself as an argument" />
+   </component>
+ </project>
+\ No newline at end of file
