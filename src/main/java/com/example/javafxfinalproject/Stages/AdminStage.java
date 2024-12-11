@@ -75,7 +75,7 @@ public class AdminStage extends Stage {
         productsBtn.getStyleClass().add("sidebar-button");
         productsBtn.setOnAction(e -> {
             mainContainer.getChildren().remove(1);
-            ScrollPane datatable = productsDataTableView(new ProductManager().getProducts(0), mainContainer);
+            ScrollPane datatable = productsDataTableView(new ProductManager().getProducts(0 ,  new ProductManager().size()), mainContainer);
             datatable.setPadding(new Insets(30));
             mainContainer.getChildren().add(datatable);
             this.setTitle("MotoCenter Dealership - Dashboard - Products");
@@ -138,11 +138,11 @@ public class AdminStage extends Stage {
         avatar.setFitWidth(35);
         avatar.setFitHeight(35);
 
-        Label userFirstName = new Label("Welcome, " + userAccount.getFirstName());
-        userFirstName.setStyle("-fx-font-size: 14px;" +
+        Label welcomeLabel = new Label("Welcome, " + userAccount.getRole().toUpperCase());
+        welcomeLabel.setStyle("-fx-font-size: 14px;" +
                 "-fx-text-fill: #E0E0E0;");
 
-        avatarNameContainer.getChildren().addAll(avatar, userFirstName);
+        avatarNameContainer.getChildren().addAll(avatar, welcomeLabel);
 
         HBox settingIconWrapper = new HBox(0);
         settingIconWrapper.setAlignment(Pos.CENTER);
@@ -228,6 +228,7 @@ public class AdminStage extends Stage {
 
             userContainer.getChildren().addAll(id, email, fname, lname, phoneNumber, saveDeleteContainer);
             subContainer.getChildren().add(userContainer);
+            id.setIsEditable(false);
         }
 
         ScrollPane mainContainer = new ScrollPane(subContainer);
@@ -278,7 +279,7 @@ public class AdminStage extends Stage {
             deleteBtn.setOnMousePressed(e -> {
                 new ProductManager().deleteProduct(Integer.parseInt(id.getInputText()));
                 parentContainer.getChildren().remove(1);
-                ScrollPane datatable = productsDataTableView(new ProductManager().getProducts(0), parentContainer);
+                ScrollPane datatable = productsDataTableView(new ProductManager().getProducts(0 , new ProductManager().size()), parentContainer);
                 datatable.setPadding(new Insets(30));
                 parentContainer.getChildren().add(datatable);
 
@@ -289,10 +290,12 @@ public class AdminStage extends Stage {
 
             productContainer.getChildren().addAll(id, brandId, categoryId, name, description, price, stock, saveDeleteContainer);
             subContainer.getChildren().add(productContainer);
+            id.setIsEditable(false);
         }
 
         ScrollPane mainContainer = new ScrollPane(subContainer);
         mainContainer.getStyleClass().add("scroll-pane");
+
         return mainContainer;
     }
 
@@ -345,6 +348,7 @@ public class AdminStage extends Stage {
 
             orderContainer.getChildren().addAll(id, userId, address, totalAmount, status, saveDeleteContainer);
             subContainer.getChildren().add(orderContainer);
+            id.setIsEditable(false);
         }
 
         ScrollPane mainContainer = new ScrollPane(subContainer);

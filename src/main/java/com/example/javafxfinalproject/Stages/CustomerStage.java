@@ -105,11 +105,11 @@ public class CustomerStage extends Stage {
         avatar.setFitWidth(35);
         avatar.setFitHeight(35);
 
-        Label userFirstName = new Label("Welcome, " + userAccount.getFirstName());
-        userFirstName.setStyle("-fx-font-size: 14px;" +
+        Label welcomeLabel = new Label("Welcome, " + userAccount.getRole().toUpperCase());
+        welcomeLabel.setStyle("-fx-font-size: 14px;" +
                 "-fx-text-fill: #E0E0E0;");
 
-        avatarNameContainer.getChildren().addAll(avatar, userFirstName);
+        avatarNameContainer.getChildren().addAll(avatar, welcomeLabel);
 
         HBox settingIconWrapper = new HBox(0);
         settingIconWrapper.setAlignment(Pos.CENTER);
@@ -149,7 +149,6 @@ public class CustomerStage extends Stage {
 
     private BorderPane shopView(User user) {
         Integer size = new ProductManager().Size();
-        double width = 0;
         tracker = 0;
         Cart userCart = new CartManager().getCartByUserId(user.getId());
         FlowPane flowPane = new FlowPane();
@@ -158,10 +157,9 @@ public class CustomerStage extends Stage {
         flowPane.setPrefWrapLength(1220);
         flowPane.setAlignment(Pos.CENTER);
         flowPane.setPadding(new Insets(20 , 80 , 20 , 0));
-        ArrayList<Product> products = new ProductManager().getProducts(1);
+        ArrayList<Product> products = new ProductManager().getProducts(1 , 5);
         for(Product product : products) {
             ProductCard productCard = new ProductCard(this , product , 250, userCart.getId());
-            width = productCard.getWidth();
             flowPane.getChildren().add(productCard);
 
         }
@@ -169,13 +167,11 @@ public class CustomerStage extends Stage {
         Button loadMoreButton = new Button("Load More");
         loadMoreButton.getStyleClass().add("button-primary");
 
-        double finalWidth = width;
-
         loadMoreButton.setOnAction(e -> {
             tracker += 5;
-            ArrayList<Product> newProducts = new ProductManager().getProducts(tracker);
+            ArrayList<Product> newProducts = new ProductManager().getProducts(tracker , 5);
             for(Product product : newProducts) {
-                ProductCard productCard = new ProductCard(this , product , finalWidth, userCart.getId());
+                ProductCard productCard = new ProductCard(this , product , 250, userCart.getId());
                 flowPane.getChildren().add(productCard);
             }
 

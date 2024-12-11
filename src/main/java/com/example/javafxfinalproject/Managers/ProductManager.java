@@ -10,21 +10,37 @@ import static java.sql.DriverManager.getConnection;
 
 public class ProductManager extends BaseManager {
 
-
-    public ArrayList<Product> getProducts(int tracker) {
+    public Integer size()
+    {
+        String sql = "SELECT COUNT(id) FROM products";
+        try(Connection connection = getConnection(connectionString); Statement stmt = connection.createStatement())
+        {
+            ResultSet rs =  stmt.executeQuery(sql);
+            if(rs.next())
+            {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+    public ArrayList<Product> getProducts(int tracker , int limit) {
         ArrayList<Product> products = new ArrayList<>();
 
         // SQL query
         String sql = "SELECT id, brand_id, category_id, name, description, price, stock " +
                 "FROM products " +
                 "WHERE id > ? " +
-                "LIMIT ?";
+                "ORDER BY id  ASC " +
+                "LIMIT ? ";
 
 
         try (Connection connection = getConnection(connectionString);  ) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, tracker);
-            ps.setInt(2, 5);
+            ps.setInt(2, limit);
             try (ResultSet rs = ps.executeQuery()) {
 
                 // Iterate through the result set and map data to Product objects
@@ -96,7 +112,7 @@ public class ProductManager extends BaseManager {
         return null;
     }
 
-    public ActionResult<String> addProduct(Product product) {
+    public ActionResult<Integer> addProduct(Product product) {
         String sql = "INSERT INTO products (name, description, brand_id, category_id, price, stock) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = getConnection(connectionString); PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -120,7 +136,7 @@ public class ProductManager extends BaseManager {
                         int newProductId = generatedKeys.getInt(1); // The first generated key is the product id
 
                         // Create the new Product object with the generated id and other data
-                        return ActionResult.success(""+newProductId, "Product added successfully");
+                        return ActionResult.success(newProductId, "Product added successfully");
                     } else {
                         // If no keys are returned, there was an issue with generating the product ID
                         return ActionResult.error(null, "Could not retrieve product ID, please try again");
@@ -133,6 +149,7 @@ public class ProductManager extends BaseManager {
 
         } catch (SQLException e) {
             // Log and return an error message if an SQLException is thrown
+
             e.printStackTrace();
             return ActionResult.error(null, "An error occurred while adding the product: " + e.getMessage());
         }

@@ -3,7 +3,9 @@ package com.example.javafxfinalproject.Stages;
 import com.example.javafxfinalproject.Components.*;
 import com.example.javafxfinalproject.Managers.BrandManager;
 import com.example.javafxfinalproject.Managers.CategoryManager;
+import com.example.javafxfinalproject.Managers.PhotoManager;
 import com.example.javafxfinalproject.Managers.ProductManager;
+import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.Brand;
 import com.example.javafxfinalproject.Models.Category;
 import com.example.javafxfinalproject.Models.Product;
@@ -18,6 +20,8 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static com.example.javafxfinalproject.Components.Toast.showToast;
 
 public class AddNewProductStage extends Stage {
     private CustomComboBox brandIdField = new CustomComboBox();
@@ -118,7 +122,10 @@ public class AddNewProductStage extends Stage {
             }).findFirst().orElse(null)).getId();
 
             Product productToBeAdded = new Product(0, brandId, categoryId, productNameField.getInputText(), productDescriptionField.getInputText(), Double.parseDouble(productPriceField.getInputText()), Integer.parseInt(productStockField.getInputText()));
-            new ProductManager().addProduct(productToBeAdded);
+            ActionResult<Integer> response =  new ProductManager().addProduct(productToBeAdded);
+            new PhotoManager().addPhoto(productUrlField.getInputText(), response.getData());
+            showToast(this , response.getMessage());
+
             adminStage.setAddNewProductStageOpen(false);
             this.close();
         }

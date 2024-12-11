@@ -28,4 +28,7 @@ public class TableViewCell extends VBox {
     public String getInputText() {
         return inputField.getText();
     }
+    public void setIsEditable(boolean isEditable) {
+        inputField.setEditable(isEditable);
+    }
 }
