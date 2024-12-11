@@ -17,9 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.util.ArrayList;
-
 import static com.example.javafxfinalproject.Components.Toast.showToast;
 
 public class ProductCard extends BorderPane {

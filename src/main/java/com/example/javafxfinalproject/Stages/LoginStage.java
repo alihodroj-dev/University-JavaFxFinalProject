@@ -119,6 +119,9 @@ public class LoginStage extends Stage {
                     if(response.getData().getRole().equalsIgnoreCase("admin")) {
                         AdminStage adminStage = new AdminStage(response.getData());
                         this.close();
+                    } else {
+                        CustomerStage customerStage = new CustomerStage(response.getData());
+                        this.close();
                     }
                 }
             }

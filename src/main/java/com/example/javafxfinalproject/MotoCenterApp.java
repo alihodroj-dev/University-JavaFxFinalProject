@@ -4,6 +4,7 @@ import com.example.javafxfinalproject.Helpers.RememberMeHelper;
 import com.example.javafxfinalproject.Managers.UserManager;
 import com.example.javafxfinalproject.Models.User;
 import com.example.javafxfinalproject.Stages.AdminStage;
+import com.example.javafxfinalproject.Stages.CustomerStage;
 import com.example.javafxfinalproject.Stages.LoginStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -24,6 +25,7 @@ public class MotoCenterApp extends Application {
                     }
                     else {
                         // customer stage here
+                        CustomerStage customerStage = new CustomerStage(user);
                     }
                 }
         } else {

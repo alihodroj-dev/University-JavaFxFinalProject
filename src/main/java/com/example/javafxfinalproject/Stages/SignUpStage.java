@@ -18,13 +18,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import static com.example.javafxfinalproject.Components.Toast.showToast;
+
 public class SignUpStage extends Stage {
     final private FormField firstNameField = new FormField("First Name", "Joseph");
     final private FormField lastNameField = new FormField("Last Name", "Gemayel");
     final private FormField phoneNumberField = new FormField("Phone Number", "03 554 042");
     final private FormField emailField = new FormField("Email", "example@example.com");
     final private SecureFormField passwordField = new SecureFormField("Password", "********");
-    final private SecureFormField confirmPasswordField = new SecureFormField("Password", "********");
+    final private SecureFormField confirmPasswordField = new SecureFormField("Confirm Password", "********");
     final private MessageLabel messageLabel = new MessageLabel("");
     public SignUpStage(LoginStage loginStage) {
         // window properties
@@ -87,8 +89,8 @@ public class SignUpStage extends Stage {
                         firstNameField.getInputText(),
                         lastNameField.getInputText(),
                         emailField.getInputText(),
-                        passwordField.getInputText(),
-                        phoneNumberField.getInputText()
+                        phoneNumberField.getInputText(),
+                        passwordField.getInputText()
                         );
 
                 if(response.getStatus() == Status.ERROR) {
@@ -97,6 +99,7 @@ public class SignUpStage extends Stage {
                     messageLabel.playAnimation();
                 } else {
                     ActionResult<String> cartResponse = new CartManager().createCart(response.getData());
+                    this.close();
                 }
             } catch (Exception ignored) {
             }

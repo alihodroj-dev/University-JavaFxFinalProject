@@ -138,7 +138,7 @@ public class AdminStage extends Stage {
         avatar.setFitWidth(35);
         avatar.setFitHeight(35);
 
-        Label userFirstName = new Label("Welcome, Ali");
+        Label userFirstName = new Label("Welcome, " + userAccount.getFirstName());
         userFirstName.setStyle("-fx-font-size: 14px;" +
                 "-fx-text-fill: #E0E0E0;");
 
@@ -153,7 +153,7 @@ public class AdminStage extends Stage {
         settingsIcon.setFitHeight(25);
         settingsIcon.setOnMousePressed(e -> {
             if(!isSettingsStageOpen) {
-                SettingsStage settingsStage = new SettingsStage(new UserManager().getUserById(userAccount.getId()), this);
+                SettingsStage settingsStage = new SettingsStage(userAccount, this);
                 this.isSettingsStageOpen = true;
             }
         });

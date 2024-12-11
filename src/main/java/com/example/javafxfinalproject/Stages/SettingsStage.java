@@ -22,7 +22,7 @@ public class SettingsStage extends Stage {
     final private FormField emailField = new FormField("Email", "example@example.com");
     final private SecureFormField passwordField = new SecureFormField("Password", "********");
     final private MessageLabel messageLabel = new MessageLabel("");
-    public SettingsStage(User userAccount, AdminStage adminStage) {
+    public SettingsStage(User userAccount, Stage parentStage) {
         // window properties
         final int mainWidth = 450;
         final int mainHeight = 700;
@@ -49,8 +49,18 @@ public class SettingsStage extends Stage {
         PrimaryButton backBtn = new PrimaryButton("Back");
         PrimaryButton updateBtn = new PrimaryButton("Update");
 
-        backBtn.setOnAction(e -> { adminStage.setSettingsStageOpen(false); this.close(); });
-        updateBtn.setOnAction(e -> updateButtonAction(userAccount, adminStage));
+        backBtn.setOnAction(e -> {
+            if(userAccount.getRole().equalsIgnoreCase("admin")) {
+                AdminStage adminStage = (AdminStage) parentStage;
+                adminStage.setSettingsStageOpen(false);
+                this.close();
+            } else {
+                CustomerStage customerStage = (CustomerStage) parentStage;
+                customerStage.setSettingsStageOpen(false);
+                this.close();
+            }
+        });
+        updateBtn.setOnAction(e -> updateButtonAction(userAccount, parentStage));
 
         buttonsContainer.getChildren().addAll(backBtn, updateBtn);
 
@@ -62,7 +72,7 @@ public class SettingsStage extends Stage {
         lastNameField.setInputText(userAccount.getLastName());
         phoneNumberField.setInputText(userAccount.getPhoneNumber());
         emailField.setInputText(userAccount.getEmail());
-        passwordField.setInputText(userAccount.getPassword());
+//        passwordField.setInputText(userAccount.getPassword());
 
         Scene mainScene = new Scene(mainContainer);
         mainScene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));
@@ -70,12 +80,18 @@ public class SettingsStage extends Stage {
         this.setScene(mainScene);
         this.setResizable(false);
         this.setOnCloseRequest(e -> {
-            adminStage.setSettingsStageOpen(false);
+            if(userAccount.getRole().equalsIgnoreCase("admin")) {
+                AdminStage adminStage = (AdminStage) parentStage;
+                adminStage.setSettingsStageOpen(false);
+            } else {
+                CustomerStage customerStage = (CustomerStage) parentStage;
+                customerStage.setSettingsStageOpen(false);
+            }
         });
         this.show();
     }
 
-    private void updateButtonAction(User userAccount, AdminStage adminStage) {
+    private void updateButtonAction(User userAccount, Stage parentStage) {
         if (firstNameField.getInputText().isEmpty() ||
                 lastNameField.getInputText().isEmpty() ||
                 emailField.getInputText().isEmpty() ||
@@ -85,9 +101,16 @@ public class SettingsStage extends Stage {
             messageLabel.setTextFill(Color.RED);
             messageLabel.playAnimation();
         } else {
-            User newUser = new User(userAccount.getId(), firstNameField.getInputText(), lastNameField.getInputText(), "", emailField.getInputText(), phoneNumberField.getInputText(), userAccount.getRole());
+            System.out.println(passwordField.getInputText());
+            User newUser = new User(userAccount.getId(), firstNameField.getInputText(), lastNameField.getInputText(), passwordField.getInputText(), emailField.getInputText(), phoneNumberField.getInputText(), userAccount.getRole());
             new UserManager().updateUser(newUser);
-            adminStage.setSettingsStageOpen(false);
+            if(userAccount.getRole().equalsIgnoreCase("admin")) {
+                AdminStage adminStage = (AdminStage) parentStage;
+                adminStage.setSettingsStageOpen(false);
+            } else {
+                CustomerStage customerStage = (CustomerStage) parentStage;
+                customerStage.setSettingsStageOpen(false);
+            }
             this.close();
         }
     }
