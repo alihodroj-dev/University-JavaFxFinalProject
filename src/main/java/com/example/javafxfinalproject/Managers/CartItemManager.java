@@ -103,6 +103,21 @@ public class CartItemManager extends BaseManager {
             return ActionResult.error(null, "An error occurred while updating the cart : " + e.getMessage());
         }
     }
+    public Integer getCount(int cartId) {
+        String sql = "SELECT COUNT(id) FROM cart_items WHERE cart_id = ?";
+
+        try(Connection connection = getConnection( connectionString) ; PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1 , cartId);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
     public ActionResult<String> addQuantity(int newQuantity , int cartId , int productid) {
         String sql = "UPDATE cart_items SET quantity = ? WHERE cart_id = ? AND product_id = ? ";
 
