@@ -17,12 +17,14 @@ public class ProductManager extends BaseManager {
         // SQL query
         String sql = "SELECT id, brand_id, category_id, name, description, price, stock " +
                 "FROM products " +
-                "WHERE id > ?";
+                "WHERE id > ? " +
+                "LIMIT ?";
 
 
         try (Connection connection = getConnection(connectionString);  ) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, tracker);
+            ps.setInt(2, 5);
             try (ResultSet rs = ps.executeQuery()) {
 
                 // Iterate through the result set and map data to Product objects
@@ -77,7 +79,22 @@ public class ProductManager extends BaseManager {
         return null;  // Return null if no product was found
     }
 
-
+    public Integer Size()
+    {
+        String sql = "SELECT COUNT(id) FROM products";
+        try(Connection connection = getConnection(connectionString); Statement stmt = connection.createStatement())
+        {
+            ResultSet rs =  stmt.executeQuery(sql);
+            if(rs.next())
+            {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
 
     public ActionResult<String> addProduct(Product product) {
         String sql = "INSERT INTO products (name, description, brand_id, category_id, price, stock) VALUES (?, ?, ?, ?, ?, ?)";

@@ -47,7 +47,12 @@ public class CartItemManager extends BaseManager {
     }
 
     // Add a new cart item
-    public ActionResult<CartItem> addCartItem(int cartId, int productId, int quantity) {
+    public ActionResult<String> addCartItem(int cartId, int productId, int quantity) {
+        Integer existingQuantity = checkIfCartItemExists(cartId, productId);
+        if(existingQuantity != null) {
+            addQuantity(existingQuantity + quantity, cartId , productId );
+            return ActionResult.success(""+existingQuantity + quantity, "Product addedd to cart");
+        }
         String sql = "INSERT INTO cart_items (cart_id, product_id, quantity) " +
                 "VALUES (?, ?, ?)";
 
@@ -64,16 +69,16 @@ public class CartItemManager extends BaseManager {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         int newId = generatedKeys.getInt(1); // Get the generated ID
-                        CartItem cartItem = new CartItem(newId, cartId, productId, quantity);
-                        return ActionResult.success(cartItem, "Cart item added successfully");
+
+                        return ActionResult.success(""+newId, "Product added to cart");
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return ActionResult.error(null, "An error occurred while adding the cart item: " + e.getMessage());
+            return ActionResult.error(null, "An error occurred while adding the cart : " + e.getMessage());
         }
-        return ActionResult.error(null, "Could not add cart item, please try again");
+        return ActionResult.error(null, "Could not add product, please try again");
     }
 
     // Update an existing cart item
@@ -95,7 +100,29 @@ public class CartItemManager extends BaseManager {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return ActionResult.error(null, "An error occurred while updating the cart item: " + e.getMessage());
+            return ActionResult.error(null, "An error occurred while updating the cart : " + e.getMessage());
+        }
+    }
+    public ActionResult<String> addQuantity(int newQuantity , int cartId , int productid) {
+        String sql = "UPDATE cart_items SET quantity = ? WHERE cart_id = ? AND product_id = ? ";
+
+        try (Connection connection = getConnection(connectionString);
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, newQuantity);
+            stmt.setInt(2, cartId);
+            stmt.setInt(3, productid);
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                return ActionResult.success(null,"Added Product");
+            } else {
+                return ActionResult.error(null, "Could not add product, please try again");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ActionResult.error(null, "An error occurred while updating the cart : " + e.getMessage());
         }
     }
 
@@ -118,6 +145,26 @@ public class CartItemManager extends BaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return ActionResult.error(null, "An error occurred while deleting the cart item: " + e.getMessage());
+        }
+    }
+
+    private Integer checkIfCartItemExists(int cartId, int productId)  {
+        String checkSql = "SELECT quantity FROM cart_items WHERE cart_id = ? AND product_id = ?";
+
+        try (Connection connection = getConnection(connectionString) ;PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+            checkStmt.setInt(1, cartId);
+            checkStmt.setInt(2, productId);
+
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if(rs.next()) {
+                   return rs.getInt("quantity");
+                }
+                return null;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
