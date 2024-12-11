@@ -72,161 +72,108 @@ public class CartManager extends BaseManager {
 
     public ActionResult<String> checkout(User user, int cartId, String address) {
         Connection connection = null;
-
         try {
             connection = getConnection(connectionString);
             connection.setAutoCommit(false); // Start a transaction
 
-            // Step 1: Retrieve Cart Items
-            ArrayList<CartItem> cartItems = getCartItems(cartId);
+            CartItemManager cartItemManager = new CartItemManager();
+
+            // Step 1: Retrieve CartItems for the given cartId
+            ArrayList<CartItem> cartItems = cartItemManager.getCartItemsByCartId(cartId);
             if (cartItems.isEmpty()) {
                 return ActionResult.error(null, "Cart is empty");
             }
 
-            // Step 2: Calculate Total Amount
-            double totalAmount = calculateTotalAmount(cartItems);
+            // Step 2: Calculate the total amount
+            double totalAmount = 0.0;
+            ProductManager productManager = new ProductManager();
+            for (CartItem cartItem : cartItems) {
+                Product product = productManager.getProductById(cartItem.getProductId());
+                totalAmount += product.getPrice() * cartItem.getQuantity();
+            }
 
-            // Step 3: Create Order
-            int orderId = createOrder(connection, user, address, totalAmount);
+            // Step 3: Create the new order
+            int orderId = -1;
+            String insertOrderSql = "INSERT INTO orders (user_id, address, total_amount, status) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement orderStmt = connection.prepareStatement(insertOrderSql, Statement.RETURN_GENERATED_KEYS)) {
+                orderStmt.setInt(1, user.getId());
+                orderStmt.setString(2, address);
+                orderStmt.setDouble(3, totalAmount);
+                orderStmt.setString(4, "pending");
+
+                int affectedRows = orderStmt.executeUpdate();
+                if (affectedRows == 0) {
+                    connection.rollback();
+                    return ActionResult.error(null, "Failed to create the order");
+                }
+
+                try (ResultSet generatedKeys = orderStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        orderId = generatedKeys.getInt(1);
+                    }
+                }
+            }
+
             if (orderId == -1) {
                 connection.rollback();
-                return ActionResult.error(null, "Failed to create the order");
+                return ActionResult.error(null, "Failed to retrieve order ID");
             }
 
-            // Step 4: Add Order Items
-            if (!addOrderItems(connection, orderId, cartItems)) {
-                connection.rollback();
-                return ActionResult.error(null, "Failed to add order items");
+            // Step 4: Create OrderItems for every CartItem
+            String insertOrderItemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement orderItemStmt = connection.prepareStatement(insertOrderItemSql)) {
+                for (CartItem cartItem : cartItems) {
+                    Product product = productManager.getProductById(cartItem.getProductId());
+                    orderItemStmt.setInt(1, orderId);
+                    orderItemStmt.setInt(2, cartItem.getProductId());
+                    orderItemStmt.setInt(3, cartItem.getQuantity());
+                    orderItemStmt.setDouble(4, product.getPrice());
+                    orderItemStmt.addBatch(); // Add to batch for execution
+                }
+                orderItemStmt.executeBatch(); // Execute all batched statements together
             }
 
-            // Step 5: Update Product Stock
-            if (!updateStock(connection, cartItems)) {
-                connection.rollback();
-                return ActionResult.error(null, "Failed to update stock");
+            // Step 5: Update stock for all products in the cart
+            String updateStockSql = "UPDATE products SET stock = stock - ? WHERE id = ?";
+            try (PreparedStatement updateStockStmt = connection.prepareStatement(updateStockSql)) {
+                for (CartItem cartItem : cartItems) {
+                    updateStockStmt.setInt(1, cartItem.getQuantity());
+                    updateStockStmt.setInt(2, cartItem.getProductId());
+                    updateStockStmt.addBatch(); // Add to batch
+                }
+                updateStockStmt.executeBatch(); // Execute batch
             }
 
-            // Step 6: Delete Cart Items
-            if (!deleteCartItems(connection, cartId)) {
-                connection.rollback();
-                return ActionResult.error(null, "Failed to clear cart");
+            // Step 6: Clear the cart items
+            String deleteCartItemsSql = "DELETE FROM cart_items WHERE cart_id = ?";
+            try (PreparedStatement deleteStmt = connection.prepareStatement(deleteCartItemsSql)) {
+                deleteStmt.setInt(1, cartId);
+                deleteStmt.executeUpdate();
             }
 
-            // Commit transaction
+            // Commit the transaction after all operations complete successfully
             connection.commit();
             return ActionResult.success(null, "" + orderId);
 
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback(); // Rollback the transaction on error
+                } catch (SQLException rollbackEx) {
+                    rollbackEx.printStackTrace();
+                }
+            }
             e.printStackTrace();
-            return ActionResult.error(null, "Error during checkout");
+            return ActionResult.error(null, "Error during checkout: " + e.getMessage());
         } finally {
             if (connection != null) {
                 try {
-                    connection.setAutoCommit(true); // Restore auto-commit mode
-                    connection.close();
+                    connection.setAutoCommit(true); // Restore auto-commit setting
+                    connection.close(); // Close the connection
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-        }
-    }
-
-// --- Private Helper Methods ---
-
-    private ArrayList<CartItem> getCartItems(int cartId) {
-        CartItemManager cartItemManager = new CartItemManager();
-        return cartItemManager.getCartItemsByCartId(cartId);
-    }
-
-    private double calculateTotalAmount(ArrayList<CartItem> cartItems) {
-        double totalAmount = 0.0;
-        ProductManager productManager = new ProductManager();
-        for (CartItem cartItem : cartItems) {
-            Product product = productManager.getProductById(cartItem.getProductId());
-            totalAmount += product.getPrice() * cartItem.getQuantity();
-        }
-        return totalAmount;
-    }
-
-    private int createOrder(Connection connection, User user, String address, double totalAmount) {
-        String sql = "INSERT INTO orders (user_id, address, total_amount, status) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, user.getId());
-            stmt.setString(2, address);
-            stmt.setDouble(3, totalAmount);
-            stmt.setString(4, "pending");
-
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) {
-                return -1;
-            }
-
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return -1;
-    }
-
-    private boolean addOrderItems(Connection connection, int orderId, ArrayList<CartItem> cartItems) {
-        String sql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            ProductManager productManager = new ProductManager();
-            for (CartItem cartItem : cartItems) {
-                Product product = productManager.getProductById(cartItem.getProductId());
-                stmt.setInt(1, orderId);
-                stmt.setInt(2, cartItem.getProductId());
-                stmt.setInt(3, cartItem.getQuantity());
-                stmt.setDouble(4, product.getPrice());
-                stmt.addBatch();
-            }
-
-            stmt.executeBatch();
-            return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private boolean updateStock(Connection connection, ArrayList<CartItem> cartItems) {
-        String sql = "UPDATE products SET stock = stock - ? WHERE id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            for (CartItem cartItem : cartItems) {
-                stmt.setInt(1, cartItem.getQuantity());
-                stmt.setInt(2, cartItem.getProductId());
-                stmt.addBatch();
-            }
-
-            stmt.executeBatch();
-            return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private boolean deleteCartItems(Connection connection, int cartId) {
-        String sql = "DELETE FROM cart_items WHERE cart_id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, cartId);
-            stmt.executeUpdate();
-            return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 }

@@ -15,7 +15,7 @@ public class PhotoManager extends BaseManager {
 
     // Method to get photo by product ID
     public Photo getPhotoByProductId(int productId) {
-        String sql = "SELECT id, product_id, url, is_main FROM photos WHERE product_id = ? LIMIT ?";
+        String sql = "SELECT id, product_id, url FROM photos WHERE product_id = ? LIMIT ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -29,7 +29,6 @@ public class PhotoManager extends BaseManager {
             if (rs.next()) {
                 int id = rs.getInt("id");
                 String url = rs.getString("url");
-                boolean isMain = rs.getBoolean("is_main");
 
                 // Create a Photo object and add it to the list
                 return new Photo(id, productId, url);
