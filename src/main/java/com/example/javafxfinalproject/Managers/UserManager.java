@@ -104,4 +104,65 @@ public class UserManager extends BaseManager {
         }
     }
 
+    public ActionResult<String> deleteUser(int userId) {
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (Connection connection = getConnection(connectionString);
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Set the user ID parameter
+            stmt.setInt(1, userId);
+
+            // Execute the DELETE statement
+            int affectedRows = stmt.executeUpdate();
+
+            // Check if any rows were deleted
+            if (affectedRows > 0) {
+                return  ActionResult.success(null , "User deleted successfully");
+            } else {
+                return ActionResult.error(null, "User not found or could not be deleted");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ActionResult.error(null ,e.getMessage());
+        }
+    }
+
+    public ArrayList<User> getUsersThatMatchName(String name) {
+        ArrayList<User> matchingUsers = new ArrayList<>();
+
+        String sql = "SELECT * FROM users WHERE LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?";
+
+        try (Connection connection = getConnection(connectionString);
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Set parameters for the wildcard search
+            String searchPattern = "%" + name.toLowerCase() + "%"; // Case-insensitive search
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                while (resultSet.next()) {
+                    // Build User objects and add them to the list
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setFirstName(resultSet.getString("first_name"));
+                    user.setLastName(resultSet.getString("last_name"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPhoneNumber(resultSet.getString("phone_number"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setRole(resultSet.getString("role"));
+
+                    matchingUsers.add(user);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception
+        }
+
+        return matchingUsers;
+    }
+
 }
