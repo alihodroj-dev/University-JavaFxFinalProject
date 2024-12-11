@@ -30,7 +30,7 @@ public class AuthManager extends BaseManager {
                         String firstName = rs.getString("first_name");
                         String lastName = rs.getString("last_name");
                         String role = rs.getString("role");
-                        User user = new User(userId, firstName , lastName , null, email, phoneNumber, role);
+                        User user = new User(userId, firstName , lastName , password, email, phoneNumber, role);
                         return ActionResult.success(user, "logged In Successfully");
                     } else {
                         return ActionResult.error(null, "Invalid Credentials");
