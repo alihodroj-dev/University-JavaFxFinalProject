@@ -13,8 +13,8 @@ import static java.sql.DriverManager.getConnection;
 
 public class PhotoManager extends BaseManager {
 
-    // Method to get photos by product ID
-    public Photo getPhotosByProductId(int productId) {
+    // Method to get photo by product ID
+    public Photo getPhotoByProductId(int productId) {
         String sql = "SELECT id, product_id, url, is_main FROM photos WHERE product_id = ? LIMIT ?";
 
         try (Connection connection = getConnection(connectionString);

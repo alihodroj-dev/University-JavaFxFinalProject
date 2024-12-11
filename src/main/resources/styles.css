@@ -57,62 +57,91 @@
     -fx-background-color: #666666;
 }
 
+/* Card Styles */
 .card {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e9ecef;
-    -fx-border-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-padding: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 3);
+    -fx-background-color: #1a1a1a; /* Card background */
+    -fx-border-color: #2b2b2b; /* Border color */
+    -fx-border-radius: 8px; /* Same as the rounding for border */
+    -fx-border-width: 1px; /* Border thickness */
+    -fx-background-radius: 8px; /* Matches the border radius */
+    -fx-background-insets: 1; /* Ensures background stays within the border */
+    -fx-padding: 16px; /* Padding inside the card */
 }
 
+/* Card Header Style */
 .card-header {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #212529;
-    -fx-padding: 0 0 12px 0;
+    -fx-text-fill: #e0e0e0; /* Bright text similar to root */
+    -fx-padding: 0 0 8px 0;
 }
 
+/* Card Description Text */
 .card-description {
-    -fx-font-size: 12px;
-    -fx-text-fill: #6c757d;
-}
-
-.card-category-brand {
     -fx-font-size: 14px;
-    -fx-text-fill: #495057;
+    -fx-text-fill: #b0b0b0; /* Muted gray for contrast */
+    -fx-padding: 0 0 8px 0;
 }
 
-.card-category {
-    -fx-font-weight: bold;
-}
-
-.card-brand {
-    -fx-font-style: italic;
-}
-
+/* Card Price Text */
 .card-price {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #10B981; /* Tailwind green-500 */
+    -fx-font-size: 18px;
+    -fx-font-weight: bold; /* Bold styling for emphasis */
+    -fx-text-fill: #e0e0e0; /* Text matches root's light color */
+    -fx-padding: 8px 0;
 }
 
+/* Card Button Box */
 .card-button-box {
-    -fx-spacing: 10;
+    -fx-spacing: 10px;
+    -fx-padding: 8px 0;
 }
 
+/* Add to Cart Button */
 .card-add-to-cart-button {
-    -fx-background-color: #10B981; /* Tailwind green-500 */
-    -fx-text-fill: white;
-    -fx-padding: 5 10;
-    -fx-background-radius: 5;
+    -fx-background-color: #333333; /* Matches primary button style */
+    -fx-text-fill: #e0e0e0; /* Contrast light text */
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand; /* Pointer cursor for interactivity */
 }
 
+.card-add-to-cart-button:hover {
+    -fx-background-color: #666666; /* Darker gray on hover */
+}
+
+/* View Button */
 .card-view-button {
-    -fx-background-color: #007bff;
-    -fx-text-fill: white;
-    -fx-padding: 5 10;
-    -fx-background-radius: 5;
+    -fx-background-color: #333333; /* Matches Add to Cart button */
+    -fx-text-fill: #e0e0e0;
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.card-view-button:hover {
+    -fx-background-color: #666666; /* Darker gray on hover */
+}
+
+/* Image Styles */
+.card-image {
+    -fx-background-color: #2a2a2a; /* Darker contrast for images */
+    -fx-padding: 8px;
+    -fx-border-radius: 6px;
+    -fx-min-height: 150px; /* Placeholder height */
+    -fx-min-width: 100%; /* Full Width */
+    -fx-alignment: center;
+}
+
+.card-image img {
+    -fx-fit-width: 100%; /* Ensures the image scales to fit */
+    -fx-border-radius: 6px; /* Slightly rounded corners for images */
 }
 
 /* Button Styles */
