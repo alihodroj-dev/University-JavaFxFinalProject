@@ -3,10 +3,12 @@ package com.example.javafxfinalproject.Stages;
 import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.TableViewCell;
+import com.example.javafxfinalproject.Components.Toast;
 import com.example.javafxfinalproject.Helpers.RememberMeHelper;
 import com.example.javafxfinalproject.Managers.OrderManager;
 import com.example.javafxfinalproject.Managers.ProductManager;
 import com.example.javafxfinalproject.Managers.UserManager;
+import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Models.Order;
 import com.example.javafxfinalproject.Models.Product;
 import com.example.javafxfinalproject.Models.User;
@@ -26,6 +28,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.example.javafxfinalproject.Components.Toast.showToast;
 
 public class AdminStage extends Stage {
     public AdminStage(User userAccount) {
@@ -180,7 +184,8 @@ public class AdminStage extends Stage {
 
             saveBtn.setOnMouseClicked(e -> {
                 User userToBeSaved = new User(Integer.parseInt(id.getInputText()), fname.getInputText(), lname.getInputText(), "", email.getInputText(), phoneNumber.getInputText(), "");
-                new UserManager().updateUser(userToBeSaved);
+                ActionResult<String> response = new UserManager().updateUser(userToBeSaved);
+                showToast(this , response.getMessage());
             });
 
             ImageView deleteBtn = new ImageView("delete.png");
@@ -229,7 +234,8 @@ public class AdminStage extends Stage {
 
             saveBtn.setOnMouseClicked(e -> {
                 Product productToBeSaved = new Product(Integer.parseInt(id.getInputText()), Integer.parseInt(brandId.getInputText()), Integer.parseInt(categoryId.getInputText()), name.getInputText(), description.getInputText(), Double.parseDouble(price.getInputText()), Integer.parseInt(stock.getInputText()));
-                new ProductManager().updateProduct(productToBeSaved);
+                ActionResult<String> response =  new ProductManager().updateProduct(productToBeSaved);
+                showToast(this , response.getMessage());
             });
 
             ImageView deleteBtn = new ImageView("delete.png");
@@ -278,7 +284,8 @@ public class AdminStage extends Stage {
 
             saveBtn.setOnMouseClicked(e -> {
                 Order orderToBeSaved = new Order(Integer.parseInt(id.getInputText()), Integer.parseInt(userId.getInputText()), Integer.parseInt(addressId.getInputText()), Integer.parseInt(totalAmount.getInputText()), status.getInputText(), Boolean.parseBoolean(isDiscounted.getInputText()), Integer.parseInt(discountId.getInputText()));
-                new OrderManager().updateOrder(orderToBeSaved);
+                ActionResult<String> response = new OrderManager().updateOrder(orderToBeSaved);
+                showToast(this , response.getMessage());
             });
 
             ImageView deleteBtn = new ImageView("delete.png");
