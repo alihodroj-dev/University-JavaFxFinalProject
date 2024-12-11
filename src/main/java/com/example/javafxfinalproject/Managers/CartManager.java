@@ -70,14 +70,12 @@ public class CartManager extends BaseManager {
     }
 
 
-    public ActionResult<String> checkout(User user , int cartId , String discountCode) {
+    public ActionResult<String> checkout(User user , int cartId , String address, String discountCode) {
         Connection connection = null;
         try {
             connection = getConnection(connectionString);
             connection.setAutoCommit(false); // Start a transaction
             CartItemManager cartItemManager = new CartItemManager();
-            AddressManager addressManager = new AddressManager();
-            ArrayList<Address> addresses = addressManager.getAddressesByUserId(user.getId());
             // Step 1: Retrieve CartItems for the given cartId
             ArrayList<CartItem> cartItems = cartItemManager.getCartItemsByCartId(cartId);
             if (cartItems.isEmpty()) {
@@ -104,11 +102,11 @@ public class CartManager extends BaseManager {
             }
 
             // Step 4: Create the new order
-            String insertOrderSql = "INSERT INTO orders (user_id, address_id, total_amount, status, discount_id) " +
+            String insertOrderSql = "INSERT INTO orders (user_id, address, total_amount, status, discount_id) " +
                     "VALUES (?, ?, ?, 'Pending', ?)";
             try (PreparedStatement orderStmt = connection.prepareStatement(insertOrderSql, Statement.RETURN_GENERATED_KEYS)) {
                 orderStmt.setInt(1, user.getId()); // user_id from User object
-                orderStmt.setInt(2, addresses.getFirst().getId()); // address_id from User object
+                orderStmt.setString(2, address); // address_id from User object
                 orderStmt.setDouble(3, totalAmount);
                 if (discount != null) {
                     orderStmt.setInt(4, discount.getId()); // Set discount_id

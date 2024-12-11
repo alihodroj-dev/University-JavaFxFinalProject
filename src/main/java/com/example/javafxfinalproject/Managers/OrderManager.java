@@ -15,7 +15,7 @@ public class OrderManager extends BaseManager {
     public ArrayList<Order> getOrders() {
         ArrayList<Order> orders = new ArrayList<>();
 
-        String sql = "SELECT id AS order_id, user_id, address_id, total_amount, status, discount_id " +
+        String sql = "SELECT id AS order_id, user_id, address, total_amount, status, discount_id " +
                 "FROM orders";
 
         try (Connection connection = getConnection(connectionString);
@@ -25,14 +25,14 @@ public class OrderManager extends BaseManager {
             while (rs.next()) {
                 int orderId = rs.getInt("order_id");
                 int userId = rs.getInt("user_id");
-                int addressId = rs.getInt("address_id");
+                String address = rs.getString("address");
                 double totalAmount = rs.getDouble("total_amount");
                 String status = rs.getString("status");
                 Integer discountId = rs.getInt("discount_id");
 
                 // Create and add Order object
 
-                Order order = new Order(orderId, userId, addressId, totalAmount, status );
+                Order order = new Order(orderId, userId, address, totalAmount, status );
 
                 if(discountId > 0) {
                     order.setDiscountId(discountId);
@@ -49,7 +49,7 @@ public class OrderManager extends BaseManager {
     }
 
     public Order getOrderById(int orderId) {
-        String sql = "SELECT id AS order_id, user_id, address_id, total_amount, status, discount_id " +
+        String sql = "SELECT id AS order_id, user_id, address, total_amount, status, discount_id " +
                 "FROM orders WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
@@ -60,13 +60,13 @@ public class OrderManager extends BaseManager {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     int userId = rs.getInt("user_id");
-                    int addressId = rs.getInt("address_id");
+                    String address = rs.getString("address");
                     double totalAmount = rs.getDouble("total_amount");
                     String status = rs.getString("status");
                     Integer discountId = rs.getInt("discount_id");
 
                     // Create and return the Order object
-                    Order order = new Order(orderId, userId, addressId, totalAmount, status);
+                    Order order = new Order(orderId, userId, address, totalAmount, status);
                     if (discountId > 0) {
                         order.setDiscountId(discountId);
                         order.setDiscounted(true);
@@ -80,7 +80,7 @@ public class OrderManager extends BaseManager {
         return null;  // Return null if the order wasn't found
     }
 
-    public ActionResult<Order> addOrder(int userId, int addressId, double totalAmount, String status, int discountId) {
+    public ActionResult<Order> addOrder(int userId, String address, double totalAmount, String status, int discountId) {
         String sql = "INSERT INTO orders (user_id, address_id, total_amount, status, discount_id) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
@@ -89,7 +89,7 @@ public class OrderManager extends BaseManager {
 
             // Set the parameters for the SQL statement
             stmt.setInt(1, userId);
-            stmt.setInt(2, addressId);
+            stmt.setString(2, address);
             stmt.setDouble(3, totalAmount);
             stmt.setString(4, status);
             stmt.setInt(5, discountId);
@@ -100,7 +100,7 @@ public class OrderManager extends BaseManager {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         int newOrderId = generatedKeys.getInt(1);  // Get the new order ID
-                        Order order = new Order(newOrderId, userId, addressId, totalAmount, status);
+                        Order order = new Order(newOrderId, userId, address, totalAmount, status);
                         if (discountId > 0) {
                             order.setDiscountId(discountId);
                             order.setDiscounted(true);
@@ -119,14 +119,14 @@ public class OrderManager extends BaseManager {
     }
 
     public ActionResult<String> updateOrder(Order order) {
-        String sql = "UPDATE orders SET user_id = ?, address_id = ?, total_amount = ?, status = ?, discount_id = ? WHERE id = ?";
+        String sql = "UPDATE orders SET user_id = ?, address = ?, total_amount = ?, status = ?, discount_id = ? WHERE id = ?";
 
         try (Connection connection = getConnection(connectionString);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             // Set the parameters for the SQL statement
             stmt.setInt(1, order.getUserId());
-            stmt.setInt(2, order.getAddressId());
+            stmt.setString(2, order.getAddress());
             stmt.setDouble(3, order.getTotalAmount());
             stmt.setString(4, order.getStatus());
             stmt.setInt(5, order.getDiscountId());
