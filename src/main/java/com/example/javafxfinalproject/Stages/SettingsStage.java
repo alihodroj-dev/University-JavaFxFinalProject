@@ -72,7 +72,7 @@ public class SettingsStage extends Stage {
         lastNameField.setInputText(userAccount.getLastName());
         phoneNumberField.setInputText(userAccount.getPhoneNumber());
         emailField.setInputText(userAccount.getEmail());
-//        passwordField.setInputText(userAccount.getPassword());
+        passwordField.setInputText(userAccount.getPassword());
 
         Scene mainScene = new Scene(mainContainer);
         mainScene.getStylesheets().add(String.valueOf(getClass().getResource("/styles.css")));

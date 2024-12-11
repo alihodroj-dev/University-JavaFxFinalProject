@@ -8,10 +8,7 @@ import com.example.javafxfinalproject.Managers.CartItemManager;
 import com.example.javafxfinalproject.Managers.CartManager;
 import com.example.javafxfinalproject.Managers.ProductManager;
 import com.example.javafxfinalproject.Managers.UserManager;
-import com.example.javafxfinalproject.Models.Cart;
-import com.example.javafxfinalproject.Models.CartItem;
-import com.example.javafxfinalproject.Models.Product;
-import com.example.javafxfinalproject.Models.User;
+import com.example.javafxfinalproject.Models.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,6 +22,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.example.javafxfinalproject.Components.Toast.showToast;
+
 
 public class CustomerStage extends Stage {
     private boolean isSettingsStageOpen = false;
@@ -158,12 +158,12 @@ public class CustomerStage extends Stage {
         FlowPane flowPane = new FlowPane();
         flowPane.setHgap(20);
         flowPane.setVgap(20);
-        flowPane.setPrefWrapLength(1000);
+        flowPane.setPrefWrapLength(1220);
         flowPane.setAlignment(Pos.CENTER);
-        flowPane.setPadding(new Insets(50 , 50 , 50 , 50));
+        flowPane.setPadding(new Insets(20 , 80 , 20 , 0));
         ArrayList<Product> products = new ProductManager().getProducts(1);
         for(Product product : products) {
-            ProductCard productCard = new ProductCard(this , product , this.getWidth() / ((double) products.size() / 2), userCart.getId());
+            ProductCard productCard = new ProductCard(this , product , 250, userCart.getId());
             width = productCard.getWidth();
             flowPane.getChildren().add(productCard);
 
@@ -183,6 +183,7 @@ public class CustomerStage extends Stage {
             }
 
         });
+        flowPane.setAlignment(Pos.CENTER_LEFT);
 
         ScrollPane container = new ScrollPane(flowPane);
         container.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -195,7 +196,10 @@ public class CustomerStage extends Stage {
 
         // Align the button in the center at the bottom
         BorderPane.setAlignment(loadMoreButton, Pos.BOTTOM_RIGHT);
-        BorderPane.setMargin(loadMoreButton, new Insets(10));
+        BorderPane.setMargin(loadMoreButton, new Insets(10));// Add some padding/margin
+        container.setPadding(new Insets(10 , 10 , 10 , 10));
+
+        mainPane.setPadding(new Insets(0 , 0 , 0 , 40));
 
         return mainPane;
     }
@@ -220,3 +224,4 @@ public class CustomerStage extends Stage {
         return scrollPane;
     }
 }
+

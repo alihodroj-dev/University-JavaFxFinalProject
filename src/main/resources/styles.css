@@ -172,6 +172,32 @@
     -fx-background-color: #ff3333; /* Slightly darker red on hover */
 }
 
+.cart-checkout-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e0e0e0;
+}
+
+/* Price/Total Labels */
+.cart-checkout-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #b0b0b0; /* Light gray for readability */
+}
+
+/* Checkout Button */
+.cart-checkout-button {
+    -fx-background-color: #008cba; /* Blue background */
+    -fx-text-fill: #ffffff; /* White text */
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 6px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.cart-checkout-button:hover {
+    -fx-background-color: #005f8f; /* Darker blue on hover */
+}
+
 /* Button Styles */
 .button-primary {
     -fx-background-color: #333333;
