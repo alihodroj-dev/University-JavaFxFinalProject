@@ -32,7 +32,7 @@ public class PhotoManager extends BaseManager {
                 boolean isMain = rs.getBoolean("is_main");
 
                 // Create a Photo object and add it to the list
-                return new Photo(id, productId, url, isMain);
+                return new Photo(id, productId, url);
             }
         } catch (SQLException e) {
             e.printStackTrace();

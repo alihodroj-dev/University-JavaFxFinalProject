@@ -93,11 +93,12 @@ public class CartManager extends BaseManager {
 
             // Step 4: Create the new order
             String insertOrderSql = "INSERT INTO orders (user_id, address, total_amount, status) " +
-                    "VALUES (?, ?, ?, 'Pending', ?)";
+                    "VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement orderStmt = connection.prepareStatement(insertOrderSql, Statement.RETURN_GENERATED_KEYS)) {
                 orderStmt.setInt(1, user.getId()); // user_id from User object
                 orderStmt.setString(2, address); // address_id from User object
                 orderStmt.setDouble(3, totalAmount);
+                orderStmt.setString(4, "pending");
 
 
                 int affectedRows = orderStmt.executeUpdate();

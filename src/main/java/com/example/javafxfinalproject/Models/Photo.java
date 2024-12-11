@@ -4,15 +4,13 @@ public class Photo {
     private int id;
     private int productId;
     private String url;
-    private boolean isMain;
 
     public Photo() {}
 
-    public Photo(int id, int productId, String url, boolean isMain) {
+    public Photo(int id, int productId, String url) {
         this.id = id;
         this.productId = productId;
         this.url = url;
-        this.isMain = isMain;
     }
 
     public int getId() {
@@ -39,11 +37,4 @@ public class Photo {
         this.url = url;
     }
 
-    public boolean isMain() {
-        return isMain;
-    }
-
-    public void setMain(boolean main) {
-        isMain = main;
-    }
 }
