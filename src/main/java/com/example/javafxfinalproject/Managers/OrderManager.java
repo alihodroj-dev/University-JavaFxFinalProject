@@ -28,7 +28,7 @@ public class OrderManager extends BaseManager {
                 int addressId = rs.getInt("address_id");
                 double totalAmount = rs.getDouble("total_amount");
                 String status = rs.getString("status");
-                int discountId = rs.getInt("discount_id");
+                Integer discountId = rs.getInt("discount_id");
 
                 // Create and add Order object
 
@@ -63,7 +63,7 @@ public class OrderManager extends BaseManager {
                     int addressId = rs.getInt("address_id");
                     double totalAmount = rs.getDouble("total_amount");
                     String status = rs.getString("status");
-                    int discountId = rs.getInt("discount_id");
+                    Integer discountId = rs.getInt("discount_id");
 
                     // Create and return the Order object
                     Order order = new Order(orderId, userId, addressId, totalAmount, status);

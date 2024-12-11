@@ -4,6 +4,7 @@ import com.example.javafxfinalproject.Components.FormField;
 import com.example.javafxfinalproject.Components.MessageLabel;
 import com.example.javafxfinalproject.Components.PrimaryButton;
 import com.example.javafxfinalproject.Components.SecureFormField;
+import com.example.javafxfinalproject.Helpers.RememberMeHelper;
 import com.example.javafxfinalproject.Models.ActionResult;
 import com.example.javafxfinalproject.Managers.AuthManager;
 import com.example.javafxfinalproject.Models.Status;
@@ -11,6 +12,7 @@ import com.example.javafxfinalproject.Models.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -23,6 +25,7 @@ public class LoginStage extends Stage {
     final private FormField emailField = new FormField("Email", "example@example.com");
     final private SecureFormField passwordField = new SecureFormField("Password", "********");
     final private MessageLabel messageLabel = new MessageLabel("");
+    final private CheckBox rememberMeCheckBox = new CheckBox("Remember Me");
     private boolean isSignUpStageOpen = false;
     public LoginStage() {
         // window properties
@@ -53,10 +56,12 @@ public class LoginStage extends Stage {
         this.emailField.setPadding(new Insets(0, 60, 0, 60));
         // password field
         passwordField.setPadding(new Insets(10, 60, 0, 60));
+        rememberMeCheckBox.setPadding(new Insets(10, 60, 0, 60));
+        rememberMeCheckBox.getStyleClass().add("remember-me-checkbox");
 
         // form container
         VBox fields = new VBox(10);
-        fields.getChildren().addAll(emailField, passwordField);
+        fields.getChildren().addAll(emailField, passwordField, rememberMeCheckBox);
 
         // buttons container
         HBox buttons = new HBox(10);
@@ -108,6 +113,9 @@ public class LoginStage extends Stage {
                     messageLabel.playAnimation();
                 }
                 else {
+                    if(rememberMeCheckBox.isSelected()) {
+                        RememberMeHelper.saveCredentials(""+response.getData().getId() , response.getData().getRole());
+                    }
                     if(response.getData().getRole().equalsIgnoreCase("admin")) {
                         AdminStage adminStage = new AdminStage(response.getData());
                         this.close();

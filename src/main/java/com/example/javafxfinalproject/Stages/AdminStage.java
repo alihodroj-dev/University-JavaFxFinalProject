@@ -79,8 +79,16 @@ public class AdminStage extends Stage {
             mainContainer.getChildren().add(datatable);
         });
 
+        PrimaryButton logoutBtn = new PrimaryButton("Logout");
+        logoutBtn.setPrefWidth(220);
+        logoutBtn.getStyleClass().add("sidebar-button");
+        logoutBtn.setOnAction(e -> {
+            this.close();
+            new LoginStage();
+        });
+
         // adding buttons to container
-        buttonsContainer.getChildren().addAll(customersBtn, productsBtn, ordersBtn);
+        buttonsContainer.getChildren().addAll(customersBtn, productsBtn, ordersBtn, logoutBtn);
 
         // setting top of sidebar to buttons container
         sideBar.setTop(buttonsContainer);
