@@ -6,6 +6,7 @@ import com.example.javafxfinalproject.Components.TableViewCell;
 import com.example.javafxfinalproject.Components.Toast;
 import com.example.javafxfinalproject.Helpers.RememberMeHelper;
 import com.example.javafxfinalproject.Managers.OrderManager;
+import com.example.javafxfinalproject.Managers.PhotoManager;
 import com.example.javafxfinalproject.Managers.ProductManager;
 import com.example.javafxfinalproject.Managers.UserManager;
 import com.example.javafxfinalproject.Models.ActionResult;
@@ -255,6 +256,8 @@ public class AdminStage extends Stage {
             TableViewCell price = new TableViewCell(products.indexOf(product) == 0 ? "PRICE" : "", "" + product.getPrice());
             // stock
             TableViewCell stock = new TableViewCell(products.indexOf(product) == 0 ? "STOCK" : "", "" + product.getStock());
+            // url
+            TableViewCell url = new TableViewCell(products.indexOf(product) == 0 ? "URL" : "", new PhotoManager().getPhotoByProductId(product.getId()).getUrl());
 
             // save and delete container
             HBox saveDeleteContainer = new HBox(15);
