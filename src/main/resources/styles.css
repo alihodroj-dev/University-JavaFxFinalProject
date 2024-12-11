@@ -35,6 +35,10 @@
     -fx-background-radius: 5em;
 }
 
+.scroll-pane > .corner {
+    -fx-background-color: #121212;
+}
+
 .sidebar {
     -fx-background-color: #333333;
 }

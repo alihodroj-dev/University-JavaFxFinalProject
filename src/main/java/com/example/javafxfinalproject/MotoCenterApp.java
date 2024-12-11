@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class MotoCenterApp extends Application {
-
-
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -28,14 +26,9 @@ public class MotoCenterApp extends Application {
                         // customer stage here
                     }
                 }
+        } else {
+            LoginStage loginStage = new LoginStage();
         }
-
-        // MARK: login
-        LoginStage loginStage = new LoginStage();
-
-        // MARK: admin
-//        AdminStage adminStage = new AdminStage(new User());
-
     }
 
     public static void main(String[] args) {

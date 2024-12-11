@@ -1,10 +1,11 @@
 package com.example.javafxfinalproject.Stages;
 
-import com.example.javafxfinalproject.Components.FormField;
-import com.example.javafxfinalproject.Components.MessageLabel;
-import com.example.javafxfinalproject.Components.PrimaryButton;
-import com.example.javafxfinalproject.Components.SecureFormField;
+import com.example.javafxfinalproject.Components.*;
+import com.example.javafxfinalproject.Managers.BrandManager;
+import com.example.javafxfinalproject.Managers.CategoryManager;
 import com.example.javafxfinalproject.Managers.ProductManager;
+import com.example.javafxfinalproject.Models.Brand;
+import com.example.javafxfinalproject.Models.Category;
 import com.example.javafxfinalproject.Models.Product;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,9 +16,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 public class AddNewProductStage extends Stage {
-    final private FormField brandIdField = new FormField("Brand ID", "103937");
-    final private FormField categoryIdField = new FormField("Category ID", "683630");
+//    final private FormField brandIdField = new FormField("Brand ID", "103937");
+//    final private FormField categoryIdField = new FormField("Category ID", "683630");
+    private CustomComboBox brandIdField = new CustomComboBox();
+    private CustomComboBox categoryIdField = new CustomComboBox();
     final private FormField productNameField = new FormField("Product Name", "Yamaha R1");
     final private FormField productDescriptionField = new FormField("Product Description", "1000cc Bike");
     final private FormField productPriceField = new FormField("Product Price", "10,000");
@@ -41,6 +47,27 @@ public class AddNewProductStage extends Stage {
         // form container
         VBox formContainer = new VBox(10);
         formContainer.setPadding(new Insets(0, 50, 0, 50));
+
+        // getting data for brandID
+        ArrayList<Brand> brands = new BrandManager().getBrands();
+        ArrayList<String> brandNames = new ArrayList<>();
+
+        for(Brand brand : brands) {
+            brandNames.add(brand.getName());
+        }
+
+        brandIdField = new CustomComboBox("Brand", brandNames);
+
+        // getting data for categoryID
+        ArrayList<Category> categories = new CategoryManager().getCategories();
+        ArrayList<String> categoryNames = new ArrayList<>();
+
+        for(Category category : categories) {
+            categoryNames.add(category.getName());
+        }
+
+        categoryIdField = new CustomComboBox("Category", categoryNames);
+
         formContainer.getChildren().addAll(brandIdField, categoryIdField, productNameField, productDescriptionField, productPriceField, productStockField);
 
         // buttons container
@@ -51,7 +78,7 @@ public class AddNewProductStage extends Stage {
         PrimaryButton addBtn = new PrimaryButton("Add");
 
         backBtn.setOnAction(e -> { adminStage.setAddNewProductStageOpen(false); this.close(); });
-        addBtn.setOnAction(e -> addProductButtonAction(adminStage));
+        addBtn.setOnAction(e -> addProductButtonAction(adminStage, brands, categories));
 
         buttonsContainer.getChildren().addAll(backBtn, addBtn);
 
@@ -70,9 +97,9 @@ public class AddNewProductStage extends Stage {
         this.show();
     }
 
-    private void addProductButtonAction(AdminStage adminStage) {
-        if (brandIdField.getInputText().isEmpty() ||
-            categoryIdField.getInputText().isEmpty() ||
+    private void addProductButtonAction(AdminStage adminStage, ArrayList<Brand> brands, ArrayList<Category> categories) {
+        if (brandIdField.getSelectedItem().isEmpty() ||
+            categoryIdField.getSelectedItem().isEmpty() ||
             productNameField.getInputText().isEmpty() ||
             productDescriptionField.getInputText().isEmpty() ||
             productPriceField.getInputText().isEmpty() ||
@@ -81,9 +108,17 @@ public class AddNewProductStage extends Stage {
             messageLabel.setTextFill(Color.RED);
             messageLabel.playAnimation();
         } else {
+            // getting brand id
+            int brandId = Objects.requireNonNull(brands.stream().filter(brand -> {
+                return brand.getName().equalsIgnoreCase(brandIdField.getSelectedItem());
+            }).findFirst().orElse(null)).getId();
 
-            Product productToBeAdded = new Product(0, Integer.parseInt(brandIdField.getInputText()), Integer.parseInt(categoryIdField.getInputText()
-            ), productNameField.getInputText(), productDescriptionField.getInputText(), Double.parseDouble(productPriceField.getInputText()), Integer.parseInt(productStockField.getInputText()));
+            // getting category id
+            int categoryId = Objects.requireNonNull(categories.stream().filter(category -> {
+                return category.getName().equalsIgnoreCase(categoryIdField.getSelectedItem());
+            }).findFirst().orElse(null)).getId();
+
+            Product productToBeAdded = new Product(0, brandId, categoryId, productNameField.getInputText(), productDescriptionField.getInputText(), Double.parseDouble(productPriceField.getInputText()), Integer.parseInt(productStockField.getInputText()));
             new ProductManager().addProduct(productToBeAdded);
             adminStage.setAddNewProductStageOpen(false);
             this.close();
