@@ -58,6 +58,6 @@ public class CartCard extends BorderPane {
         this.setLeft(leftSideWrapper);
         this.setRight(removeButton);
 
-        this.setPrefWidth(1080);
+        this.setPrefWidth(900);
     }
 }

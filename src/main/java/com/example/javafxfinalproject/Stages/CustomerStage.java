@@ -37,7 +37,7 @@ public class CustomerStage extends Stage {
 
         // main container
         HBox mainContainer = new HBox(0);
-//        mainContainer.setPrefWidth(mainWidth);
+        mainContainer.setPrefWidth(mainWidth);
         mainContainer.setPrefHeight(mainHeight);
 
         // MARK: SIDEBAR
