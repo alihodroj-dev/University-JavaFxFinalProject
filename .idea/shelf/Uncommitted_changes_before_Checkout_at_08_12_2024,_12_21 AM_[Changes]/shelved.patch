@@ -1,0 +1,48 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"project setup\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 4\n}</component>\n  <component name=\"ProjectId\" id=\"2p2P8MVFdI2exeqyOV5l1BkkJ3T\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\n    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\n    &quot;project.structure.side.proportion&quot;: &quot;0.5354839&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;\n  }\n}</component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"e36b6ff1-edeb-4a19-8d6a-3239d82ba716\" name=\"Changes\" comment=\"\" />\n      <created>1731961038614</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1731961038614</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"commit 1\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1731969251555</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1731969251555</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"testing connection to Database\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1731979452231</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1731979452231</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"project setup\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1732047956786</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1732047956786</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"4\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"commit 1\" />\n    <MESSAGE value=\"testing connection to Database\" />\n    <MESSAGE value=\"project setup\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"project setup\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,8 +4,9 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="project setup">
++    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="classes setup">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/HelloApplication.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -90,7 +91,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1732047956786</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="classes setup">
++      <option name="closed" value="true" />
++      <created>1732320422157</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1732320422157</updated>
++    </task>
++    <option name="localTasksCounter" value="5" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -108,6 +117,7 @@
+     <MESSAGE value="commit 1" />
+     <MESSAGE value="testing connection to Database" />
+     <MESSAGE value="project setup" />
+-    <option name="LAST_COMMIT_MESSAGE" value="project setup" />
++    <MESSAGE value="classes setup" />
++    <option name="LAST_COMMIT_MESSAGE" value="classes setup" />
+   </component>
+ </project>
+\ No newline at end of file

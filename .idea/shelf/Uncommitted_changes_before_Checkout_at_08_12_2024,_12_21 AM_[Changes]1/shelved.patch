@@ -1,0 +1,19 @@
+Index: src/main/java/com/example/javafxfinalproject/HelloApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.javafxfinalproject;\n\nimport com.example.javafxfinalproject.Models.PostgresManager;\nimport javafx.application.Application;\nimport javafx.scene.Scene;\nimport javafx.scene.layout.Pane;\nimport javafx.stage.Stage;\n\nimport java.io.IOException;\n\npublic class HelloApplication extends Application {\n    @Override\n    public void start(Stage stage) throws IOException {\n        Pane pane = new Pane();\n        Scene scene = new Scene(pane, 320, 240);\n\n        PostgresManager.test();\n\n        stage.setTitle(\"Hello!\");\n        stage.setScene(scene);\n        stage.show();\n    }\n\n    public static void main(String[] args) {\n        launch();\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafxfinalproject/HelloApplication.java b/src/main/java/com/example/javafxfinalproject/HelloApplication.java
+--- a/src/main/java/com/example/javafxfinalproject/HelloApplication.java	
++++ b/src/main/java/com/example/javafxfinalproject/HelloApplication.java	
+@@ -10,7 +10,7 @@
+ 
+ public class HelloApplication extends Application {
+     @Override
+-    public void start(Stage stage) throws IOException {
++    public void start(Stage stage) {
+         Pane pane = new Pane();
+         Scene scene = new Scene(pane, 320, 240);
+ 

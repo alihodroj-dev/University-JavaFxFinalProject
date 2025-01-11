@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="project setup">
+    <list default="true" id="e36b6ff1-edeb-4a19-8d6a-3239d82ba716" name="Changes" comment="working on customer panel">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/CustomerStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Stages/CustomerStage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,14 +16,22 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Class" />
       </list>
+    </option>
+  </component>
+  <component name="Git.Pull.Settings">
+    <option name="OPTIONS">
+      <set>
+        <option value="REBASE" />
+      </set>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="test-branch-authmanager" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -31,25 +40,47 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2p2P8MVFdI2exeqyOV5l1BkkJ3T" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.5354839&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Application.HelloApplication.executor": "Run",
+    "Application.MotoCenterApp.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "managers-testing",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/alihodroj/Desktop/JavaFxFinalProject/src/main/resources",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.5354839",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Components" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafxfinalproject/Helpers" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.example.javafxfinalproject" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.javafxfinalproject.Stages" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -90,7 +121,135 @@
       <option name="project" value="LOCAL" />
       <updated>1732047956786</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added loginStage">
+      <option name="closed" value="true" />
+      <created>1733628415569</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1733628415569</updated>
+    </task>
+    <task id="LOCAL-00005" summary="added signup stage and updated user model">
+      <option name="closed" value="true" />
+      <created>1733838359920</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1733838359920</updated>
+    </task>
+    <task id="LOCAL-00006" summary="added signup stage and updated user model">
+      <option name="closed" value="true" />
+      <created>1733838426029</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1733838426029</updated>
+    </task>
+    <task id="LOCAL-00007" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733856662935</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1733856662935</updated>
+    </task>
+    <task id="LOCAL-00008" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733856735234</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1733856735234</updated>
+    </task>
+    <task id="LOCAL-00009" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733859604046</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1733859604046</updated>
+    </task>
+    <task id="LOCAL-00010" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733863604699</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1733863604699</updated>
+    </task>
+    <task id="LOCAL-00011" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733933873324</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1733933873324</updated>
+    </task>
+    <task id="LOCAL-00012" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733935700674</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1733935700674</updated>
+    </task>
+    <task id="LOCAL-00013" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733936611771</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1733936611771</updated>
+    </task>
+    <task id="LOCAL-00014" summary="working on admin panel">
+      <option name="closed" value="true" />
+      <created>1733943371001</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1733943371001</updated>
+    </task>
+    <task id="LOCAL-00015" summary="working on customer panel">
+      <option name="closed" value="true" />
+      <created>1733943760160</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1733943760160</updated>
+    </task>
+    <task id="LOCAL-00016" summary="working on customer panel">
+      <option name="closed" value="true" />
+      <created>1733945915364</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1733945915364</updated>
+    </task>
+    <task id="LOCAL-00017" summary="working on customer panel">
+      <option name="closed" value="true" />
+      <created>1733947743669</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1733947743669</updated>
+    </task>
+    <task id="LOCAL-00018" summary="working on customer panel">
+      <option name="closed" value="true" />
+      <created>1733948195847</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1733948195847</updated>
+    </task>
+    <task id="LOCAL-00019" summary="working on customer panel">
+      <option name="closed" value="true" />
+      <created>1733952680896</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1733952680896</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -108,6 +267,10 @@
     <MESSAGE value="commit 1" />
     <MESSAGE value="testing connection to Database" />
     <MESSAGE value="project setup" />
-    <option name="LAST_COMMIT_MESSAGE" value="project setup" />
+    <MESSAGE value="added loginStage" />
+    <MESSAGE value="added signup stage and updated user model" />
+    <MESSAGE value="working on admin panel" />
+    <MESSAGE value="working on customer panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="working on customer panel" />
   </component>
 </project>

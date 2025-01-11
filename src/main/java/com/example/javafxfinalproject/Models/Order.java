@@ -3,19 +3,20 @@ package com.example.javafxfinalproject.Models;
 public class Order {
     private int id;
     private int userId;
-    private int addressId;
+    private String address;
     private double totalAmount;
     private String status;
 
     public Order() {}
 
-    public Order(int id, int userId, int addressId, double totalAmount, String status) {
+    public Order(int id, int userId, String address, double totalAmount, String status) {
         this.id = id;
         this.userId = userId;
-        this.addressId = addressId;
+        this.address = address;
         this.totalAmount = totalAmount;
         this.status = status;
     }
+
 
     public int getId() {
         return id;
@@ -33,12 +34,12 @@ public class Order {
         this.userId = userId;
     }
 
-    public int getAddressId() {
-        return addressId;
-    }
 
-    public void setAddressId(int addressId) {
-        this.addressId = addressId;
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public double getTotalAmount() {
@@ -56,4 +57,5 @@ public class Order {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

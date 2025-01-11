@@ -1,0 +1,366 @@
+/* Basic Styles */
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-background-color: #121212;
+    -fx-text-fill: #343a40;
+}
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.scroll-pane {
+   -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #333333;
+    -fx-background-radius: 5em;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: #121212;
+}
+
+.sidebar {
+    -fx-background-color: #333333;
+}
+
+.sidebar-button {
+        -fx-background-color: #333333;
+        -fx-text-fill: #E0E0E0;
+        -fx-padding: 6px 16px;
+        -fx-background-radius: 6px;
+        -fx-border-radius: 6px;
+        -fx-font-size: 18px;
+        -fx-font-weight: bold;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #666666;
+}
+
+/* Card Styles */
+.card {
+    -fx-background-color: #1a1a1a; /* Card background */
+    -fx-border-color: #2b2b2b; /* Border color */
+    -fx-border-radius: 8px; /* Same as the rounding for border */
+    -fx-border-width: 1px; /* Border thickness */
+    -fx-background-radius: 8px; /* Matches the border radius */
+    -fx-background-insets: 1; /* Ensures background stays within the border */
+    -fx-padding: 16px; /* Padding inside the card */
+}
+
+/* Card Header Style */
+.card-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e0e0e0; /* Bright text similar to root */
+    -fx-padding: 0 0 8px 0;
+}
+
+/* Card Description Text */
+.card-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #b0b0b0; /* Muted gray for contrast */
+    -fx-padding: 0 0 8px 0;
+}
+
+/* Card Price Text */
+.card-price {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold; /* Bold styling for emphasis */
+    -fx-text-fill: #e0e0e0; /* Text matches root's light color */
+    -fx-padding: 8px 0;
+}
+
+/* Card Button Box */
+.card-button-box {
+    -fx-spacing: 10px;
+    -fx-padding: 8px 0;
+}
+
+/* Add to Cart Button */
+.card-add-to-cart-button {
+    -fx-background-color: #333333; /* Matches primary button style */
+    -fx-text-fill: #e0e0e0; /* Contrast light text */
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand; /* Pointer cursor for interactivity */
+}
+
+.card-add-to-cart-button:hover {
+    -fx-background-color: #666666; /* Darker gray on hover */
+}
+
+/* View Button */
+.card-view-button {
+    -fx-background-color: #333333; /* Matches Add to Cart button */
+    -fx-text-fill: #e0e0e0;
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.card-view-button:hover {
+    -fx-background-color: #666666; /* Darker gray on hover */
+}
+
+/* Image Styles */
+.card-image {
+    -fx-background-color: #2a2a2a; /* Darker contrast for images */
+    -fx-padding: 8px;
+    -fx-border-radius: 6px;
+    -fx-min-height: 150px; /* Placeholder height */
+    -fx-min-width: 100%; /* Full Width */
+    -fx-alignment: center;
+}
+
+.card-image img {
+    -fx-fit-width: 100%; /* Ensures the image scales to fit */
+    -fx-border-radius: 6px; /* Slightly rounded corners for images */
+}
+
+/*cart item styles*/
+.cart-item-name {
+    -fx-font-size: 14px; /* Smaller size for labels */
+    -fx-text-fill: #e0e0e0; /* Bright text for dark background */
+    -fx-font-weight: bold;
+}
+.cart-item-quantity {
+    -fx-font-size: 14px;
+    -fx-text-fill: #b0b0b0; /* Subtle gray for less emphasis */
+}
+.cart-item-price {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e0e0e0; /* Matches the product name for brightness */
+}
+.cart-item-remove-button {
+    -fx-background-color: #ff6666; /* Standout red for the action button */
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 6px;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.cart-item-remove-button:hover {
+    -fx-background-color: #ff3333; /* Slightly darker red on hover */
+}
+
+.cart-checkout-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e0e0e0;
+}
+
+/* Price/Total Labels */
+.cart-checkout-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #b0b0b0; /* Light gray for readability */
+}
+
+/* Checkout Button */
+.cart-checkout-button {
+    -fx-background-color: #008cba; /* Blue background */
+    -fx-text-fill: #ffffff; /* White text */
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 6px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.cart-checkout-button:hover {
+    -fx-background-color: #005f8f; /* Darker blue on hover */
+}
+
+/* Button Styles */
+.button-primary {
+    -fx-background-color: #333333;
+    -fx-text-fill: #E0E0E0;
+    -fx-padding: 6px 16px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-font-size: 14px;
+}
+
+.button-primary:hover {
+    -fx-background-color: #666666;
+}
+
+/* Form Elements */
+.input-field {
+    -fx-background-color: #333333;
+    -fx-border-color: #444444;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 8px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #E0E0E0;
+}
+
+.input-field:focused {
+    -fx-border-color: #888888;
+}
+
+.text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+}
+
+.heading {
+    -fx-font-size: 26px;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-weight: bold;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #E0E0E0;
+    -fx-padding: 4px 0;
+}
+
+.checkbox {
+    -fx-padding: 8px 0;
+    -fx-font-size: 14px;
+}
+
+/* Containers */
+.container {
+    -fx-padding: 20px;
+    -fx-background-color: #f1f3f5;
+    -fx-border-radius: 10px;
+}
+
+.section {
+    -fx-padding: 16px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-spacing: 10px;
+}
+
+.section-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #343a40;
+}
+
+.sidebar-item {
+    -fx-font-size: 14px;
+    -fx-text-fill: #adb5bd;
+    -fx-padding: 8px 0;
+}
+
+.sidebar-item:hover {
+    -fx-text-fill: #ffffff;
+}
+
+.header {
+  -fx-background-color: #343a40;
+}
+
+.navbar {
+    -fx-background-color: #343a40;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-spacing: 20px;
+}
+
+.navbar-link {
+    -fx-font-size: 14px;
+    -fx-text-fill: #adb5bd;
+    -fx-padding: 5px 10px;
+}
+
+.navbar-link:hover {
+    -fx-text-fill: #ffffff;
+}
+
+.flex-row {
+    -fx-hgap: 10px;
+    -fx-alignment: center-left;
+}
+
+.flex-column {
+    -fx-vgap: 10px;
+    -fx-alignment: center-left;
+}
+
+.grid {
+    -fx-hgap: 15px;
+    -fx-vgap: 15px;
+}
+
+.modal {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);
+}
+
+.tooltip {
+    -fx-background-color: #343a40;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 6px 12px;
+    -fx-background-radius: 5px;
+    -fx-font-size: 12px;
+}
+
+.combo-box-base {
+	-fx-background-color: #333333;
+	-fx-background-radius: 6px;
+}
+.combo-box-base:hover {
+	-fx-background-color: #333333;
+}
+.combo-box-base:disabled {
+	-fx-background-color: gray;
+}
+.combo-box .list-cell {
+	-fx-text-fill: #E0E0E0;
+}
+.combo-box-base .arrow-button .arrow {
+	-fx-background-color: #E0E0E0;
+}
+/* WHILE OPEN */
+.combo-box-base:showing {
+	-fx-background-color: #333333;
+}
+.combo-box .combo-box-popup .list-view .list-cell {
+	-fx-background-color: gray;
+}
+.combo-box .combo-box-popup .list-view .list-cell:hover,
+.combo-box .combo-box-popup .list-view .list-cell:selected {
+	-fx-background-color: #333333;
+}
